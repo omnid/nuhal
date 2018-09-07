@@ -51,10 +51,9 @@ target_link_libraries(common PUBLIC
     >
   )
 
-# Set up header file paths.  Public headers are in
-# include/common, include/tiva, and include/host
-# Private headers are in src/
-# tiva headers should only be available when the target is tiva, etc.
+# Set up header file paths.
+# include/ headers are available on all platforms
+# include/tiva headers are only added for the embedded platforms
 target_include_directories(common PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<$<PLATFORM_ID:arm-none-eabi>:$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/tiva/include>>
