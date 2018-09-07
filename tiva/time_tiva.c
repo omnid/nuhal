@@ -1,5 +1,5 @@
 #include "common/time.h"
-#include "tiva/common_tiva.h"
+#include "tiva/tiva.h"
 #include "driverlib/systick.h"
 
 uint32_t time_current_ms(void)
@@ -9,7 +9,7 @@ uint32_t time_current_ms(void)
     // while increasing precision
     // ticks * msec/ tick = current ms, right shifted 8 to compensate
     return (((SysTickPeriodGet() - SysTickValueGet()) << 8)
-            / (tiva_clock_frequency()/1000u)) >> 8;
+            / (tiva_clock_hz()/1000u)) >> 8;
 }
 
 uint32_t time_current_us(void)
@@ -19,7 +19,7 @@ uint32_t time_current_us(void)
     // while increasing precision
     // ticks * usec/ tick = current us, right shifted 8 to compensate
     return (((SysTickPeriodGet() - SysTickValueGet()) << 8)
-            / (tiva_clock_frequency()/1000000u)) >> 8;
+            / (tiva_clock_hz()/1000000u)) >> 8;
 }
 
 uint32_t time_period_ms(void)
@@ -28,7 +28,7 @@ uint32_t time_period_ms(void)
     // beware of overflow.  The period is at most 24 bits, so we
     // left shift the numerator by 8 bits (guaranteed to not overflow)
     // then shift everything back at the end
-    return ((SysTickPeriodGet() << 8)  / (tiva_clock_frequency()/1000u)) >> 8;
+    return ((SysTickPeriodGet() << 8)  / (tiva_clock_hz()/1000u)) >> 8;
 }
 
 uint32_t time_period_us(void)
@@ -37,5 +37,5 @@ uint32_t time_period_us(void)
     // beware of overflow.  The period is at most 24 bits, so we
     // left shift the numerator by 8 bits (guaranteed to not overflow)
     // then shift everything back at the end
-    return ((SysTickPeriodGet() << 8)  / (tiva_clock_frequency()/1000000u)) >> 8;
+    return ((SysTickPeriodGet() << 8)  / (tiva_clock_hz()/1000000u)) >> 8;
 }

@@ -1,6 +1,6 @@
 #include "common/uart.h"
 #include "common/error.h"
-#include "tiva/common_tiva.h"
+#include "tiva/tiva.h"
 #include "common/time.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_ints.h"
@@ -74,7 +74,7 @@ void uart_passthrough(const struct uart_port * port1,
 ///   and software flow control is not implemented yet
 /// @param parity - even, odd, or no parity
 /// NOTE: The pins that are used for the UART must be setup using
-/// the TIVA_PIN_SETUP array and common_setup.  On reset, UART0 pins
+/// the TIVA_PIN_SETUP array and tiva_setup.  On reset, UART0 pins
 /// are setup for UART already so it is only the other UARTs that need this
 const struct uart_port * uart_open(const char name[], unsigned int baud,
                                    enum uart_flow flow, enum uart_parity parity)
@@ -107,7 +107,7 @@ const struct uart_port * uart_open(const char name[], unsigned int baud,
 
 
     UARTConfigSetExpClk(ports[pindex].base,
-                        tiva_clock_frequency(), // clock speed for the uart
+                        tiva_clock_hz(), // clock speed for the uart
                         baud,
                         UART_CONFIG_WLEN_8     // 8 data bits
                         | UART_CONFIG_STOP_ONE // 1 stop bit
