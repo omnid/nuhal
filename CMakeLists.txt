@@ -40,7 +40,7 @@ set_source_files_properties(queue.c error.c
 
 # don't issue a warning about link time optimization being disabled
 # for files with weak symbols, when using the ti compiler
-set_source_files_properties(tiva/isr_tiva.c
+set_source_files_properties(tiva/isr_tiva.c tiva/error_tiva.c
   PROPERTIES COMPILE_FLAGS $<$<C_COMPILER_ID:TI>:-pds=1463>)
 
 # on the embedded platform, linking against common provides the proper linker script

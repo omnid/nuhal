@@ -215,7 +215,7 @@ enum type_led_color type_extract_led_color(struct bytestream * bs)
     {
         error(FILE_LINE, "NULL ptr");
     }
-    enum type_led_color color = bytestream_extract_u8(bs);
+    enum type_led_color color = (enum type_led_color)bytestream_extract_u8(bs);
     if(color > 0x7)
     {
         error(FILE_LINE, "invalid color");
@@ -242,5 +242,5 @@ enum type_control_mode type_extract_control_mode(struct bytestream * bs)
     {
         error(FILE_LINE, "NULL ptr");
     }
-    return bytestream_extract_u8(bs);
+    return (enum type_control_mode)bytestream_extract_u8(bs);
 }
