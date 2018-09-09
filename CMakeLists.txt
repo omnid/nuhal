@@ -16,10 +16,10 @@
 cmake_minimum_required(VERSION 3.9)
 project(common C)
 
-# touch build_info.h so any file including it gets recompiled
-add_custom_target(build_info ALL
-  COMMAND ${CMAKE_COMMAND} -E touch "${PROJECT_SOURCE_DIR}/include/common/build_info.h"
-  COMMENT "Updating build_info.h"
+# touch timestamp.h so any file including it gets recompiled
+add_custom_target(timestamp ALL
+  COMMAND ${CMAKE_COMMAND} -E touch "${PROJECT_SOURCE_DIR}/include/common/timestamp.h"
+  COMMENT "Updating timestamp.h"
   )
 
 # Add files that are compiled for any platform
@@ -27,7 +27,7 @@ add_library(common
   utilities.c uart.c time.c queue.c error.c
   motor.c protocol.c bytestream.c pid.c delta_robot.c
   parameters.c encoder.c type.c matrix.c)
-add_dependencies(common build_info)
+add_dependencies(common timestamp)
 
 # host-specific sources
 target_sources(common PRIVATE
