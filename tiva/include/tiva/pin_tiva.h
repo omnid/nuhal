@@ -4,6 +4,7 @@
 /// various peripherals and for manipulating them as GPIO
 #include<stdint.h>
 #include<stdbool.h>
+#include "driverlib/pin_map.h"
 
 /// @brief the type of pin to setup
 enum pin_type

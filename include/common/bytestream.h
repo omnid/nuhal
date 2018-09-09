@@ -86,8 +86,8 @@ void bytestream_inject_string(struct bytestream * bs, const char * str);
 /// followed by a null character to store in str. if the end of the stream
 /// is reached without a null character an error will be issued
 /// @param str - where the string is to be stored.
-/// @param len - the length of output string including '\0' no more than len-1
-/// characters will be read from the bytestream.  
+/// @param len - the max length of the output string including '\0'.
+///              no more than len-1 characters will be read from the bytestream.  
 /// @post it is an error if full string in the bytestream does not fit in str
 void bytestream_extract_string(struct bytestream * bs, char str[], size_t len);
 

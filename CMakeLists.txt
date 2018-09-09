@@ -16,11 +16,18 @@
 cmake_minimum_required(VERSION 3.9)
 project(common C)
 
+# touch build_info.h so any file including it gets recompiled
+add_custom_target(build_info ALL
+  COMMAND ${CMAKE_COMMAND} -E touch "${PROJECT_SOURCE_DIR}/include/common/build_info.h"
+  COMMENT "Updating build_info.h"
+  )
+
 # Add files that are compiled for any platform
 add_library(common
   utilities.c uart.c time.c queue.c error.c
   motor.c protocol.c bytestream.c pid.c delta_robot.c
   parameters.c encoder.c type.c matrix.c)
+add_dependencies(common build_info)
 
 # host-specific sources
 target_sources(common PRIVATE
@@ -44,7 +51,7 @@ set_source_files_properties(tiva/isr_tiva.c tiva/error_tiva.c
   PROPERTIES COMPILE_FLAGS $<$<C_COMPILER_ID:TI>:-pds=1463>)
 
 # on the embedded platform, linking against common provides the proper linker script
-target_link_libraries(common PUBLIC
+target_link_libraries(common PUBLIC 
   $<$<PLATFORM_ID:arm-none-eabi>: mytivaware
     $<$<C_COMPILER_ID:TI>:${PROJECT_SOURCE_DIR}/tiva/tiva_ti_cgt.cmd>
     $<$<C_COMPILER_ID:GNU>:-lm -Wl,-T${PROJECT_SOURCE_DIR}/tiva/tiva_arm_gcc.lds>
