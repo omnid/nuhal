@@ -203,7 +203,7 @@ void uart_close(const struct uart_port * port)
 {
     if(!port)
     {
-        error(FILE_LINE, "Null pointer");
+        error(FILE_LINE, "NULL ptr");
     }
     UARTFIFODisable(port->base);
     UARTDisable(port->base);
@@ -214,6 +214,10 @@ void uart_close(const struct uart_port * port)
 
 bool uart_wait_for_data(const struct uart_port * port, uint32_t timeout)
 {
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
     struct time_elapsed_ms stamp = time_elapsed_ms_init();
     while(!UARTCharsAvail(port->base))
     {
@@ -227,5 +231,27 @@ bool uart_wait_for_data(const struct uart_port * port, uint32_t timeout)
 
 bool uart_data_available(const struct uart_port * port)
 {
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
     return UARTCharsAvail(port->base);
+}
+
+void uart_send_break(const struct uart_port * port, uint32_t timeout)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    UARTBreakCtl(port->base, true);
+    if(timeout < 2)
+    {
+        time_delay_ms(2);
+    }
+    else
+    {
+        time_delay_ms(timeout/2);
+    }
+    UARTBreakCtl(port->base, false);
 }
