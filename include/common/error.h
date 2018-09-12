@@ -35,6 +35,11 @@ void error(const char * fileline, const char * msg) __attribute__((noreturn));
 /// which can be overridden by specific applications
 void error_handler(const char * fileline, const char * msg, const void * data); 
 
+/// @brief a platform-dependent function that handles when an error occurs 
+/// within the error handler.  This function SHOULD NOT call any function
+/// that might call error
+void error_handler_fatal(const char * fileline, const char * msg);
+   
 /// @brief display an error message corresponding to the errno that is set
 ///  and exit the program
 /// @param fileline: the FILE_LINE macro, current file and line number

@@ -26,3 +26,11 @@ void error_handler(__attribute__((unused)) const char * fileline,
     }
 }
 
+__attribute__((weak))
+void error_handler_fatal(__attribute__((unused)) const char * fileline,
+                         __attribute__((unused)) const char * msg)
+{
+    for(;;)
+    {
+    }
+}
