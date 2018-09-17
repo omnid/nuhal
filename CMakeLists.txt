@@ -25,7 +25,7 @@ add_custom_target(timestamp ALL
 # Add files that are compiled for any platform
 add_library(common
   utilities.c uart.c time.c queue.c error.c
-  motor.c protocol.c bytestream.c pid.c delta_robot.c
+  motor.c bytestream.c pid.c delta_robot.c
   parameters.c encoder.c type.c matrix.c)
 add_dependencies(common timestamp)
 
