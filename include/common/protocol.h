@@ -19,14 +19,6 @@ extern "C" {
 /// units of ms
 #define PROTOCOL_TIMEOUT_DEFAULT 200u
 
-/// repreresents a major.minor version
-struct protocol_version
-{
-    char id[16];    // an identifier
-    uint8_t major; // major version
-    uint8_t minor; // minor version
-};
-
 /// @brief the communications packet that is sent between processors
 /// To build a protocol_packet
 /// 1. call protocol_packet_init
@@ -151,17 +143,6 @@ void protocol_broadcast(const struct uart_port * const ports[],
                         bool all,
                         uint32_t timeout);
 
-/// @brief serialize the protocol version
-/// @param bs - the bytestream
-/// @param vs - the version
-void protocol_inject_version(struct bytestream * bs,
-                             const struct protocol_version * vs);
-
-/// @brief deserialize the protocol version
-/// @param bs - the bytestream
-/// @param vs - the version
-void protocol_extract_version(struct bytestream * bs,
-                              struct protocol_version * vs);
 #ifdef __cplusplus
 }
 #endif
