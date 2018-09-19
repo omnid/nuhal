@@ -658,3 +658,8 @@ void motor_current_set(struct motor_port * port, float current)
     // current command is in 10 ma units
     motor_command_i32_nonblock(port, "GC", current * 100.0f, false);
 }
+
+void motor_torque_set(struct motor_port * port, float newton_meters)
+{
+    motor_current_set(port, newton_meters/(MOTOR_TORQUE_CONSTANT*(float)MOTOR_GEAR_RATIO));
+}

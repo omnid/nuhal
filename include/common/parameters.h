@@ -1,10 +1,11 @@
 #ifndef COMMON_PARAMETERS_INCLUDE_GUARD_H
 #define COMMON_PARAMETERS_INCLUDE_GUARD_H
 /// @brief store general parameters that are useful to the whole system
+#include "common/utilities.h"
 
 /// @brief joint limits for the arm angle
-extern const float PARAMETERS_ARM_MIN_RAD;
-extern const float PARAMETERS_ARM_MAX_RAD;
+#define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(10.0f)
+#define PARAMETERS_ARM_MAX_RAD DEGREES_TO_RADIANS(80.0f)
 
 /// @brief maximum velocity of the arm
 #define PARAMETERS_ARM_MAX_RAD_SEC 10.0f
@@ -16,10 +17,10 @@ extern const float PARAMETERS_ARM_MAX_RAD;
 /// so limits are x (-PARAMETERS_WORK_X_MM,LIMIT_WORK_X_M)
 /// so limits are y (-PARAMETERS_WORK_Y_MM,LIMIT_WORK_Y_M)
 /// so limits are y (-PARAMETERS_WORK_Z_MIN_MM,LIMIT_WORK_Z_MAX_M)
-extern const float PARAMETERS_WORK_X_M;
-extern const float PARAMETERS_WORK_Y_M;
-extern const float PARAMETERS_WORK_Z_MIN_M;
-extern const float PARAMETERS_WORK_Z_MAX_M;
+#define PARAMETERS_WORK_X_M 0.070f
+#define PARAMETERS_WORK_Y_M 0.070f
+#define PARAMETERS_WORK_Z_MIN_M 0.2f
+#define PARAMETERS_WORK_Z_MAX_M 0.36f
 
 /// physical parameters of the delta robot
 #define PARAMETERS_DELTA_BASE_RADIUS  0.17f
@@ -35,4 +36,16 @@ extern const float PARAMETERS_WORK_Z_MAX_M;
 
 /// mass of the robot above the spring, in kg, excluding the gimbal
 #define PARAMETERS_CALIBRATION_SPRUNG_MASS 0.9f
+
+
+/// Frequencies for some control loop
+
+/// @brief joint control loop in hz. The speed of this loop is limited
+/// by the speed of the motor firmware.
+/// it can take up to 2 ms to get a response for
+/// a motor command.  It could be possible to circumvent this limitation by
+/// not waiting for the response; however, the commands would then fill the
+/// motor's queue and be buffered, which does not help much
+#define PARAMETERS_JOINT_CONTROL_HZ 800u
+
 #endif

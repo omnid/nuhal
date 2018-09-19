@@ -142,9 +142,17 @@ void motor_mode_current(struct motor_port * port);
 /// MOTOR_MAX_AMPS.
 void motor_current_set(struct motor_port * port, float current);
 
+/// @brief set the commanded torque to the motor at the output of the gearbox.
+/// must be in current control mode
+/// @param port - the motor port
+/// @param newton_meters - motor torque
+void motor_torque_set(struct motor_port * port, float newton_meters);
+
 // actual max speed is 60, 
 #define MOTOR_MAX_REV_SEC  60.0f
 /// actual motor max amps is 6
 #define MOTOR_MAX_AMPS 6.0f
 
+/// units are Nm/A
+#define MOTOR_TORQUE_CONSTANT 0.4f
 #endif

@@ -13,17 +13,6 @@ enum type_processor_id
     TYPE_GC_1 /// gimbal controller 1
 };
 
-enum type_control_mode
-{
-    // control is handled by directly setting velocity on the motors
-    TYPE_CONTROL_MODE_MOTOR_VELOCITY,
-    // control is handled by controlling velocity after the spring
-    TYPE_CONTROL_MODE_AFTER_VELOCITY,
-    // control is handled by directly setting current on the motors
-    TYPE_CONTROL_MODE_MOTOR_CURRENT,
-    // control is handled by controlling the torque after the spring
-    TYPE_CONTROL_MODE_AFTER_TORQUE,
-};
 
 /// @brief the position of the end effector platform
 struct type_linear_position
@@ -238,16 +227,6 @@ void type_inject_led_color(struct bytestream * bs, enum type_led_color color);
 enum type_led_color type_extract_led_color(struct bytestream * bs);
 
 
-/// @brief serialize the control mode
-/// @param bs - the bytestream
-/// @param mode - the control mode
-void type_inject_control_mode(struct bytestream * bs,
-                              enum type_control_mode mode);
-
-/// @brief deserialize the control mode
-/// @param bs - the bytestream
-/// @return the control mode
-enum type_control_mode type_extract_control_mode(struct bytestream * bs);
 #ifdef __cplusplus
 }
 #endif

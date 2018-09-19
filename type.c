@@ -141,6 +141,10 @@ void type_extract_linear_force(struct bytestream * bs,
 void type_inject_joint_encoders(struct bytestream * bs,
                                 const struct type_joint_encoders * enc)
 {
+    if(!bs || !enc)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
     bytestream_inject_u32(bs, enc->before_raw);
     bytestream_inject_f(bs, enc->before_radians);
     bytestream_inject_u32(bs, enc->after_raw);
@@ -153,6 +157,10 @@ void type_inject_joint_encoders(struct bytestream * bs,
 void type_extract_joint_encoders(struct bytestream * bs,
                                  struct type_joint_encoders * out)
 {
+    if(!bs || !out)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
     out->before_raw = bytestream_extract_u32(bs);
     out->before_radians = bytestream_extract_f(bs);
     out->after_raw = bytestream_extract_u32(bs);
@@ -223,24 +231,3 @@ enum type_led_color type_extract_led_color(struct bytestream * bs)
     return color;
 }
 
-void type_inject_control_mode(struct bytestream * bs,
-                              enum type_control_mode mode)
-{
-    if(!bs)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    bytestream_inject_u8(bs, mode);
-}
-
-/// @brief deserialize the control mode
-/// @param bs - the bytestream
-/// @return the control mode
-enum type_control_mode type_extract_control_mode(struct bytestream * bs)
-{
-    if(!bs)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    return (enum type_control_mode)bytestream_extract_u8(bs);
-}

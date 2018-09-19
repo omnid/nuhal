@@ -26,7 +26,7 @@ add_custom_target(timestamp ALL
 add_library(common
   utilities.c uart.c time.c queue.c error.c
   motor.c bytestream.c pid.c delta_robot.c
-  parameters.c encoder.c type.c matrix.c)
+  encoder.c type.c matrix.c)
 add_dependencies(common timestamp)
 
 # host-specific sources
