@@ -178,8 +178,8 @@ void pin_write(uint32_t pin, bool value)
 
 bool pin_read(uint32_t pin)
 {
-    const uint32_t base = pin_base(pin_port(pin));
-    const uint32_t mask = pin_mask(pin_number(pin));
+    const uint32_t base = pin_base(pin);
+    const uint32_t mask = pin_mask(pin);
     return GPIOPinRead(base, mask) & 0xFF;
 }
 
