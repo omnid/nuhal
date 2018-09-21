@@ -31,7 +31,8 @@ static const struct uart_port ports[] = {
     {UART7_BASE, SYSCTL_PERIPH_UART7, INT_UART7}
 };
 
-
+// number of bytes in the fifo
+#define UART_FIFO_DEPTH 16
 
 void uart_passthrough(const struct uart_port * port1,
                       const struct uart_port * port2)
@@ -144,6 +145,20 @@ const struct uart_port * uart_open(const char name[], unsigned int baud,
             error(FILE_LINE, "Flow control not implemented on this uart");
         }
     }
+
+    // flush the uart by attempting to read from it atlest UART_FIFO_DEPTH t
+    /// because of how things startup, sometimes there can be spurious
+    /// data and even framing errors, which we need to remove and clear.
+    /// NOTE: this replaces code that simply delayed 500ms for all electrical
+    /// transients to settle out prior to starting the uart
+    for(int nflushed = 0; nflushed != UART_FIFO_DEPTH; ++nflushed)
+    {
+        if(UARTCharsAvail(ports[pindex].base))
+        {
+            (void)UARTCharGetNonBlocking(ports[pindex].base);
+        }
+    }
+    UARTRxErrorClear(ports[pindex].base);
 
     return &ports[pindex];
 }
