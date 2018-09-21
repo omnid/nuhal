@@ -3,6 +3,21 @@
 /// @brief types that are commonly used/shared by multiple modules
 #include<stdint.h>
 
+/// Types of control efforts
+enum type_control_effort
+{
+    // control effort for the joint corresponds to motor velocity
+    TYPE_CONTROL_EFFORT_MOTOR_VELOCITY,
+    // control effort for the joint corresponds to motor torque
+    TYPE_CONTROL_EFFORT_MOTOR_TORQUE,
+
+    /// control is handled by setting the arm velocity (after the spring)
+    TYPE_CONTROL_EFFORT_ARM_VELOCITY,
+
+    /// control is handled by setting the arm torque (after the spring
+    TYPE_CONTROL_EFFORT_ARM_TORQUE,
+};
+
 /// @brief identifier for the processor
 enum type_processor_id
 {
@@ -226,7 +241,11 @@ void type_inject_led_color(struct bytestream * bs, enum type_led_color color);
 /// @return the color that was stored in the bytestream
 enum type_led_color type_extract_led_color(struct bytestream * bs);
 
+/// @brief deserialize control effort from the bytestream
+enum type_control_effort type_control_effort_extract(struct bytestream * bs);
 
+/// @brief serialize control effort to the bytestream
+void type_control_effort_inject(struct bytestream * bs, enum type_control_effort ef);
 #ifdef __cplusplus
 }
 #endif

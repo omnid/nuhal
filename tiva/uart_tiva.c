@@ -31,9 +31,6 @@ static const struct uart_port ports[] = {
     {UART7_BASE, SYSCTL_PERIPH_UART7, INT_UART7}
 };
 
-// number of bytes in the fifo
-#define UART_FIFO_DEPTH 16
-
 void uart_passthrough(const struct uart_port * port1,
                       const struct uart_port * port2)
 {
@@ -146,21 +143,18 @@ const struct uart_port * uart_open(const char name[], unsigned int baud,
         }
     }
 
-    // flush the uart by attempting to read from it atlest UART_FIFO_DEPTH t
-    /// because of how things startup, sometimes there can be spurious
-    /// data and even framing errors, which we need to remove and clear.
+    // flush the uart to eliminate any spurious data
     /// NOTE: this replaces code that simply delayed 500ms for all electrical
     /// transients to settle out prior to starting the uart
 
-    for(int nflushed = 0; nflushed != UART_FIFO_DEPTH; ++nflushed)
+    /// time for a single character to arrive, in us, assuming 10 bits
+    /// per byte (byte + 1 stop and 1 start bit)
+    const uint32_t byte_us = 10000000/baud;
+    time_delay_us(byte_us);
+    while(UARTCharsAvail(ports[pindex].base))
     {
-        // wait for there to have been enough time for 1 byte to have been sent
-        // we include 10 bits per byte to include the start and stop bits
-        time_delay_us(1000000/(baud/10));
-        if(UARTCharsAvail(ports[pindex].base))
-        {
-            (void)UARTCharGetNonBlocking(ports[pindex].base);
-        }
+        (void)UARTCharGetNonBlocking(ports[pindex].base);
+        time_delay_us(byte_us);
     }
     UARTRxErrorClear(ports[pindex].base);
 

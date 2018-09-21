@@ -231,3 +231,13 @@ enum type_led_color type_extract_led_color(struct bytestream * bs)
     return color;
 }
 
+
+enum type_control_effort type_control_effort_extract(struct bytestream * bs)
+{
+    return (enum type_control_effort)bytestream_extract_u8(bs);
+}
+
+void type_control_effort_inject(struct bytestream * bs, enum type_control_effort ef)
+{
+    bytestream_inject_u8(bs, ef);
+}
