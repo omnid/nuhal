@@ -151,8 +151,12 @@ const struct uart_port * uart_open(const char name[], unsigned int baud,
     /// data and even framing errors, which we need to remove and clear.
     /// NOTE: this replaces code that simply delayed 500ms for all electrical
     /// transients to settle out prior to starting the uart
+
     for(int nflushed = 0; nflushed != UART_FIFO_DEPTH; ++nflushed)
     {
+        // wait for there to have been enough time for 1 byte to have been sent
+        // we include 10 bits per byte to include the start and stop bits
+        time_delay_us(1000000/(baud/10));
         if(UARTCharsAvail(ports[pindex].base))
         {
             (void)UARTCharGetNonBlocking(ports[pindex].base);
