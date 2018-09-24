@@ -12,6 +12,7 @@ enum pin_type
     PIN_UART,        /// uart
     PIN_OUTPUT,      /// gpio output
     PIN_INPUT,       /// gpio input
+    PIN_INPUT_PULL_UP, /// gpio input with internal pull-up resistor
     PIN_CAN,         /// can bus
     PIN_SSI         /// ssi
 };

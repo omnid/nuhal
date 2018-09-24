@@ -144,6 +144,12 @@ static void pin_configure(uint32_t pin, enum pin_type type)
         break;
     case PIN_INPUT:
         GPIOPinTypeGPIOInput(base, mask);
+        GPIODirModeSet(base, mask, GPIO_DIR_MODE_IN);
+        break;
+    case PIN_INPUT_PULL_UP:
+        GPIOPinTypeGPIOInput(base, mask);
+        GPIODirModeSet(base, mask, GPIO_DIR_MODE_IN);
+        GPIOPadConfigSet(base, mask, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
         break;
     case PIN_CAN:
         GPIOPinConfigure(pin);
