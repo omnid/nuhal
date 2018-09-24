@@ -116,8 +116,8 @@ static void pin_configure(uint32_t pin, enum pin_type type)
     // PINS PC0, PC1, PC2, and PC3 are the JTAG pins.  They are locked.
     // This function will not automatically unlock them and instead trigger
     // an error. Users should explicitly unlock and change the function of these
-    // pins, as changing their values can disable JTAG and require
-    // using LMFlashProgrammer to execute a JTAG unlock sequence.
+    // pins using tivaware, as changing their values disables JTAG and may
+    // require using LMFlashProgrammer to execute a JTAG unlock sequence.
     if(port == 2 && number <= 3)
     {
         error(FILE_LINE, "Will not change JTAG pins");
@@ -141,6 +141,9 @@ static void pin_configure(uint32_t pin, enum pin_type type)
     case PIN_OUTPUT:   /// gpio output
         // outputs don't get pin configured
         GPIOPinTypeGPIOOutput(base, mask);
+        break;
+    case PIN_INPUT:
+        GPIOPinTypeGPIOInput(base, mask);
         break;
     case PIN_CAN:
         GPIOPinConfigure(pin);
