@@ -13,28 +13,47 @@ struct uart_port;
 /// @brief types of flow control
 enum uart_flow
 {
-    UART_FLOW_HARDWARE, /// use hardware flow control
-    UART_FLOW_SOFTWARE, /// use software Xon/Xoff flow control
-      ///NOTE: on most platforms software flow control is unimplimented
-    UART_FLOW_NONE /// do not use flow control
+    /// use hardware flow control
+    UART_FLOW_HARDWARE, 
+
+    /// use software Xon/Xoff flow control
+    ///NOTE: on most platforms software flow control is unimplimented
+    UART_FLOW_SOFTWARE,
+
+    /// do not use flow control
+    UART_FLOW_NONE 
 };
 
 /// @brief types of parity
 enum uart_parity
 {
-    UART_PARITY_NONE, /// do note use parity checking
-    UART_PARITY_ODD,  /// odd parity
-    UART_PARITY_EVEN  /// even parity
+    /// do not use parity checking
+    UART_PARITY_NONE,
+
+    /// odd parity
+    UART_PARITY_ODD,  
+
+    /// even parity
+    UART_PARITY_EVEN  
 };
 
 /// @brief types of termination sequences to look for when doing blocking reads
 enum uart_term
 {
-    UART_TERM_NONE,  /// no termination character
-    UART_TERM_LF,   /// line-feed '\n' character ends the read
-    UART_TERM_CR,   /// carriage return '\r' character ends the read
-    UART_TERM_CR_OR_LF, // either a '\r' or a '\n' ends the read
-    UART_TERM_NULL, /// Null character terminates the read
+    /// no termination character
+    UART_TERM_NONE,
+
+    /// line-feed '\n' character ends the read
+    UART_TERM_LF,
+
+    /// carriage return '\r' character ends the read
+    UART_TERM_CR,
+
+    /// either a '\r' or a '\n' ends the read
+    UART_TERM_CR_OR_LF,
+
+    /// Null character terminates the read
+    UART_TERM_NULL, 
 };
 
 #ifdef __cplusplus
