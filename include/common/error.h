@@ -2,6 +2,7 @@
 #define COMMON_ERROR_H_INCLUDE_GUARD
 
 /// @brief platform-independent error handling code
+/// @file
 ///  The error handling behavior for this project is to
 ///  Notify the user and exit the program. On a microcontroller
 ///  we may loop infinitely to preserve state instead of exiting
@@ -31,6 +32,7 @@ void error(const char * fileline, const char * msg) __attribute__((noreturn));
 /// @param fileline - filename and line-number where the error was triggered
 /// @param msg - custom additional message
 /// @param data - additional data, as provided to error_setup
+/// @details
 /// The platform may provide a generic weak version of the error_handler
 /// which can be overridden by specific applications
 void error_handler(const char * fileline, const char * msg, const void * data); 

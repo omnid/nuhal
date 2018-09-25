@@ -1,5 +1,6 @@
 #ifndef COMMON_UTILITIES_H
 #define COMMON_UTILITIES_H
+/// @file
 /// @brief commonly useful c utilities
 #include<stdint.h>
 #include <stddef.h>

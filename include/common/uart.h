@@ -3,7 +3,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-///@brief generic interface to a uart,
+/// @file
+/// @brief generic interface to a uart,
 /// implemented with different uart_<platform>.c files
 
 /// @brief a description of the port
