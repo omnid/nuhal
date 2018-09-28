@@ -53,6 +53,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
                                    enum uart_flow flow, enum uart_parity parity)
 {
     static bool first_run = true;
+    // set an at_exit function to automatically close all uart ports on exit
     if(first_run)
     {
         first_run = false;
@@ -101,10 +102,13 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         error_with_errno(FILE_LINE);
     }
 
-    // set an at_exit function to automatically close the port
 
     struct termios tio;
-    memcpy(&tio, &port->old_tio, sizeof(tio)); // start from the original settings
+    // retrieve the original settings and save them
+    if(0 != tcgetattr(port->fd, &port->old_tio) )
+    {
+        error_with_errno(FILE_LINE);
+    }
 
     tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
 
@@ -114,10 +118,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     // set raw output mode
     tio.c_oflag &= ~OPOST;
 
-    // set the baud rate. To use a custom baud rate would require
-    // termios2 defined in asm/termios.h.  This is not well documented
-    // so unless absolutely necessary I will restrict us to standard baud rates.
-    // If one you need is not supported but has a constant, add it to the switch statement below
+    tio.c_cflag |= B38400;
     speed_t stdbaud = 0;
     switch(baud)
     {
@@ -180,19 +181,21 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         break;
     }
 
-    // all modes use 8 data bits
-    tio.c_cflag &= ~CSIZE;
-    tio.c_cflag |= CS8;
+    if(cfsetospeed(&tio, stdbaud) != 0)
+    {
+        error_with_errno(FILE_LINE);
+    }
 
     if(cfsetispeed(&tio, stdbaud) != 0)
     {
         error_with_errno(FILE_LINE);
     }
 
-    if(cfsetospeed(&tio, stdbaud) != 0)
-    {
-        error_with_errno(FILE_LINE);
-    }
+
+    // all modes use 8 data bits
+    tio.c_cflag &= ~CSIZE;
+    tio.c_cflag |= CS8;
+
 
     // set serial port options
     if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
