@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <string.h>
 
-/// @brief implements some uart functions in a platform independent manner
-
-int uart_read_block(const struct uart_port * port, void * data, size_t len,
-                    uint32_t timeout, enum uart_term term)
+int uart_read_block_error(const struct uart_port * port, void * data,
+                          size_t len, uint32_t timeout,
+                          enum uart_term term,
+                          bool timeout_error)
 {
     // if we try to wait for 0 data to be available we will wait forever
     // if the user is trying to read 0 bytes, then we have done that
@@ -67,8 +67,17 @@ int uart_read_block(const struct uart_port * port, void * data, size_t len,
         }
     }
     // if we get here we have timed out
-    error(FILE_LINE, "Timeout on blocking read.");
-    return -1;
+    if(timeout_error)
+    {
+        error(FILE_LINE, "Timeout on blocking read.");
+    }
+    return read;
+}
+
+int uart_read_block(const struct uart_port * port, void * data,
+                    size_t len, uint32_t timeout, enum uart_term term)
+{
+    return uart_read_block_error(port, data, len, timeout, term, false);
 }
 
 int uart_write_block(const struct uart_port * port, const void * data,
