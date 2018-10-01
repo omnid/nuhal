@@ -89,7 +89,7 @@ static void motor_command_generic_send(struct motor_port * port,
         error(FILE_LINE, "null ptr");
     }
 
-    // even if awaiting response, still allow the stop command, 
+    // even if awaiting response, still allow the stop command, via SK or GC
     if(port->awaiting_response
        && !(cmd[0] == 'S' && cmd[1] == 'K')
        && !(cmd[0] == 'G' && cmd[1] == 'C' && 1 == nargs && 0 == *(int32_t*)arg)
