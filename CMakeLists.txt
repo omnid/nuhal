@@ -71,7 +71,8 @@ target_include_directories(common PUBLIC
 #gnuinstalldirs defines CMAKE_INSTAL_xxxx directories
 include(GNUInstallDirs)
 
-# add platform specific files
+# add platform specific files. Basically we need to only do an install
+# for the host target
 if(${CMAKE_SYSTEM_NAME} STREQUAL ${CMAKE_HOST_SYSTEM_NAME})
 
   # add include directories for host-specific extensions
