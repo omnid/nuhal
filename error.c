@@ -16,11 +16,12 @@ void error_with_errno(const char * fileline)
     error(fileline, strerror(errno));
 }
 
+// sometimes an error somewhere else can trigger another
+// error message. we want to stop recursive error calls
+static bool error_called = false;
+
 void error(const char * fileline, const char * msg)
 {
-    // sometimes an error somewhere else can trigger another
-    // error message. we want to stop recursive error calls
-    static bool error_called = false;
     static bool fatal_error_called = false;
     if(!error_called)
     {
@@ -41,3 +42,8 @@ void error(const char * fileline, const char * msg)
     exit(EXIT_FAILURE);
 }
 
+
+bool error_pending(void)
+{
+    return error_called;
+}
