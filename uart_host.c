@@ -109,6 +109,8 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     {
         error_with_errno(FILE_LINE);
     }
+    // start with the old settings
+    tio = port->old_tio;
 
     tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
 
@@ -118,7 +120,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     // set raw output mode
     tio.c_oflag &= ~OPOST;
 
-    tio.c_cflag |= B38400;
+    // set the baud rate
     speed_t stdbaud = 0;
     switch(baud)
     {
@@ -181,6 +183,10 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         break;
     }
 
+    // all modes use 8 data bits
+    tio.c_cflag &= ~CSIZE;
+    tio.c_cflag |= CS8;
+
     if(cfsetospeed(&tio, stdbaud) != 0)
     {
         error_with_errno(FILE_LINE);
@@ -191,23 +197,11 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         error_with_errno(FILE_LINE);
     }
 
-
-    // all modes use 8 data bits
-    tio.c_cflag &= ~CSIZE;
-    tio.c_cflag |= CS8;
-
-
     // set serial port options
     if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
     {
         error_with_errno(FILE_LINE);
     }
-
-    // when using a USB serial driver, the driver does not fill
-    // the uart buffer with data it has already received right away.
-    // therefore, we need to delay after opening the port in order
-    // to ensure that the buffers are flushed properly
-    usleep(5000);
 
     // flush serial buffers
     if(tcflush(port->fd, TCIOFLUSH) != 0)
