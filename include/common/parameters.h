@@ -20,7 +20,7 @@
 #define PARAMETERS_WORK_X_M 0.070f
 #define PARAMETERS_WORK_Y_M 0.070f
 #define PARAMETERS_WORK_Z_MIN_M 0.20f
-#define PARAMETERS_WORK_Z_MAX_M 0.41f
+#define PARAMETERS_WORK_Z_MAX_M 0.45f
 
 /// physical parameters of the delta robot (in meters)
 #define PARAMETERS_DELTA_BASE_RADIUS  0.17f
