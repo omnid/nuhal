@@ -109,8 +109,6 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     {
         error_with_errno(FILE_LINE);
     }
-    // start with the old settings
-    tio = port->old_tio;
 
     tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
 
@@ -202,6 +200,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     {
         error_with_errno(FILE_LINE);
     }
+
 
     // flush serial buffers
     if(tcflush(port->fd, TCIOFLUSH) != 0)
