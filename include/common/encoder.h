@@ -37,6 +37,7 @@ struct encoder
     enum encoder_orientation orientation;
 };
 
+/// @brief raw data from an encoder
 struct encoder_raw
 {
     // multi has a resolution of 1 tick per revolution
@@ -57,9 +58,11 @@ extern "C" {
 /// @brief normalize an encoder so that increasing ticks correspond
 /// to increasing angle and the zero angle and zero tick points are the same
 /// @param enc - encoder whose ticks we are to normalize
-/// @param ticks - the tick count of enc
-/// @return normalized encoder count ticksN:
-/// This means that
+/// @param raw - the raw count of enc
+/// @return normalized encoder ticks:
+///
+/// @detail
+/// The normalization means that
 /// 1. -ceil(enc->ticks_per_rev/2) <= ticksN <= floor(enc->ticks_per_rev/2)
 /// 1. ticksN == 0 -> ticks == enc-> zero_angle_ticks
 /// essentially this is a signed angle, centered at 0, in units of ticks
@@ -76,7 +79,7 @@ int32_t encoder_ticks(const struct encoder * enc, struct encoder_raw raw);
 float encoder_radians(const struct encoder * enc, int32_t ticks);
 
 /// @brief  This function answers the question:
-/// given that an ENCODERS raw count of X corresponds to Y radians,
+/// given that an ENCODER'S raw count of X corresponds to Y radians,
 /// what raw count corresponds to 0 radians?
 /// @param enc - the encoder
 /// @param raw count - the count of the encoder at a position

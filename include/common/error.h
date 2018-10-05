@@ -8,6 +8,7 @@
 ///  we may loop infinitely to preserve state instead of exiting
 
 #include "common/utilities.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,7 +48,8 @@ void error_handler_fatal(const char * fileline, const char * msg);
 /// @param fileline: the FILE_LINE macro, current file and line number
 void error_with_errno(const char * fileline) __attribute__((noreturn));
 
-
+/// @brief return true if an error is already pending, false otherwise
+bool error_pending(void);
 
 
 #ifdef __cplusplus

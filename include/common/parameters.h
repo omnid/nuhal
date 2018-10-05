@@ -4,7 +4,7 @@
 #include "common/utilities.h"
 
 /// @brief joint limits for the arm angle
-#define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(10.0f)
+#define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(-5.0f)
 #define PARAMETERS_ARM_MAX_RAD DEGREES_TO_RADIANS(80.0f)
 
 /// @brief maximum velocity of the arm
@@ -19,14 +19,14 @@
 /// so limits are y (-PARAMETERS_WORK_Z_MIN_MM,LIMIT_WORK_Z_MAX_M)
 #define PARAMETERS_WORK_X_M 0.070f
 #define PARAMETERS_WORK_Y_M 0.070f
-#define PARAMETERS_WORK_Z_MIN_M 0.2f
-#define PARAMETERS_WORK_Z_MAX_M 0.36f
+#define PARAMETERS_WORK_Z_MIN_M 0.20f
+#define PARAMETERS_WORK_Z_MAX_M 0.45f
 
-/// physical parameters of the delta robot
+/// physical parameters of the delta robot (in meters)
 #define PARAMETERS_DELTA_BASE_RADIUS  0.17f
 #define PARAMETERS_DELTA_PLATFORM_RADIUS  0.067f
 #define PARAMETERS_DELTA_LOWER_LEG_LENGTH 0.200f
-#define PARAMETERS_DELTA_UPPER_LEG_LENGTH 0.305f
+#define PARAMETERS_DELTA_UPPER_LEG_LENGTH 0.368f
 
 /// height of the calibration fixture (m)
 /// height of the fixture is .20489875 m
@@ -47,5 +47,8 @@
 /// not waiting for the response; however, the commands would then fill the
 /// motor's queue and be buffered, which does not help much
 #define PARAMETERS_JOINT_CONTROL_HZ 800u
+
+/// @brief frequency of the control loop on the main delta controller
+#define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
 
 #endif

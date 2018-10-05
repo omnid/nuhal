@@ -98,6 +98,16 @@ int uart_read_nonblock(const struct uart_port * port, void  * data, size_t len);
 int uart_read_block(const struct uart_port * port, void * data, size_t len,
                     uint32_t timeout, enum uart_term term);
 
+/// @brief blocking read of uart with extra options, @see uart_read_block.
+/// @param timeout_error - if true generate a timeout error on timeout
+///         if false, the function returns 0 on timeout error
+int uart_read_block_error(const struct uart_port * port,
+                          void * data,
+                          size_t len,
+                          uint32_t timeout,
+                          enum uart_term term,
+                          bool timeout_error);
+
 
 /// @brief non-blocking write data to uart. Up to len bytes will be written
 /// @param port - the port to write to. must be opened with uart_open
