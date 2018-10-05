@@ -4,7 +4,7 @@
 #include "common/utilities.h"
 
 /// @brief joint limits for the arm angle
-#define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(0.0f)
+#define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(-5.0f)
 #define PARAMETERS_ARM_MAX_RAD DEGREES_TO_RADIANS(80.0f)
 
 /// @brief maximum velocity of the arm
