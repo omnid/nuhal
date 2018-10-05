@@ -48,4 +48,7 @@
 /// motor's queue and be buffered, which does not help much
 #define PARAMETERS_JOINT_CONTROL_HZ 800u
 
+/// @brief frequency of the control loop on the main delta controller
+#define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
+
 #endif
