@@ -113,24 +113,15 @@ void matrix_4x3_3x1_multiply_vector(const struct matrix_4x3 * A,
 
     if(A->transpose)
     {
-        v->data[0] = A->data[0][0]*x->data[0] + A->data[1][0]*x->data[1]
-            + A->data[2][0]*x->data[2];
-        v->data[1] = A->data[0][1]*x->data[0] + A->data[1][1]*x->data[1]
-            + A->data[2][1]*x->data[2];
-        v->data[2] = A->data[0][2]*x->data[0] + A->data[1][2]*x->data[1]
-            + A->data[2][2]*x->data[2];
-        v->data[3] = A->data[0][3]*x->data[0] + A->data[1][3]*x->data[1]
-            + A->data[2][3]*x->data[2];
+        error(FILE_LINE, "Invalid shape");
     }
-    else
-    {
-        v->data[0] = A->data[0][0]*x->data[0] + A->data[0][1]*x->data[1]
-            + A->data[0][2]*x->data[2];
-        v->data[1] = A->data[1][0]*x->data[0] + A->data[1][1]*x->data[1]
-            + A->data[1][2]*x->data[2];
-        v->data[2] = A->data[2][0]*x->data[0] + A->data[2][1]*x->data[1]
-            + A->data[2][2]*x->data[2];
-        v->data[3] = A->data[3][0]*x->data[0] + A->data[3][1]*x->data[1]
-            + A->data[3][2]*x->data[2];
-    }
+
+    v->data[0] = A->data[0][0]*x->data[0] + A->data[0][1]*x->data[1]
+        + A->data[0][2]*x->data[2];
+    v->data[1] = A->data[1][0]*x->data[0] + A->data[1][1]*x->data[1]
+        + A->data[1][2]*x->data[2];
+    v->data[2] = A->data[2][0]*x->data[0] + A->data[2][1]*x->data[1]
+        + A->data[2][2]*x->data[2];
+    v->data[3] = A->data[3][0]*x->data[0] + A->data[3][1]*x->data[1]
+        + A->data[3][2]*x->data[2];
 }
