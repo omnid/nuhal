@@ -76,6 +76,14 @@ void matrix_4x3_3x1_multiply_vector(const struct matrix_4x3 * A,
                                     const struct matrix_3x1 * x,
                                     struct matrix_4x1 * v);
 
+/// @brief multiply a 3x4 matrix by a 4x1 vector
+/// @param A - the matrix (uses the 4x3 matrix struct with .transpose = true)
+/// @param x - the vector
+/// @param v - the output vector v = Ax
+void matrix_4x3T_4x1_multiply_vector(const struct matrix_4x3 * A,
+                                     const struct matrix_4x1 * x,
+                                     struct matrix_3x1 * v);
+
 #ifdef __cplusplus
 }
 #endif

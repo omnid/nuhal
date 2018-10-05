@@ -111,6 +111,7 @@ void matrix_4x3_3x1_multiply_vector(const struct matrix_4x3 * A,
         error(FILE_LINE, "NULL ptr");
     }
 
+    // Matrix cannot be a transpose, otherwise multiplication will not work
     if(A->transpose)
     {
         error(FILE_LINE, "Invalid shape");
@@ -124,4 +125,27 @@ void matrix_4x3_3x1_multiply_vector(const struct matrix_4x3 * A,
         + A->data[2][2]*x->data[2];
     v->data[3] = A->data[3][0]*x->data[0] + A->data[3][1]*x->data[1]
         + A->data[3][2]*x->data[2];
+}
+
+void matrix_4x3T_4x1_multiply_vector(const struct matrix_4x3 * A,
+                                     const struct matrix_4x1 * x,
+                                     struct matrix_3x1 * v)
+{
+  if(!A || !x || !v)
+  {
+      error(FILE_LINE, "NULL ptr");
+  }
+
+  // Matrix must be a transpose, otherwise multiplication will not work
+  if(!A->transpose)
+  {
+    error(FILE_LINE, "Invalid shape");
+  }
+
+  v->data[0] = A->data[0][0]*x->data[0] + A->data[1][0]*x->data[1]
+      + A->data[2][0]*x->data[2] + A->data[3][0]*x->data[3];
+  v->data[1] = A->data[0][1]*x->data[0] + A->data[1][1]*x->data[1]
+      + A->data[2][1]*x->data[2] + A->data[3][1]*x->data[3];
+  v->data[2] = A->data[0][2]*x->data[0] + A->data[1][2]*x->data[1]
+      + A->data[2][2]*x->data[2] + A->data[3][2]*x->data[3];
 }
