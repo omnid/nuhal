@@ -2,6 +2,7 @@
 #define COMMON_PARAMETERS_INCLUDE_GUARD_H
 /// @brief store general parameters that are useful to the whole system
 #include "common/utilities.h"
+#include "common/matrix.h"
 
 /// @brief joint limits for the arm angle
 #define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(-5.0f)
@@ -50,5 +51,27 @@
 
 /// @brief frequency of the control loop on the main delta controller
 #define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
+
+/// @brief Mobile base configuration
+#define WHEEL_RADIUS 0.1016
+#define BASE_LENGTH 0.2064
+#define BASE_WIDTH 0.2032
+
+/// @brief H matrix of mobile base
+struct matrix_4x3 H;
+matrix_4x3_init(&H,
+                (-BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, -1/WHEEL_RADIUS,
+                (BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, 1/WHEEL_RADIUS,
+                (BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, -1/WHEEL_RADIUS,
+                (-BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, 1/WHEEL_RADIUS);
+
+/// @brief Pseudoinverse of the H matrix. See Literature/vels_to_twist.nb to see calculation steps
+struct matrix_4x3 Hpinv;
+matrix_4x3_init(&Hpinv,
+                -0.0620117, 0.0254, -0.0254,
+                0.0620117, 0.0254, 0.0254,
+                0.0620117, 0.0254, -0.0254,
+                -0.0620117, 0.0254, 0.0254);
+Hpinv.transpose = true;
 
 #endif
