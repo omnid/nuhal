@@ -57,21 +57,8 @@
 #define BASE_LENGTH 0.2064
 #define BASE_WIDTH 0.2032
 
-/// @brief H matrix of mobile base
+/// @brief H matrix and it's pseudoinverse for the mobile base
 struct matrix_4x3 H;
-matrix_4x3_init(&H,
-                (-BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, -1/WHEEL_RADIUS,
-                (BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, 1/WHEEL_RADIUS,
-                (BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, -1/WHEEL_RADIUS,
-                (-BASE_LENGTH-BASE_WIDTH)/WHEEL_RADIUS, 1/WHEEL_RADIUS, 1/WHEEL_RADIUS);
-
-/// @brief Pseudoinverse of the H matrix. See Literature/vels_to_twist.nb to see calculation steps
 struct matrix_4x3 Hpinv;
-matrix_4x3_init(&Hpinv,
-                -0.0620117, 0.0254, -0.0254,
-                0.0620117, 0.0254, 0.0254,
-                0.0620117, 0.0254, -0.0254,
-                -0.0620117, 0.0254, 0.0254);
-Hpinv.transpose = true;
 
 #endif
