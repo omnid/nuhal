@@ -129,6 +129,18 @@ struct type_twist
   float vy;
 };
 
+struct type_wheel_velocities
+{
+  // Front left
+  float uFL;
+  // Front right
+  float uFR;
+  // Rear left
+  float uRL;
+  // Rear right
+  float uRR;
+};
+
 /// @brief colors for leds. lower 3 bits of an 8 bit byte
 /// correspond to the red, green, and blue leds being on (1) or off (0)
 enum type_led_color
