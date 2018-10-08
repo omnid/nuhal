@@ -81,7 +81,7 @@ struct type_angular_velocity
 /// @brief the position, velocity and force on a joint
 struct type_joint_state
 {
-    /// joint angle, in radians 
+    /// joint angle, in radians
     float radians;
 
     /// velocity, in rad/sec
@@ -120,6 +120,13 @@ struct type_delta_state
     struct type_linear_velocity platform_vel;
     // platform force
     struct type_linear_force platform_force;
+};
+
+struct type_twist
+{
+  float wz;
+  float vx;
+  float vy;
 };
 
 /// @brief colors for leds. lower 3 bits of an 8 bit byte
@@ -181,26 +188,26 @@ void type_extract_arm_state(struct bytestream * bs,
 
 
 /// @brief inject the linear position into a bytestream
-/// @param bs - the bytestream 
+/// @param bs - the bytestream
 /// @param lp - the struct to inject
 void type_inject_linear_position(struct bytestream * bs,
                                        const struct type_linear_position * lp);
 
 /// @brief extract linear position from a bytestream
-/// @param bs - the bytestream 
+/// @param bs - the bytestream
 /// @param lp [out] - the struct to extract
 void type_extract_linear_position(struct bytestream * bs,
                                         struct type_linear_position * lp);
 
 
 /// @brief inject the linear velocity into a bytestream
-/// @param bs - the bytestream 
+/// @param bs - the bytestream
 /// @param lp - the struct to inject
 void type_inject_linear_velocity(struct bytestream * bs,
                                        const struct type_linear_velocity * lp);
 
 /// @brief extract linear velocity from a bytestream
-/// @param bs - the bytestream 
+/// @param bs - the bytestream
 /// @param lp [out] - the struct to extract
 void type_extract_linear_velocity(struct bytestream * bs,
                                         struct type_linear_velocity * lp);
@@ -246,6 +253,16 @@ enum type_control_effort type_control_effort_extract(struct bytestream * bs);
 
 /// @brief serialize control effort to the bytestream
 void type_control_effort_inject(struct bytestream * bs, enum type_control_effort ef);
+
+/// @brief inject twist values into bytestream
+/// @param bs - the bytestream
+/// @param v - the twist to place in the bytestream
+void type_inject_twist(struct bytestream * bs, const struct type_twist * v);
+
+/// @brief etract twist values from the bytestream
+/// @param bs - the bytestream
+/// @param v - the output twist
+void type_extract_twist(struct bytestream * bs, struct type_twist * v);
 #ifdef __cplusplus
 }
 #endif
