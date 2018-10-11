@@ -129,16 +129,24 @@ struct type_twist
   float vy;
 };
 
-struct type_wheel_velocities
+struct type_omni_velocities
 {
   // Front left
-  float uFL;
-  // Front right
   float uFR;
+  // Front right
+  float uFL;
   // Rear left
-  float uRL;
-  // Rear right
   float uRR;
+  // Rear right
+  float uRL;
+};
+
+struct type_wheel_velocities
+{
+  // Right wheel
+  float right;
+  // Left wheel
+  float left;
 };
 
 /// @brief colors for leds. lower 3 bits of an 8 bit byte
@@ -275,6 +283,17 @@ void type_inject_twist(struct bytestream * bs, const struct type_twist * v);
 /// @param bs - the bytestream
 /// @param v - the output twist
 void type_extract_twist(struct bytestream * bs, struct type_twist * v);
+
+/// @brief extract wheel velocities from a single Tiva wheel board (data for two wheels only)
+/// @param bs - the bytestream
+/// @param u - the wheel velocities (rad/s)
+void type_inject_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u);
+
+/// @brief injects wheel velocities from a single Tiva wheel board (data for two wheels only)
+/// @param bs - the bytestream
+/// @param u - the wheel velocities (rad/s)
+void type_extract_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u);
+
 #ifdef __cplusplus
 }
 #endif

@@ -265,3 +265,25 @@ void type_extract_twist(struct bytestream * bs, struct type_twist * v)
   v->vx = bytestream_extract_f(bs);
   v->vy = bytestream_extract_f(bs);
 }
+
+void type_inject_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u)
+{
+  if(!bs || !u)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  bytestream_inject_f(bs, u->right);
+  bytestream_inject_f(bs, u->left);
+}
+
+void type_extract_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u)
+{
+  if(!bs || !u)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  u->right = bytestream_extract_f(bs);
+  u->left = bytestream_extract_f(bs);
+}
