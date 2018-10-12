@@ -54,8 +54,8 @@
 
 /// @brief Mobile base configuration
 #define WHEEL_RADIUS 0.1016
-#define BASE_LENGTH 0.2064
-#define BASE_WIDTH 0.2032
+#define OMNI_LENGTH 0.2064
+#define OMNI_WIDTH 0.2032
 
 /// @brief H matrix and it's pseudoinverse for the mobile base
 struct matrix_4x3 H;
