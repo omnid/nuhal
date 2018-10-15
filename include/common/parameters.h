@@ -51,4 +51,7 @@
 /// @brief frequency of the control loop on the main delta controller
 #define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
 
+/// @brief wheel control loop in hz. 
+#define PARAMETERS_WHEEL_CONTROL_HZ 400u
+
 #endif

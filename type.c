@@ -241,3 +241,25 @@ void type_control_effort_inject(struct bytestream * bs, enum type_control_effort
 {
     bytestream_inject_u8(bs, ef);
 }
+
+void type_inject_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u)
+{
+  if(!bs || !u)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  bytestream_inject_f(bs, u->right);
+  bytestream_inject_f(bs, u->left);
+}
+
+void type_extract_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u)
+{
+  if(!bs || !u)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  u->right = bytestream_extract_f(bs);
+  u->left = bytestream_extract_f(bs);
+}
