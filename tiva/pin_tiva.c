@@ -112,7 +112,7 @@ static void pin_configure(uint32_t pin, enum pin_type type)
 
     // enable the peripheral and perform the pin configuration
     tiva_peripheral_enable(sysctl_ports[port]);
- 
+
 
     // PINS PC0, PC1, PC2, and PC3 are the JTAG pins.  They are locked.
     // This function will not automatically unlock them and instead trigger
@@ -164,6 +164,10 @@ static void pin_configure(uint32_t pin, enum pin_type type)
         GPIOPinConfigure(pin);
         GPIOPinTypeQEI(base, mask);
         break;
+    case PIN_PWM:
+        GPIOPinConfigure(pin);
+        GPIOPinTypePWM(base, mask);
+        break;  
     default:
         error(FILE_LINE, "Invalid peripheral type");
         break;
