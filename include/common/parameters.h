@@ -2,6 +2,7 @@
 #define COMMON_PARAMETERS_INCLUDE_GUARD_H
 /// @brief store general parameters that are useful to the whole system
 #include "common/utilities.h"
+#include "common/matrix.h"
 
 /// @brief joint limits for the arm angle
 #define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(-5.0f)
@@ -65,7 +66,5 @@
 /// @brief H matrix and it's pseudoinverse for the mobile base
 struct matrix_4x3 H;
 struct matrix_4x3 Hpinv;
-
-#endif
 
 #endif

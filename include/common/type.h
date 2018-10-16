@@ -122,6 +122,25 @@ struct type_delta_state
     struct type_linear_force platform_force;
 };
 
+struct type_twist
+{
+  float wz;
+  float vx;
+  float vy;
+};
+
+struct type_omni_velocities
+{
+  // Front left
+  float uFR;
+  // Front right
+  float uFL;
+  // Rear left
+  float uRR;
+  // Rear right
+  float uRL;
+};
+
 /// @brief wheel velocities in rad/sec
 struct type_wheel_velocities
 {
@@ -253,6 +272,16 @@ enum type_control_effort type_control_effort_extract(struct bytestream * bs);
 
 /// @brief serialize control effort to the bytestream
 void type_control_effort_inject(struct bytestream * bs, enum type_control_effort ef);
+
+/// @brief inject twist values into bytestream
+/// @param bs - the bytestream
+/// @param v - the twist to place in the bytestream
+void type_inject_twist(struct bytestream * bs, const struct type_twist * v);
+
+/// @brief etract twist values from the bytestream
+/// @param bs - the bytestream
+/// @param v - the output twist
+void type_extract_twist(struct bytestream * bs, struct type_twist * v);
 
 /// @brief extract wheel velocities from a single Tiva wheel board (data for two wheels only)
 /// @param bs - the bytestream

@@ -242,6 +242,30 @@ void type_control_effort_inject(struct bytestream * bs, enum type_control_effort
     bytestream_inject_u8(bs, ef);
 }
 
+void type_inject_twist(struct bytestream * bs, const struct type_twist * v)
+{
+  if(!bs || !v)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  bytestream_inject_f(bs, v->wz);
+  bytestream_inject_f(bs, v->vx);
+  bytestream_inject_f(bs, v->vy);
+}
+
+void type_extract_twist(struct bytestream * bs, struct type_twist * v)
+{
+  if(!bs || !v)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  v->wz = bytestream_extract_f(bs);
+  v->vx = bytestream_extract_f(bs);
+  v->vy = bytestream_extract_f(bs);
+}
+
 void type_inject_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u)
 {
   if(!bs || !u)
