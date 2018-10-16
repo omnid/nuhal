@@ -37,6 +37,9 @@
 /// mass of the robot above the spring, in kg, excluding the gimbal
 #define PARAMETERS_CALIBRATION_SPRUNG_MASS 0.9f
 
+/// max wheel speed is 285 rpm - corresponds to sending a data byte of '127'
+#define PARAMETERS_WHEEL_MAX_SPEED 127u
+
 
 /// Frequencies for some control loop
 
