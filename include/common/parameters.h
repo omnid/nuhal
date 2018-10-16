@@ -57,4 +57,15 @@
 /// @brief wheel control loop in hz. 
 #define PARAMETERS_WHEEL_CONTROL_HZ 400u
 
+/// @brief Mobile base configuration
+#define WHEEL_RADIUS 0.1016
+#define OMNI_LENGTH 0.2064
+#define OMNI_WIDTH 0.2032
+
+/// @brief H matrix and it's pseudoinverse for the mobile base
+struct matrix_4x3 H;
+struct matrix_4x3 Hpinv;
+
+#endif
+
 #endif
