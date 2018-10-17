@@ -279,7 +279,7 @@ void type_inject_twist(struct bytestream * bs, const struct type_twist * v);
 
 /// @brief etract twist values from the bytestream
 /// @param bs - the bytestream
-/// @param v - the output twist
+/// @param v [out] - the output twist
 void type_extract_twist(struct bytestream * bs, struct type_twist * v);
 
 /// @brief extract wheel velocities from a single Tiva wheel board (data for two wheels only)
@@ -289,7 +289,7 @@ void type_inject_wheel_velocities(struct bytestream * bs, struct type_wheel_velo
 
 /// @brief injects wheel velocities from a single Tiva wheel board (data for two wheels only)
 /// @param bs - the bytestream
-/// @param u - the wheel velocities (rad/s)
+/// @param u [out] - the wheel velocities (rad/s)
 void type_extract_wheel_velocities(struct bytestream * bs, struct type_wheel_velocities * u);
 
 #ifdef __cplusplus
