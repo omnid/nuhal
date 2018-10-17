@@ -26,7 +26,7 @@ add_custom_target(timestamp ALL
 add_library(common
   utilities.c uart.c time.c queue.c error.c
   motor.c bytestream.c pid.c delta_robot.c
-  encoder.c type.c matrix.c)
+encoder.c type.c matrix.c omni_robot.c)
 add_dependencies(common timestamp)
 
 # host-specific sources
@@ -51,7 +51,7 @@ set_source_files_properties(tiva/isr_tiva.c tiva/error_tiva.c
   PROPERTIES COMPILE_FLAGS $<$<C_COMPILER_ID:TI>:-pds=1463>)
 
 # on the embedded platform, linking against common provides the proper linker script
-target_link_libraries(common PUBLIC 
+target_link_libraries(common PUBLIC
   $<$<PLATFORM_ID:arm-none-eabi>: mytivaware
     $<$<C_COMPILER_ID:TI>:${PROJECT_SOURCE_DIR}/tiva/tiva_ti_cgt.cmd>
     $<$<C_COMPILER_ID:GNU>:-lm -Wl,-T${PROJECT_SOURCE_DIR}/tiva/tiva_arm_gcc.lds>
