@@ -9,12 +9,14 @@
 /// @brief the type of pin to setup
 enum pin_type
 {
-    PIN_UART,        /// uart
-    PIN_OUTPUT,      /// gpio output
-    PIN_INPUT,       /// gpio input
-    PIN_INPUT_PULL_UP, /// gpio input with internal pull-up resistor
-    PIN_CAN,         /// can bus
-    PIN_SSI         /// ssi
+    PIN_UART,           /// uart
+    PIN_OUTPUT,         /// gpio output
+    PIN_INPUT,          /// gpio input
+    PIN_INPUT_PULL_UP,  /// gpio input with internal pull-up resistor
+    PIN_CAN,            /// can bus
+    PIN_SSI,            /// ssi
+    PIN_QEI,            /// qei
+    PIN_PWM             /// pwm
 };
 
 /// @param port - the port letter 'A' - 'F'
@@ -41,7 +43,7 @@ struct pin_configuration
 /// will issue an error if a pin is attempted to be configured more than once.
 void pin_setup(const struct pin_configuration table[], uint32_t length);
 
-/// @brief write the value to the pin. 
+/// @brief write the value to the pin.
 /// @param pin - PIN(port, pin number),
 /// the pin must be configured
 /// as an input or an output

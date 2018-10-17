@@ -143,9 +143,7 @@ struct type_omni_velocities
 
 struct type_wheel_velocities
 {
-  // Right wheel
   float right;
-  // Left wheel
   float left;
 };
 
