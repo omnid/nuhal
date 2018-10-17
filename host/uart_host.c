@@ -201,7 +201,6 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         error_with_errno(FILE_LINE);
     }
 
-
     // flush serial buffers
     if(tcflush(port->fd, TCIOFLUSH) != 0)
     {

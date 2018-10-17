@@ -69,6 +69,7 @@ void delta_robot_inverse_jacobian(const struct delta_robot * params,
 /// @param ang - the joint angles, in radians
 /// @param vel - the desired end-effector velocity
 /// @param out - the joint velocities corresponding to the end-effector velocity
+///              in rad/sec
 void delta_robot_inverse_velocity(const struct delta_robot * params,
                                   const struct type_linear_position * pos,
                                   const struct type_angular_position * angle,
@@ -81,7 +82,7 @@ void delta_robot_inverse_velocity(const struct delta_robot * params,
 /// @param pos - the position of the end effector
 /// @param ang - the joint angles, in radians
 /// @param force - the desired end-effector force
-/// @param out - the joint torques corresponding to the end-effector forces
+/// @param out - the joint torques corresponding to the end-effector forces, N/m
 void delta_robot_inverse_force(const struct delta_robot * params,
                                const struct type_linear_position * pos,
                                const struct type_angular_position * angle,
