@@ -14,6 +14,7 @@
 #include <termios.h>
 #include <errno.h>
 #include <limits.h>
+#include <sys/file.h>
 // timeout to wait for pending writes to finish before closing the port
 static const int CLOSE_TIMEOUT = 200;
 
@@ -376,5 +377,29 @@ bool uart_data_available(const struct uart_port * port)
     else
     {
         return fds->revents & POLLIN;
+    }
+}
+
+void uart_lock(const struct uart_port * port)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    if(0 != flock(port->fd, LOCK_EX))
+    {
+        error_with_errno(FILE_LINE);
+    }
+}
+
+void uart_unlock(const struct uart_port * port)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    if(0 != flock(port->fd, LOCK_UN))
+    {
+        error_with_errno(FILE_LINE);
     }
 }
