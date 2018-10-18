@@ -58,6 +58,9 @@
 /// @brief wheel control loop in hz.
 #define PARAMETERS_WHEEL_CONTROL_HZ 400u
 
+/// @brief omni control loop in hz.
+#define PARAMETERS_OMNI_CONTROL_LOOP_HZ 100u
+
 /// @brief Mobile base configuration (units are in m)
 #define PARAMETERS_OMNI_WHEEL_RADIUS 0.1016f
 #define PARAMETERS_OMNI_LENGTH 0.2064f
