@@ -66,7 +66,6 @@ target_include_directories(common PUBLIC
   $<$<PLATFORM_ID:arm-none-eabi>:$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/tiva/include>>
   $<INSTALL_INTERFACE:include>
   )
-
 #use gnuinstalldirs to get the correct directories
 #gnuinstalldirs defines CMAKE_INSTAL_xxxx directories
 include(GNUInstallDirs)
@@ -77,10 +76,9 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL ${CMAKE_HOST_SYSTEM_NAME})
 
   # add include directories for host-specific extensions
   # currently there are none
-  #target_include_directories(common PUBLIC
-  #  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/host/include>
-  #  $<INSTALL_INTERFACE:host/include>
-  #  PRIVATE host)
+  target_include_directories(common PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/host/include>
+    PRIVATE host)
 
 
   # make install target, and also create the export target
@@ -97,7 +95,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL ${CMAKE_HOST_SYSTEM_NAME})
   install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
   # host-specific include files. Currently there are none
-  #install(DIRECTORY host/include DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(DIRECTORY host/include/host DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
   # make the project importable from the install directory
   install(EXPORT common-target DESTINATION share/common/cmake)
