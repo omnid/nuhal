@@ -100,7 +100,8 @@ int uart_read_block(const struct uart_port * port, void * data, size_t len,
 
 /// @brief blocking read of uart with extra options, @see uart_read_block.
 /// @param timeout_error - if true generate a timeout error on timeout
-///         if false, the function returns 0 on timeout error
+/// @return the number of bytes read a timeout error has occurred if
+/// the number of bytes read is < len
 int uart_read_block_error(const struct uart_port * port,
                           void * data,
                           size_t len,
