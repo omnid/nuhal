@@ -119,6 +119,11 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     // set raw output mode
     tio.c_oflag &= ~OPOST;
 
+    // disable stripping off the eigth bit
+    // (somehow this option was enabled by
+    // default occasionally)
+    tio.c_iflag &= ~ISTRIP;
+
     // set the baud rate
     speed_t stdbaud = 0;
     switch(baud)
@@ -165,10 +170,6 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         break;
     }
 
-    // disable stripping off the eigth bit
-    // (somehow this option was enabled by
-    // default occasionally)
-    tio.c_iflag &= ~ISTRIP;
 
     switch(parity)
     {
