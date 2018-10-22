@@ -165,6 +165,11 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         break;
     }
 
+    // disable stripping off the eigth bit
+    // (somehow this option was enabled by
+    // default occasionally)
+    tio.c_iflag &= ~ISTRIP;
+
     switch(parity)
     {
     case UART_PARITY_EVEN:
