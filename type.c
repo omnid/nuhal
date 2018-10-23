@@ -287,3 +287,29 @@ void type_extract_wheel_velocities(struct bytestream * bs, struct type_wheel_vel
   u->right = bytestream_extract_f(bs);
   u->left = bytestream_extract_f(bs);
 }
+
+void type_inject_omni_velocities(struct bytestream * bs, struct type_omni_velocities * u)
+{
+  if(!bs || !u)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  bytestream_inject_f(bs, u->uFR);
+  bytestream_inject_f(bs, u->uFL);
+  bytestream_inject_f(bs, u->uRR);
+  bytestream_inject_f(bs, u->uRL);
+}
+
+void type_extract_omni_velocities(struct bytestream * bs, struct type_omni_velocities * u)
+{
+  if(!bs || !u)
+  {
+    error(FILE_LINE, "NULL ptr");
+  }
+
+  u->uFR = bytestream_extract_f(bs);
+  u->uFL = bytestream_extract_f(bs);
+  u->uRR = bytestream_extract_f(bs);
+  u->uRL = bytestream_extract_f(bs);
+}
