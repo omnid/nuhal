@@ -129,7 +129,12 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     serial.flags |= ASYNC_LOW_LATENCY;
     if(-1 == ioctl(port->fd, TIOCSSERIAL, &serial))
     {
-        error_with_errno(FILE_LINE);
+        // if the operation is not supported on this particular
+        // device, just ignore the error
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
     }
 
 
@@ -307,12 +312,20 @@ void uart_close(const struct uart_port * port)
     // restore settings to state when the program was open
     if(0 != tcsetattr(port->fd, TCSADRAIN, &port->old_tio))
     {
-        error_with_errno(FILE_LINE);
+        // if the operation is not supported on this particular
+        // device, just ignore the error
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
     }
 
     if(-1 == ioctl(port->fd, TIOCSSERIAL, &port->old_serial))
     {
-        error_with_errno(FILE_LINE);
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
     }
 
     if(0 != close(port->fd))
