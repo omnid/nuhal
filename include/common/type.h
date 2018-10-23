@@ -300,7 +300,7 @@ void type_inject_omni_velocities(struct bytestream * bs, struct type_omni_veloci
 /// @brief injects wheel velocities from the omni robot
 /// @param bs - the bytestream
 /// @param u [out] - the wheel velocities (rad/s)
-void type_extract_womni_velocities(struct bytestream * bs, struct type_omni_velocities * u);
+void type_extract_omni_velocities(struct bytestream * bs, struct type_omni_velocities * u);
 
 #ifdef __cplusplus
 }
