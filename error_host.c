@@ -4,8 +4,7 @@
 
 __attribute__((weak))
 void error_handler(const char * fileline,
-                   const char * msg,
-                   __attribute__((unused)) const void * data)
+                   const char * msg)
 {
     fprintf(stderr, "HOST ERROR: %s %s\n", fileline, msg);
 }
