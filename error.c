@@ -4,13 +4,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-static const void * error_data = NULL;
-
-void error_setup(const void * data)
-{
-    error_data = data;
-}
-
 void error_with_errno(const char * fileline)
 {
     error(fileline, strerror(errno));
@@ -26,7 +19,7 @@ void error(const char * fileline, const char * msg)
     if(!error_called)
     {
         error_called = true;
-        error_handler(fileline, msg, error_data);
+        error_handler(fileline, msg);
         exit(EXIT_FAILURE);
     }
 

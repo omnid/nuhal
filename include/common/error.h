@@ -32,23 +32,24 @@ void error(const char * fileline, const char * msg) __attribute__((noreturn));
 /// @brief a platform-dependent function that handles the error message
 /// @param fileline - filename and line-number where the error was triggered
 /// @param msg - custom additional message
-/// @param data - additional data, as provided to error_setup
 /// @details
 /// The platform may provide a generic weak version of the error_handler
 /// which can be overridden by specific applications
-void error_handler(const char * fileline, const char * msg, const void * data); 
+void error_handler(const char * fileline, const char * msg);
 
 /// @brief a platform-dependent function that handles when an error occurs 
 /// within the error handler.  This function SHOULD NOT call any function
 /// that might call error
 void error_handler_fatal(const char * fileline, const char * msg);
-   
+
 /// @brief display an error message corresponding to the errno that is set
 ///  and exit the program
 /// @param fileline: the FILE_LINE macro, current file and line number
 void error_with_errno(const char * fileline) __attribute__((noreturn));
 
 /// @brief return true if an error is already pending, false otherwise
+/// This function is useful in code that may run from within the error handler
+/// as it allows such code to avoid triggering a recursive error
 bool error_pending(void);
 
 

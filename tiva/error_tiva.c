@@ -14,8 +14,7 @@ void __error__(char * filename, uint32_t line)
 
 __attribute__((weak))
 void error_handler(__attribute__((unused)) const char * fileline,
-                   __attribute__((unused)) const char * msg,
-                   __attribute__((unused)) const void * data)
+                   __attribute__((unused)) const char * msg)
 {
     // we don't want any interrupts continuing because otherwise
     // we could re-enter the error function repeatedly
