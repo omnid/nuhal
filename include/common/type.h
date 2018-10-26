@@ -25,7 +25,10 @@ enum type_processor_id
     TYPE_JC_2, /// joint controller 2
     TYPE_JC_3, /// joint controller 3
     TYPE_UC_1, /// main controller 1
-    TYPE_GC_1 /// gimbal controller 1
+    TYPE_GC_1, /// gimbal controller 1
+    TYPE_WC_1, /// wheel controller 1
+    TYPE_WC_2  /// wheel controller 2
+
 };
 
 
