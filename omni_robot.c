@@ -2,22 +2,17 @@
 #include "common/parameters.h"
 #include "common/omni_robot.h"
 #include <math.h>
+
 /// @brief H matrix for the omni robot used for getting wheel velocities
 /// from a given twist. See Eq 13.10 in Modern Robotics.
 static const struct matrix_4x3 OMNI_H_MATRIX =
 {
   .data =
-  // {
-  //   {(-PARAMETERS_OMNI_LENGTH-PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS, 1/PARAMETERS_OMNI_WHEEL_RADIUS, -1/PARAMETERS_OMNI_WHEEL_RADIUS},
-  //   {(PARAMETERS_OMNI_LENGTH-PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS, 1/PARAMETERS_OMNI_WHEEL_RADIUS, 1/PARAMETERS_OMNI_WHEEL_RADIUS},
-  //   {(PARAMETERS_OMNI_LENGTH-PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS, 1/PARAMETERS_OMNI_WHEEL_RADIUS, -1/PARAMETERS_OMNI_WHEEL_RADIUS},
-  //   {(-PARAMETERS_OMNI_LENGTH-PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS, 1/PARAMETERS_OMNI_WHEEL_RADIUS, 1/PARAMETERS_OMNI_WHEEL_RADIUS}
-  // },
   {
-    {-4.0315,	9.84252,	-9.84252},
-    {4.0315,	9.84252,	9.84252},
-    {4.0315,	9.84252,	-9.84252},
-    {-4.0315,	9.84252,	9.84252}
+    {-(PARAMETERS_OMNI_LENGTH+PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS,	1/PARAMETERS_OMNI_WHEEL_RADIUS,	-1/PARAMETERS_OMNI_WHEEL_RADIUS},
+    {(PARAMETERS_OMNI_LENGTH+PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS,	1/PARAMETERS_OMNI_WHEEL_RADIUS,	1/PARAMETERS_OMNI_WHEEL_RADIUS},
+    {(PARAMETERS_OMNI_LENGTH+PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS,	1/PARAMETERS_OMNI_WHEEL_RADIUS,	-1/PARAMETERS_OMNI_WHEEL_RADIUS},
+    {-(PARAMETERS_OMNI_LENGTH+PARAMETERS_OMNI_WIDTH)/PARAMETERS_OMNI_WHEEL_RADIUS,	1/PARAMETERS_OMNI_WHEEL_RADIUS,	1/PARAMETERS_OMNI_WHEEL_RADIUS}
   },
   .transpose = false
 };
@@ -66,4 +61,44 @@ void omni_robot_join_vels(const struct type_wheel_velocities * uFront, const str
   u->data[1] = uFront->right;
   u->data[2] = uRear->right;
   u->data[3] = uRear->left;
+}
+
+/// @brief Updates omni robot odometry
+/// @param v - an input twist
+/// @param pose [out] - the robot's updated pose
+void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot * pose, const float time_step)
+{
+    // Get change in position from input twist in body frame
+    float wz = 0.0f, vx = 0.0f, vy = 0.0f;
+    if(v->wz < 0.0001f)     // Precision up to 10^-5 for determining if a number should be rounded down to 0.0
+    {
+        wz = 0.0f;
+        vx = v->vx;
+        vy = v->vy;
+    } else
+    {
+        wz = v->wz;
+        vx = (v->vx*sin(v->wz) + v->vy*(cos(v->wz) - 1.0f))/v->wz;
+        vy = (v->vy*sin(v->wz) + v->vx*(1.0f - cos(v->wz)))/v->wz;
+    }
+
+    // Add values to a vector for computation
+    struct matrix_3x1 delta_body;
+    delta_body.data[0] = wz;
+    delta_body.data[1] = vx;
+    delta_body.data[2] = vy;
+
+    // Transform coordinates to the fixed frame
+    struct matrix_3x1 delta_fixed = {0};
+    struct matrix_3x3 fixed_transform = {0};
+    matrix_3x3_init(&fixed_transform,
+                    1.0f, 0.0f, 0.0f,
+                    0.0f, cos(pose->theta_pos), sin(pose->theta_pos)*(-1.0f),
+                    0.0f, sin(pose->theta_pos), cos(pose->theta_pos));
+    matrix_3x3_multiply_vector(&fixed_transform, &delta_body, &delta_fixed);
+
+    // Update robot position and orientation
+    pose->theta_pos += (delta_fixed.data[0] * time_step);
+    pose->x_pos += (delta_fixed.data[1] * time_step);
+    pose->y_pos += (delta_fixed.data[2] * time_step);
 }

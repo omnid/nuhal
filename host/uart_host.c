@@ -14,6 +14,11 @@
 #include <termios.h>
 #include <errno.h>
 #include <limits.h>
+#include <sys/file.h>
+#include <linux/serial.h>
+#include <stropts.h>
+#include <asm/ioctls.h>
+
 // timeout to wait for pending writes to finish before closing the port
 static const int CLOSE_TIMEOUT = 200;
 
@@ -24,6 +29,8 @@ struct uart_port
     int fd;
     bool is_open;
     struct termios old_tio;
+    struct serial_struct old_serial;
+
     struct uart_port * next;
     struct uart_port * prev;
     // pointer to the struct itself. provides an internal non-constant reference
@@ -103,13 +110,35 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     }
 
 
-    struct termios tio;
     // retrieve the original settings and save them
     if(0 != tcgetattr(port->fd, &port->old_tio) )
     {
         error_with_errno(FILE_LINE);
     }
 
+    // enable low latency mode.  FTDI usb serial converter,
+    // for example, defaults to a latency of 16ms.  The
+    // minimum (for a USB 2.0 Full Speed converter) is
+    // 1 ms, which we set here
+    if(-1 == ioctl(port->fd, TIOCGSERIAL, &port->old_serial))
+    {
+        error_with_errno(FILE_LINE);
+    }
+    struct serial_struct serial = port->old_serial;
+    // the below is defined in serial.h
+    serial.flags |= ASYNC_LOW_LATENCY;
+    if(-1 == ioctl(port->fd, TIOCSSERIAL, &serial))
+    {
+        // if the operation is not supported on this particular
+        // device, just ignore the error
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
+    }
+
+
+    struct termios tio = {0};
     tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
 
     // set raw input mode
@@ -164,6 +193,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         break;
     }
 
+
     switch(parity)
     {
     case UART_PARITY_EVEN:
@@ -202,6 +232,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     }
 
     // flush serial buffers
+    // TODO: might need a slight delay prior to flushing
     if(tcflush(port->fd, TCIOFLUSH) != 0)
     {
         error_with_errno(FILE_LINE);
@@ -258,7 +289,7 @@ void uart_close(const struct uart_port * port)
     {
         // this was a timeout. Flow control can prevent us from flushing
         // so disable it
-        struct termios tio;
+        struct termios tio = {0};
         // get the current settings
         if(0 != tcgetattr(port->fd, &tio) )
         {
@@ -281,7 +312,20 @@ void uart_close(const struct uart_port * port)
     // restore settings to state when the program was open
     if(0 != tcsetattr(port->fd, TCSADRAIN, &port->old_tio))
     {
-        error_with_errno(FILE_LINE);
+        // if the operation is not supported on this particular
+        // device, just ignore the error
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
+    }
+
+    if(-1 == ioctl(port->fd, TIOCSSERIAL, &port->old_serial))
+    {
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
     }
 
     if(0 != close(port->fd))
@@ -376,5 +420,29 @@ bool uart_data_available(const struct uart_port * port)
     else
     {
         return fds->revents & POLLIN;
+    }
+}
+
+void uart_lock(const struct uart_port * port)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    if(0 != flock(port->fd, LOCK_EX))
+    {
+        error_with_errno(FILE_LINE);
+    }
+}
+
+void uart_unlock(const struct uart_port * port)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    if(0 != flock(port->fd, LOCK_UN))
+    {
+        error_with_errno(FILE_LINE);
     }
 }
