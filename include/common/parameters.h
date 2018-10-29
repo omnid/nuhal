@@ -55,16 +55,15 @@
 /// @brief frequency of the control loop on the main delta controller
 #define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
 
-/// @brief wheel control loop in hz. 
+/// @brief wheel control loop in hz.
 #define PARAMETERS_WHEEL_CONTROL_HZ 400u
 
-/// @brief Mobile base configuration
-#define WHEEL_RADIUS 0.1016
-#define OMNI_LENGTH 0.2064
-#define OMNI_WIDTH 0.2032
+/// @brief omni control loop in hz.
+#define PARAMETERS_OMNI_CONTROL_LOOP_HZ 100u
 
-/// @brief H matrix and it's pseudoinverse for the mobile base
-struct matrix_4x3 H;
-struct matrix_4x3 Hpinv;
+/// @brief Mobile base configuration (units are in m)
+#define PARAMETERS_OMNI_WHEEL_RADIUS 0.1016f
+#define PARAMETERS_OMNI_LENGTH 0.2064f
+#define PARAMETERS_OMNI_WIDTH 0.2032f
 
 #endif
