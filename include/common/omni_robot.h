@@ -7,12 +7,12 @@
 extern "C" {
 #endif
 
-/// @brief physical parameters for the omni robot
+/// @brief Position and orientation of the omni robot
 struct omni_robot
 {
-  float wheel_radius;   // Radius of the mecanum wheel
-  float body_length;    // Length of the robot
-  float body_width;     // Width of the robot
+  float x_pos;          // x position
+  float y_pos;          // y position
+  float theta_pos;      // orientation
 };
 
 /// @brief Converts an input twist to a set of wheel velocities.
@@ -41,6 +41,11 @@ void omni_robot_split_vels(const struct matrix_4x1 * u, struct type_wheel_veloci
 /// @param u [out] - output wheel velocity vector
 void omni_robot_join_vels(const struct type_wheel_velocities * uFront, const struct type_wheel_velocities * uRear, struct matrix_4x1 * u);
 
+/// @brief Updates omni robot odometry for a given time step. Trnasforms the robot's body
+/// twist to the space frame and then integrates over time to update the pose.
+/// @param v - an input twist
+/// @param pose [out] - the robot's pose that is updated
+void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot * pose, float time_step);
 
 #ifdef __cplusplus
 }
