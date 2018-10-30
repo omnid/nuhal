@@ -2,6 +2,8 @@
 #include "common/parameters.h"
 #include "common/omni_robot.h"
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /// @brief H matrix for the omni robot used for getting wheel velocities
 /// from a given twist. See Eq 13.10 in Modern Robotics.
@@ -70,7 +72,7 @@ void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot *
 {
     // Get change in position from input twist in body frame
     float wz = 0.0f, vx = 0.0f, vy = 0.0f;
-    if(v->wz < 0.0001f)     // Precision up to 10^-5 for determining if a number should be rounded down to 0.0
+    if(fabs(v->wz) < 0.0001f)     // Precision up to 10^-5 for determining if a number should be rounded down to 0.0
     {
         wz = 0.0f;
         vx = v->vx;
@@ -87,6 +89,7 @@ void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot *
     delta_body.data[0] = wz;
     delta_body.data[1] = vx;
     delta_body.data[2] = vy;
+    // printf("Delta Body:\nWz: %f, Vx: %f, Vy: %f\n", wz, vx, vy);
 
     // Transform coordinates to the fixed frame
     struct matrix_3x1 delta_fixed = {0};
@@ -96,9 +99,11 @@ void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot *
                     0.0f, cos(pose->theta_pos), sin(pose->theta_pos)*(-1.0f),
                     0.0f, sin(pose->theta_pos), cos(pose->theta_pos));
     matrix_3x3_multiply_vector(&fixed_transform, &delta_body, &delta_fixed);
+    // printf("Delta Fixed:\nWz: %f, Vx: %f, Vy: %f\n", delta_fixed.data[0], delta_fixed.data[1], delta_fixed.data[2]);
 
     // Update robot position and orientation
     pose->theta_pos += (delta_fixed.data[0] * time_step);
     pose->x_pos += (delta_fixed.data[1] * time_step);
     pose->y_pos += (delta_fixed.data[2] * time_step);
+    // printf("New Pose:\nWz: %f, Vx: %f, Vy: %f\n---------------------------\n\n", pose->theta_pos, pose->x_pos, pose->y_pos);
 }
