@@ -64,6 +64,6 @@
 /// @brief Mobile base configuration (units are in m)
 #define PARAMETERS_OMNI_WHEEL_RADIUS 0.1016f
 #define PARAMETERS_OMNI_LENGTH 0.2064f
-#define PARAMETERS_OMNI_WIDTH 0.2032f
+#define PARAMETERS_OMNI_WIDTH 0.2159f
 
 #endif
