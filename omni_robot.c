@@ -49,30 +49,20 @@ void omni_robot_split_vels(const struct matrix_4x1 * u, struct type_wheel_veloci
 {
     // Input velocity vector should be in the order: [0]FL, [1]FR, [2]RR, [3]RL
     // This follows the same setup as the one used in Chapter 13 of Modern Robotics
-    // uFront->right = u->data[1];
-    // uFront->left = u->data[0];
-    // uRear->right = u->data[2];
-    // uRear->left = u->data[3];
-
     u_out[0].right = u->data[1];
     u_out[0].left = u->data[0];
     u_out[1].right = u->data[2];
     u_out[1].left = u->data[3];
 }
 
-void omni_robot_join_vels(const struct type_wheel_velocities vels_get[], struct matrix_4x1 * u_out)
+void omni_robot_join_vels(const struct type_wheel_velocities u[], struct matrix_4x1 * u_out)
 {
     // Output velocity vector should be in the order: [0]FL, [1]FR, [2]RR, [3]RL
     // This follows the same setup as the one used in Chapter 13 of Modern Robotics
-    // u->data[0] = uFront->left;
-    // u->data[1] = uFront->right;
-    // u->data[2] = uRear->right;
-    // u->data[3] = uRear->left;
-
-    u_out->data[0] = vels_get[0].left;
-    u_out->data[1] = vels_get[0].right;
-    u_out->data[2] = vels_get[1].right;
-    u_out->data[3] = vels_get[1].left;
+    u_out->data[0] = u[0].left;
+    u_out->data[1] = u[0].right;
+    u_out->data[2] = u[1].right;
+    u_out->data[3] = u[1].left;
 }
 
 /// @brief Updates omni robot odometry
@@ -99,7 +89,6 @@ void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot *
     delta_body.data[0] = wz;
     delta_body.data[1] = vx;
     delta_body.data[2] = vy;
-    // printf("Delta Body:\nWz: %f, Vx: %f, Vy: %f\n", wz, vx, vy);
 
     // Transform coordinates to the fixed frame
     struct matrix_3x1 delta_fixed = {0};
@@ -109,11 +98,9 @@ void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot *
                     0.0f, cos(pose->theta_pos), sin(pose->theta_pos)*(-1.0f),
                     0.0f, sin(pose->theta_pos), cos(pose->theta_pos));
     matrix_3x3_multiply_vector(&fixed_transform, &delta_body, &delta_fixed);
-    // printf("Delta Fixed:\nWz: %f, Vx: %f, Vy: %f\n", delta_fixed.data[0], delta_fixed.data[1], delta_fixed.data[2]);
 
     // Update robot position and orientation
     pose->theta_pos += (delta_fixed.data[0] * time_step);
     pose->x_pos += (delta_fixed.data[1] * time_step);
     pose->y_pos += (delta_fixed.data[2] * time_step);
-    // printf("New Pose:\nWz: %f, Vx: %f, Vy: %f\n---------------------------\n\n", pose->theta_pos, pose->x_pos, pose->y_pos);
 }
