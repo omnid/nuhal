@@ -32,14 +32,14 @@ void omni_robot_vels_to_twist(const struct matrix_4x1 * u, struct matrix_3x1 * v
 /// @param u - input wheel velocity vector
 /// @param uFront [out] - output velocites of the front wheels
 /// @param uRear [out] - output velocitied of the rear wheels
-void omni_robot_split_vels(const struct matrix_4x1 * u, struct type_wheel_velocities * uFront, struct type_wheel_velocities * uRear);
+void omni_robot_split_vels(const struct matrix_4x1 * u, struct type_wheel_velocities u_out[]);
 
 /// @brief Takes the front and rear sets of wheel velocities and joins them
 /// correctly into a single 4x1 vector that can be used for matrix operations
 /// @param uFront - input velocites of the front wheels
 /// @param uRear - input velocitied of the rear wheels
 /// @param u [out] - output wheel velocity vector
-void omni_robot_join_vels(const struct type_wheel_velocities * uFront, const struct type_wheel_velocities * uRear, struct matrix_4x1 * u);
+void omni_robot_join_vels(const struct type_wheel_velocities vels_get[], struct matrix_4x1 * u_out);
 
 /// @brief Updates omni robot odometry for a given time step. Trnasforms the robot's body
 /// twist to the space frame and then integrates over time to update the pose.

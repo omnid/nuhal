@@ -45,24 +45,34 @@ void omni_robot_vels_to_twist(const struct matrix_4x1 * u, struct matrix_3x1 * v
     matrix_4x3T_4x1_multiply_vector(&OMNI_H_PINV, u, v);
 }
 
-void omni_robot_split_vels(const struct matrix_4x1 * u, struct type_wheel_velocities * uFront, struct type_wheel_velocities * uRear)
+void omni_robot_split_vels(const struct matrix_4x1 * u, struct type_wheel_velocities u_out[])
 {
     // Input velocity vector should be in the order: [0]FL, [1]FR, [2]RR, [3]RL
     // This follows the same setup as the one used in Chapter 13 of Modern Robotics
-    uFront->right = u->data[1];
-    uFront->left = u->data[0];
-    uRear->right = u->data[2];
-    uRear->left = u->data[3];
+    // uFront->right = u->data[1];
+    // uFront->left = u->data[0];
+    // uRear->right = u->data[2];
+    // uRear->left = u->data[3];
+
+    u_out[0].right = u->data[1];
+    u_out[0].left = u->data[0];
+    u_out[1].right = u->data[2];
+    u_out[1].left = u->data[3];
 }
 
-void omni_robot_join_vels(const struct type_wheel_velocities * uFront, const struct type_wheel_velocities * uRear, struct matrix_4x1 * u)
+void omni_robot_join_vels(const struct type_wheel_velocities vels_get[], struct matrix_4x1 * u_out)
 {
     // Output velocity vector should be in the order: [0]FL, [1]FR, [2]RR, [3]RL
     // This follows the same setup as the one used in Chapter 13 of Modern Robotics
-    u->data[0] = uFront->left;
-    u->data[1] = uFront->right;
-    u->data[2] = uRear->right;
-    u->data[3] = uRear->left;
+    // u->data[0] = uFront->left;
+    // u->data[1] = uFront->right;
+    // u->data[2] = uRear->right;
+    // u->data[3] = uRear->left;
+
+    u_out->data[0] = vels_get[0].left;
+    u_out->data[1] = vels_get[0].right;
+    u_out->data[2] = vels_get[1].right;
+    u_out->data[3] = vels_get[1].left;
 }
 
 /// @brief Updates omni robot odometry
