@@ -41,6 +41,12 @@
 /// max wheel speed is 285 rpm - corresponds to sending a data byte of '127'
 #define PARAMETERS_WHEEL_MAX_SPEED 127u
 
+/// soft max speed for safe operation of the robot
+/// CONTROL is for setting the saturation value of the PID controller
+/// VEL is for setting the max wheel velocity
+#define PARAMETERS_WHEEL_CONTROL_SOFT_MAX 32u
+#define PARAMETERS_WHEEL_VEL_SOFT_MAX 7.0
+
 
 /// Frequencies for some control loop
 
