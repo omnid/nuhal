@@ -16,6 +16,10 @@ enum type_control_effort
 
     /// control is handled by setting the arm torque (after the spring
     TYPE_CONTROL_EFFORT_ARM_TORQUE,
+
+    /// control mode that does not result in any actual control effort
+    /// being exerted (for debugging purposes)
+    TYPE_CONTROL_EFFORT_NULL,
 };
 
 /// @brief identifier for the processor
