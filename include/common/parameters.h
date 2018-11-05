@@ -42,9 +42,7 @@
 #define PARAMETERS_WHEEL_MAX_SPEED 127u
 
 /// soft max speed for safe operation of the robot
-/// CONTROL is for setting the saturation value of the PID controller
 /// VEL is for setting the max wheel velocity
-#define PARAMETERS_WHEEL_CONTROL_SOFT_MAX 32u
 #define PARAMETERS_WHEEL_VEL_SOFT_MAX 7.0
 
 
@@ -62,7 +60,7 @@
 #define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
 
 /// @brief wheel control loop in hz.
-#define PARAMETERS_WHEEL_CONTROL_HZ 400u
+#define PARAMETERS_WHEEL_CONTROL_LOOP_HZ 400u
 
 /// @brief omni control loop in hz.
 #define PARAMETERS_OMNI_CONTROL_LOOP_HZ 100u
