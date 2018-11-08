@@ -29,11 +29,9 @@
 #define PARAMETERS_DELTA_LOWER_LEG_LENGTH 0.200f
 #define PARAMETERS_DELTA_UPPER_LEG_LENGTH 0.368f
 
-/// height of the calibration fixture (m)
-/// height of the fixture is .20489875 m
-/// The aluminum block pedestal is .0056896 m
-/// so the total is .21058835
-#define PARAMETERS_CALIBRATION_FIXTURE_HEIGHT 0.21058835f
+/// height of the calibration fixture (m), from the drive axes to the axes
+/// of the joints connected to the platform
+#define PARAMETERS_CALIBRATION_FIXTURE_HEIGHT 0.2467737f
 
 /// mass of the robot above the spring, in kg, excluding the gimbal
 #define PARAMETERS_CALIBRATION_SPRUNG_MASS 0.9f
