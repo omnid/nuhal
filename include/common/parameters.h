@@ -24,10 +24,32 @@
 #define PARAMETERS_WORK_Z_MAX_M 0.45f
 
 /// physical parameters of the delta robot (in meters)
+/// radius of the circle where the lower joints connect to the
+/// delta robot base plate
 #define PARAMETERS_DELTA_BASE_RADIUS  0.18f
+/// thickness of the delta robot base plate
+#define PARAMETERS_DELTA_BASE_THICKNESS 0.009525f
+// mass of the base plate, in kg
+#define PARAMETERS_DELTA_BASE_MASS 2.5
+// height between the base and the lower joint axis
+#define PARAMETERS_DELTA_BASE_OFFSET 0.041275
+
+
+/// radius of the circle where the upper joints connect to the gimbal platform
 #define PARAMETERS_DELTA_PLATFORM_RADIUS  0.062f
+/// thickness of the end-effector platform
+#define PARAMETERS_DELTA_PLATFORM_THICKNESS 0.01f
+
+/// mass of the end-effector platform in kg. not including gimbal
+#define PARAMETERS_DELTA_PLATFORM_MASS 0.5f
+
+/// length of the lower leg
 #define PARAMETERS_DELTA_LOWER_LEG_LENGTH 0.200f
+
+/// length of the upper leg
 #define PARAMETERS_DELTA_UPPER_LEG_LENGTH 0.368f
+
+
 
 /// height of the calibration fixture (m), from the drive axes to the axes
 /// of the joints connected to the platform
