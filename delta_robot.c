@@ -2,6 +2,7 @@
 #include "common/utilities.h"
 #include "common/error.h"
 #include "common/matrix.h"
+#include "common/parameters.h"
 #include <math.h>
 #include <stdbool.h>
 
@@ -10,6 +11,16 @@ static const float root3 = 1.73205080756887729353f;
 
 // sqrt(3)/2
 static const float root3_div_2 = 0.86602540378443864676f;
+
+
+// physical parameters for the delta robot
+const struct delta_robot DELTA_ROBOT =
+{
+    .base_radius = PARAMETERS_DELTA_BASE_RADIUS,
+    .platform_radius = PARAMETERS_DELTA_PLATFORM_RADIUS,
+    .lower_leg_length = PARAMETERS_DELTA_LOWER_LEG_LENGTH,
+    .upper_leg_length = PARAMETERS_DELTA_UPPER_LEG_LENGTH
+};
 
 /// define some helper functions that compute variables used
 /// in several equations
@@ -551,4 +562,14 @@ void delta_robot_forward_force(const struct delta_robot * params,
     out->fx = u.data[0];
     out->fy = u.data[1];
     out->fz = u.data[2];
+}
+
+void delta_robot_knees(const struct delta_robot * params,
+                       const struct type_delta_state * state,
+                       struct delta_robot_knee_angles * knees)
+{
+    if(!params || !state || !knees)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
 }

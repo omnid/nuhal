@@ -19,6 +19,16 @@ struct delta_robot
     float upper_leg_length; // upper leg length (|M|)
 };
 
+/// @brief angles of the knee joint of the delta robot
+struct delta_robot_knee_angles
+{
+    /// the angles about the axis parallel to the lower joint axis, for each arm
+    float pitch[3];
+
+    /// the angle about an axis sticking out the end of the arm, axially,
+    /// for each arm
+    float yaw[3];
+};
 
 
 /// @brief given the position of the delta robot end effector,
@@ -115,6 +125,18 @@ void delta_robot_forward_force(const struct delta_robot * params,
                                const struct type_angular_position * angle,
                                const struct type_torques * torque,
                                struct type_linear_force * out);
+
+/// @brief get the configuration of the knee (the U-joint between upper and lower arms
+/// @param params - physical parameters for the delta robot
+/// @param state - the complete state of the delta robot
+/// @param knees [out] - the pitch and yaw angles of the knees
+void delta_robot_knees(const struct delta_robot * params,
+                       const struct type_delta_state * state,
+                       struct delta_robot_knee_angles * knees);
+
+/// the default delta robot used by this project, matches the physical robot
+extern const struct delta_robot DELTA_ROBOT;
+
 #ifdef __cplusplus
 }
 #endif
