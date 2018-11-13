@@ -1,8 +1,49 @@
 #ifndef COMMON_PARAMETERS_INCLUDE_GUARD_H
 #define COMMON_PARAMETERS_INCLUDE_GUARD_H
 /// @brief store general parameters that are useful to the whole system
+/// NOTE: this file has some parameters populated by cmake.
+///   The variable values are defined in @see common/parameters.cmake
+///   The variables defined in parameters.cmake are substituted into
+///   This file, to create parameters.h, which is then included as normal
+///   This allows ROS urdf generation from xacro using the same
+///   physical parameters as those defined in this file.
+///   The substitution from cmake is:  ${VAR_NAME} in this file gets
+///   the value of VAR_NAME from cmake
 #include "common/utilities.h"
 #include "common/matrix.h"
+
+//// Physical parameters of the delta robot.  Actual values are substituted
+//// From the values defined in parameters.cmake
+/// Units are in kilograms and meters, and SI
+
+/// radius of the circle where the lower joints connect to the
+#define PARAMETERS_DELTA_BASE_RADIUS  @PARAMETERS_DELTA_BASE_RADIUS@
+
+/// thickness of the base plate
+#define PARAMETERS_DELTA_BASE_THICKNESS @PARAMETERS_DELTA_BASE_THICKNESS@
+
+/// mass of the base plate
+#define PARAMETERS_DELTA_BASE_MASS @PARAMETERS_DELTA_BASE_MASS@
+
+/// height of the joint axis above the center of the base plate
+#define PARAMETERS_DELTA_BASE_OFFSET @PARAMETERS_DELTA_BASE_OFFSET@
+
+/// radius of the end-effector platform
+#define PARAMETERS_DELTA_PLATFORM_RADIUS @PARAMETERS_DELTA_PLATFORM_RADIUS@
+
+/// thickness of the end-effector platform
+#define PARAMETERS_DELTA_PLATFORM_THICKNESS @PARAMETERS_DELTA_PLATFORM_THICKNESS@
+
+/// mass of the end-effector platform
+#define PARAMETERS_DELTA_PLATFORM_MASS @PARAMETERS_DELTA_PLATFORM_MASS@
+
+/// length of the lower leg (this is cnced from a block of aluminum)
+#define PARAMETERS_DELTA_LOWER_LEG_LENGTH @PARAMETERS_DELTA_LOWER_LEG_LENGTH@
+
+/// length of the upper leg (this is made from aluminum tubes)
+#define PARAMETERS_DELTA_UPPER_LEG_LENGTH @PARAMETERS_DELTA_UPPER_LEG_LENGTH@
+///// ------ END CMAKE defined parameters
+
 
 /// @brief joint limits for the arm angle
 #define PARAMETERS_ARM_MIN_RAD DEGREES_TO_RADIANS(-5.0f)
@@ -23,31 +64,6 @@
 #define PARAMETERS_WORK_Z_MIN_M 0.20f
 #define PARAMETERS_WORK_Z_MAX_M 0.45f
 
-/// physical parameters of the delta robot (in meters)
-/// radius of the circle where the lower joints connect to the
-/// delta robot base plate
-#define PARAMETERS_DELTA_BASE_RADIUS  0.18f
-/// thickness of the delta robot base plate
-#define PARAMETERS_DELTA_BASE_THICKNESS 0.009525f
-// mass of the base plate, in kg
-#define PARAMETERS_DELTA_BASE_MASS 2.5
-// height between the base and the lower joint axis
-#define PARAMETERS_DELTA_BASE_OFFSET 0.041275
-
-
-/// radius of the circle where the upper joints connect to the gimbal platform
-#define PARAMETERS_DELTA_PLATFORM_RADIUS  0.062f
-/// thickness of the end-effector platform
-#define PARAMETERS_DELTA_PLATFORM_THICKNESS 0.01f
-
-/// mass of the end-effector platform in kg. not including gimbal
-#define PARAMETERS_DELTA_PLATFORM_MASS 0.5f
-
-/// length of the lower leg
-#define PARAMETERS_DELTA_LOWER_LEG_LENGTH 0.200f
-
-/// length of the upper leg
-#define PARAMETERS_DELTA_UPPER_LEG_LENGTH 0.368f
 
 
 
