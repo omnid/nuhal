@@ -2,12 +2,12 @@
 #define COMMON_PARAMETERS_INCLUDE_GUARD_H
 /// @brief store general parameters that are useful to the whole system
 /// NOTE: this file has some parameters populated by cmake.
-///   The variable values are defined in @see common/parameters.cmake
+///   The variable values are defined in @see common/include/common/parameters.cmake
 ///   The variables defined in parameters.cmake are substituted into
 ///   This file, to create parameters.h, which is then included as normal
 ///   This allows ROS urdf generation from xacro using the same
 ///   physical parameters as those defined in this file.
-///   The substitution from cmake is:  ${VAR_NAME} in this file gets
+///   The substitution from cmake is:  @VAR_NAME@ in this file gets
 ///   the value of VAR_NAME from cmake
 #include "common/utilities.h"
 #include "common/matrix.h"
