@@ -605,18 +605,18 @@ void delta_robot_knees(const struct delta_robot * params,
 
     // \bar{M2}
     const float m21 = (C2*(q -r -0.5f*x - root3_div_2 *y) + S2*z - L)/M;
-    const float m22 = (0.5f *y - root3_div_2 *x)/M;
+    const float m22 = (-0.5f *y - root3_div_2 *x)/M;
     const float m23 = (S2*(r-q+0.5f*x-root3_div_2 *y) + C2*z)/M;
  
     const float m31 = (C3*(q -r -0.5f*x - root3_div_2 *y) + S3*z - L)/M;
     const float m32 = (-0.5f *y + root3_div_2 *x)/M;
     const float m33 = (S3*(r-q+0.5f*x+root3_div_2 *y) + C3*z)/M;
 
-    knees->gamma[0] = -asin(m12);
-    knees->gamma[1] = -asin(m22);
-    knees->gamma[2] = -asin(m32);
+    knees->gamma[0] = -asinf(m12);
+    knees->gamma[1] = -asinf(m22);
+    knees->gamma[2] = -asinf(m32);
 
-    knees->beta[0] = atan2(m13, m11);
-    knees->beta[1] = atan2(m23, m21);
-    knees->beta[2] = atan2(m33, m31);
+    knees->beta[0] = atan2f(m13, m11);
+    knees->beta[1] = atan2f(m23, m21);
+    knees->beta[2] = atan2f(m33, m31);
 }
