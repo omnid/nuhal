@@ -565,11 +565,27 @@ void delta_robot_forward_force(const struct delta_robot * params,
 }
 
 void delta_robot_knees(const struct delta_robot * params,
-                       const struct type_delta_state * state,
+                       const struct type_linear_position * pos,
+                       const struct type_angular_position * joints,
                        struct delta_robot_knee_angles * knees)
 {
-    if(!params || !state || !knees)
+    if(!params || !pos || !joints || !knees)
     {
         error(FILE_LINE, "NULL ptr");
     }
+
+    const auto M = params->upper_leg_length;
+    const auto L = params->lower_leg_length;
+
+    // end effector platform position
+    const float x = pos->x;
+    const float y = pos->y;
+    const float z = pos->z;
+
+    // joint angles
+    const float theta1 = joints->theta1;
+    const float theta2 = joints->theta2;
+    const float theta3 = joints->theta3;
+
+    // see delta_robot.nb for derivation.  This is also called \bar{M} in delta_robot.tex
 }
