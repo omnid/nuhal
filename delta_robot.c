@@ -601,7 +601,7 @@ void delta_robot_knees(const struct delta_robot * params,
     // \bar{M1}
     const float m11 = (C1*(q - r +x) + S1*z - L)/M;
     const float m12 = y/M;
-    const float m13 = C1*z-S1*(q-r+x)/M;
+    const float m13 = (C1*z-S1*(q-r+x))/M;
 
     // \bar{M2}
     const float m21 = (C2*(q -r -0.5f*x - root3_div_2 *y) + S2*z - L)/M;
