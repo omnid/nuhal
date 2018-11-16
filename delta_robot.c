@@ -204,7 +204,7 @@ void delta_robot_inverse_kinematics(const struct delta_robot * params,
     const float theta3_minus = 2.0f * atan(s3_minus);
 
     // compute the knee bend inequalities to determine the correct angle to use
-    // see equations (22), (23), and (24) in delta_robot.pdf. 
+    // see equations (31), (32), and (33) in delta_robot.pdf. 
     const float knee1_lhs = (q - r + x)*sin(theta1_plus); 
     const float knee2_lhs = (q -r - x/2.0f + y *root3_div_2)*sin(theta2_plus); 
     const float knee3_lhs = (q -r - x/2.0f - y *root3_div_2)*sin(theta3_plus); 
