@@ -45,6 +45,9 @@
 /// Value is 25% above the actual desired limit (2Pi - 60rpm)
 #define PARAMETERS_WHEEL_VEL_SOFT_MAX 2.0f*PI*1.25f
 
+#define PARAMETERS_OMNI_LINEAR_VEL_MAX 1.0f
+#define PARAMETERS_OMNI_ANGULAR_VEL_MAX 1.0f
+
 
 /// Frequencies for some control loop
 
