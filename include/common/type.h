@@ -105,17 +105,6 @@ struct type_arm_state
     struct type_joint_state after;
 };
 
-/// @brief get the joint encoder values
-struct type_joint_encoders
-{
-    // ticks and radians of the before the joint encoder
-    uint32_t before_raw;
-    float before_radians;
-
-    // ticks and radians of the after the joint encoder
-    uint32_t after_raw;
-    float after_radians;
-};
 
 struct type_delta_state
 {
@@ -238,17 +227,6 @@ void type_extract_linear_velocity(struct bytestream * bs,
                                         struct type_linear_velocity * lp);
 
 
-/// @brief serialize the encoder values into a bytestream
-/// @param bs - the bytestream
-/// @param enc - the encoder data to store in the stream
-void type_inject_joint_encoders(struct bytestream * bs,
-                                const struct type_joint_encoders * enc);
-
-/// @brief deserialize encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
-void type_extract_joint_encoders(struct bytestream * bs,
-                                 struct type_joint_encoders * out);
 
 /// @brief serialize delta state data from the bytestram
 /// @param bs - the bytestream

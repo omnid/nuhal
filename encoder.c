@@ -1,5 +1,6 @@
 #include "common/encoder.h"
 #include "common/error.h"
+#include "common/bytestream.h"
 
 int32_t encoder_ticks(const struct encoder * enc, struct encoder_raw raw)
 {
@@ -101,4 +102,33 @@ uint32_t encoder_zero_raw(const struct encoder * enc,
     {
         error(FILE_LINE, "unknown orientation");
     }
+}
+
+void encoder_joints_inject(struct bytestream * bs,
+                          const struct encoder_joints * enc)
+{
+    if(!bs || !enc)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    bytestream_inject_u32(bs, enc->before_raw);
+    bytestream_inject_f(bs, enc->before_radians);
+    bytestream_inject_u32(bs, enc->after_raw);
+    bytestream_inject_f(bs, enc->after_radians);
+}
+
+/// @brief deserialize encoder data from the bytestream
+/// @param bs - the bytestream
+/// @param out [out] - the encoder data read from the stream
+void encoder_joints_extract(struct bytestream * bs,
+                           struct encoder_joints * out)
+{
+    if(!bs || !out)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    out->before_raw = bytestream_extract_u32(bs);
+    out->before_radians = bytestream_extract_f(bs);
+    out->after_raw = bytestream_extract_u32(bs);
+    out->after_radians = bytestream_extract_f(bs);
 }

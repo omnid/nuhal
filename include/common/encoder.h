@@ -16,6 +16,8 @@
 /// General workflow is for a low-level function to provide encoder_raw_ticks
 /// The user then normalizes the raw ticks and can convert them to radians
 
+struct bytestream;
+
 /// encoder orientation - if counting up results in smaller or larger angles
 enum encoder_orientation
 {
@@ -49,6 +51,17 @@ struct encoder_raw
 };
 
 
+/// @brief encoders for the joint
+struct encoder_joints
+{
+    // ticks and radians of the before the joint encoder
+    uint32_t before_raw;
+    float before_radians;
+
+    // ticks and radians of the after the joint encoder
+    uint32_t after_raw;
+    float after_radians;
+};
 
 
 #ifdef __cplusplus
@@ -90,6 +103,17 @@ uint32_t encoder_zero_raw(const struct encoder * enc,
                           struct encoder_raw raw,
                           float radians);
 
+/// @brief serialize the joint encoder values into a bytestream
+/// @param bs - the bytestream
+/// @param enc - the encoder data to store in the stream
+void encoder_joints_inject(struct bytestream * bs,
+                          const struct encoder_joints * enc);
+
+/// @brief deserialize joint encoder data from the bytestream
+/// @param bs - the bytestream
+/// @param out [out] - the encoder data read from the stream
+void encoder_joints_extract(struct bytestream * bs,
+                           struct encoder_joints * out);
 #ifdef __cplusplus
 }
 #endif
