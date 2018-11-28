@@ -77,6 +77,13 @@
 /// max wheel speed is 285 rpm - corresponds to sending a data byte of '127'
 #define PARAMETERS_WHEEL_MAX_SPEED 127u
 
+/// soft max speed for safe operation of the robot
+/// Value is 25% above the actual desired limit (2Pi - 60rpm)
+#define PARAMETERS_WHEEL_VEL_SOFT_MAX 2.0f*PI*1.25f
+
+#define PARAMETERS_OMNI_LINEAR_VEL_MAX 1.0f
+#define PARAMETERS_OMNI_ANGULAR_VEL_MAX 1.0f
+
 
 /// Frequencies for some control loop
 
@@ -92,7 +99,7 @@
 #define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
 
 /// @brief wheel control loop in hz.
-#define PARAMETERS_WHEEL_CONTROL_HZ 400u
+#define PARAMETERS_WHEEL_CONTROL_LOOP_HZ 400u
 
 /// @brief omni control loop in hz.
 #define PARAMETERS_OMNI_CONTROL_LOOP_HZ 100u
