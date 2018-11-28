@@ -155,34 +155,6 @@ void type_extract_delta_state(struct bytestream * bs,
     type_extract_linear_force(bs, &out->platform_force);
 }
 
-void type_inject_led_color(struct bytestream * bs, enum type_led_color color)
-{
-    if(!bs)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    if(color > 0x7)
-    {
-        error(FILE_LINE, "invalid color");
-    }
-    bytestream_inject_u8(bs, color);
-}
-
-/// @param bs - the bytestream
-/// @return the color that was stored in the bytestream
-enum type_led_color type_extract_led_color(struct bytestream * bs)
-{
-    if(!bs)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    enum type_led_color color = (enum type_led_color)bytestream_extract_u8(bs);
-    if(color > 0x7)
-    {
-        error(FILE_LINE, "invalid color");
-    }
-    return color;
-}
 
 
 enum type_control_effort type_control_effort_extract(struct bytestream * bs)

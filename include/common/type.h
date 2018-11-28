@@ -129,19 +129,6 @@ struct type_wheel_velocities
   float left;
 };
 
-/// @brief colors for leds. lower 3 bits of an 8 bit byte
-/// correspond to the red, green, and blue leds being on (1) or off (0)
-enum type_led_color
-{
-    TYPE_LED_COLOR_BLACK = 0x0,
-    TYPE_LED_COLOR_RED   = 0x4,
-    TYPE_LED_COLOR_GREEN = 0x2,
-    TYPE_LED_COLOR_BLUE  = 0x1,
-    TYPE_LED_COLOR_YELLOW = 0x6,
-    TYPE_LED_COLOR_CYAN = 0x3,
-    TYPE_LED_COLOR_MAGENTA = 0x5,
-    TYPE_LED_COLOR_WHITE = 0x7,
-};
 
 struct bytestream;
 
@@ -214,15 +201,6 @@ void type_inject_delta_state(struct bytestream * bs,
 void type_extract_delta_state(struct bytestream * bs,
                                  struct type_delta_state * out);
 
-/// @brief serialize the led color
-/// @param bs - the bytestream
-/// @param color -t he color to place in the bytestream
-void type_inject_led_color(struct bytestream * bs, enum type_led_color color);
-
-
-/// @param bs - the bytestream
-/// @return the color that was stored in the bytestream
-enum type_led_color type_extract_led_color(struct bytestream * bs);
 
 /// @brief deserialize control effort from the bytestream
 enum type_control_effort type_control_effort_extract(struct bytestream * bs);
