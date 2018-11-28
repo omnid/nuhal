@@ -132,3 +132,41 @@ void encoder_joints_extract(struct bytestream * bs,
     out->after_raw = bytestream_extract_u32(bs);
     out->after_radians = bytestream_extract_f(bs);
 }
+
+/// @brief serialize the gimbal encoder values into a bytestream
+/// @param bs - the bytestream
+/// @param enc - the encoder data to store in the stream
+void encoder_gimbal_inject(struct bytestream * bs,
+                          const struct encoder_gimbal * enc)
+{
+    if(!bs || !enc)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    bytestream_inject_u32(bs, enc->x_raw);
+    bytestream_inject_u32(bs, enc->y_raw);
+    bytestream_inject_u32(bs, enc->z_raw);
+
+    bytestream_inject_f(bs, enc->x_radians);
+    bytestream_inject_f(bs, enc->y_radians);
+    bytestream_inject_f(bs, enc->z_radians);
+}
+
+/// @brief deserialize gimbal encoder data from the bytestream
+/// @param bs - the bytestream
+/// @param out [out] - the encoder data read from the stream
+void encoder_gimbal_extract(struct bytestream * bs,
+                           struct encoder_gimbal * out)
+{
+    if(!bs || !out)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+    out->x_raw = bytestream_extract_u32(bs);
+    out->y_raw = bytestream_extract_u32(bs);
+    out->z_raw = bytestream_extract_u32(bs);
+
+    out->x_radians = bytestream_extract_f(bs);
+    out->y_radians = bytestream_extract_f(bs);
+    out->z_radians = bytestream_extract_f(bs);
+}

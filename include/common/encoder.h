@@ -63,6 +63,19 @@ struct encoder_joints
     float after_radians;
 };
 
+/// @brief encoders for the gimbal
+struct encoder_gimbal
+{
+    /// raw encoder readings for each axis
+    uint32_t x_raw;
+    uint32_t y_raw;
+    uint32_t z_raw;
+
+    // radians for each axis
+    float x_radians;
+    float y_radians;
+    float z_radians;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -114,6 +127,19 @@ void encoder_joints_inject(struct bytestream * bs,
 /// @param out [out] - the encoder data read from the stream
 void encoder_joints_extract(struct bytestream * bs,
                            struct encoder_joints * out);
+
+
+/// @brief serialize the gimbal encoder values into a bytestream
+/// @param bs - the bytestream
+/// @param enc - the encoder data to store in the stream
+void encoder_gimbal_inject(struct bytestream * bs,
+                          const struct encoder_gimbal * enc);
+
+/// @brief deserialize gimbal encoder data from the bytestream
+/// @param bs - the bytestream
+/// @param out [out] - the encoder data read from the stream
+void encoder_gimbal_extract(struct bytestream * bs,
+                           struct encoder_gimbal * out);
 #ifdef __cplusplus
 }
 #endif
