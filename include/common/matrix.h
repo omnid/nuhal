@@ -7,7 +7,10 @@
 /// @brief a 3x3 matrix
 struct matrix_3x3
 {
+    // [row][col]
     float data[3][3];
+    // if true the data should be treated as transposed
+    // so if true [col][row] indexing is used
     bool transpose;
 };
 
@@ -27,7 +30,11 @@ struct matrix_4x1
 /// @brief a 4x3 matrix
 struct matrix_4x3
 {
+    // [row][col]
     float data[4][3];
+
+    // if true the data should be treated as transposed
+    // so if true [col][row] indexing is used
     bool transpose;
 };
 

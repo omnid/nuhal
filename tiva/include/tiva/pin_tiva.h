@@ -65,4 +65,11 @@ bool pin_read(uint32_t pin);
 /// @post - the pin's value is the logical NOT of its previous value
 void pin_invert(uint32_t pin);
 
+/// define pins for the leds
+#define PIN_LED_RED PIN('F', 1)
+#define PIN_LED_GREEN PIN('F', 3)
+#define PIN_LED_BLUE PIN('F', 2)
+
+/// @brief state of the led to turn it on or off
+enum led_state { LED_OFF = false, LED_ON = true};
 #endif

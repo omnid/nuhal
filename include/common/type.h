@@ -16,21 +16,11 @@ enum type_control_effort
 
     /// control is handled by setting the arm torque (after the spring
     TYPE_CONTROL_EFFORT_ARM_TORQUE,
+
+    /// control mode that does not result in any actual control effort
+    /// being exerted (for debugging purposes)
+    TYPE_CONTROL_EFFORT_NULL,
 };
-
-/// @brief identifier for the processor
-enum type_processor_id
-{
-    TYPE_JC_1, /// joint controller 1
-    TYPE_JC_2, /// joint controller 2
-    TYPE_JC_3, /// joint controller 3
-    TYPE_UC_1, /// main controller 1
-    TYPE_GC_1, /// gimbal controller 1
-    TYPE_WC_1, /// wheel controller 1
-    TYPE_WC_2  /// wheel controller 2
-
-};
-
 
 /// @brief the position of the end effector platform
 struct type_linear_position
@@ -101,17 +91,6 @@ struct type_arm_state
     struct type_joint_state after;
 };
 
-/// @brief get the joint encoder values
-struct type_joint_encoders
-{
-    // ticks and radians of the before the joint encoder
-    uint32_t before_raw;
-    float before_radians;
-
-    // ticks and radians of the after the joint encoder
-    uint32_t after_raw;
-    float after_radians;
-};
 
 struct type_delta_state
 {
@@ -150,38 +129,12 @@ struct type_wheel_velocities
   float left;
 };
 
-/// @brief colors for leds. lower 3 bits of an 8 bit byte
-/// correspond to the red, green, and blue leds being on (1) or off (0)
-enum type_led_color
-{
-    TYPE_LED_COLOR_BLACK = 0x0,
-    TYPE_LED_COLOR_RED   = 0x4,
-    TYPE_LED_COLOR_GREEN = 0x2,
-    TYPE_LED_COLOR_BLUE  = 0x1,
-    TYPE_LED_COLOR_YELLOW = 0x6,
-    TYPE_LED_COLOR_CYAN = 0x3,
-    TYPE_LED_COLOR_MAGENTA = 0x5,
-    TYPE_LED_COLOR_WHITE = 0x7,
-};
 
 struct bytestream;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/// @brief serialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @param id - the processor id
-/// @pre there must be enough room in bs for the id
-void type_inject_processor_id(struct bytestream * bs,
-                              enum type_processor_id id);
-
-/// @brief deserialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @return the processor id
-/// @pre bs must contain a valid processor id
-enum type_processor_id type_extract_processor_id(struct bytestream * bs);
 
 /// @brief inject a joint state into a bytestream
 /// @param bs - bytestream which should contain space to store a joint_state
@@ -234,17 +187,6 @@ void type_extract_linear_velocity(struct bytestream * bs,
                                         struct type_linear_velocity * lp);
 
 
-/// @brief serialize the encoder values into a bytestream
-/// @param bs - the bytestream
-/// @param enc - the encoder data to store in the stream
-void type_inject_joint_encoders(struct bytestream * bs,
-                                const struct type_joint_encoders * enc);
-
-/// @brief deserialize encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
-void type_extract_joint_encoders(struct bytestream * bs,
-                                 struct type_joint_encoders * out);
 
 /// @brief serialize delta state data from the bytestram
 /// @param bs - the bytestream
@@ -259,15 +201,6 @@ void type_inject_delta_state(struct bytestream * bs,
 void type_extract_delta_state(struct bytestream * bs,
                                  struct type_delta_state * out);
 
-/// @brief serialize the led color
-/// @param bs - the bytestream
-/// @param color -t he color to place in the bytestream
-void type_inject_led_color(struct bytestream * bs, enum type_led_color color);
-
-
-/// @param bs - the bytestream
-/// @return the color that was stored in the bytestream
-enum type_led_color type_extract_led_color(struct bytestream * bs);
 
 /// @brief deserialize control effort from the bytestream
 enum type_control_effort type_control_effort_extract(struct bytestream * bs);

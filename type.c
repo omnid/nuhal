@@ -3,25 +3,6 @@
 #include "common/utilities.h"
 #include "common/error.h"
 
-/// @brief serialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @param id - the processor id
-/// @pre there must be enough room in bs for the id
-void type_inject_processor_id(struct bytestream * bs,
-                              enum type_processor_id id)
-{
-    bytestream_inject_u16(bs, id);
-}
-
-/// @brief deserialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @return the processor id
-/// @pre bs must contain a valid processor id
-enum type_processor_id type_extract_processor_id(struct bytestream * bs)
-{
-    return (enum type_processor_id)bytestream_extract_u16(bs);
-}
-
 void type_inject_joint_state(struct bytestream * bs,
                                    const struct type_joint_state * js)
 {
@@ -138,34 +119,6 @@ void type_extract_linear_force(struct bytestream * bs,
     lp->fz = bytestream_extract_f(bs);
 }
 
-void type_inject_joint_encoders(struct bytestream * bs,
-                                const struct type_joint_encoders * enc)
-{
-    if(!bs || !enc)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    bytestream_inject_u32(bs, enc->before_raw);
-    bytestream_inject_f(bs, enc->before_radians);
-    bytestream_inject_u32(bs, enc->after_raw);
-    bytestream_inject_f(bs, enc->after_radians);
-}
-
-/// @brief deserialize encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
-void type_extract_joint_encoders(struct bytestream * bs,
-                                 struct type_joint_encoders * out)
-{
-    if(!bs || !out)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    out->before_raw = bytestream_extract_u32(bs);
-    out->before_radians = bytestream_extract_f(bs);
-    out->after_raw = bytestream_extract_u32(bs);
-    out->after_radians = bytestream_extract_f(bs);
-}
 
 
 void type_inject_delta_state(struct bytestream * bs,
@@ -202,34 +155,6 @@ void type_extract_delta_state(struct bytestream * bs,
     type_extract_linear_force(bs, &out->platform_force);
 }
 
-void type_inject_led_color(struct bytestream * bs, enum type_led_color color)
-{
-    if(!bs)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    if(color > 0x7)
-    {
-        error(FILE_LINE, "invalid color");
-    }
-    bytestream_inject_u8(bs, color);
-}
-
-/// @param bs - the bytestream
-/// @return the color that was stored in the bytestream
-enum type_led_color type_extract_led_color(struct bytestream * bs)
-{
-    if(!bs)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-    enum type_led_color color = (enum type_led_color)bytestream_extract_u8(bs);
-    if(color > 0x7)
-    {
-        error(FILE_LINE, "invalid color");
-    }
-    return color;
-}
 
 
 enum type_control_effort type_control_effort_extract(struct bytestream * bs)
