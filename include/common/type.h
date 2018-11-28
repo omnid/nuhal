@@ -22,20 +22,6 @@ enum type_control_effort
     TYPE_CONTROL_EFFORT_NULL,
 };
 
-/// @brief identifier for the processor
-enum type_processor_id
-{
-    TYPE_JC_1, /// joint controller 1
-    TYPE_JC_2, /// joint controller 2
-    TYPE_JC_3, /// joint controller 3
-    TYPE_UC_1, /// main controller 1
-    TYPE_GC_1, /// gimbal controller 1
-    TYPE_WC_1, /// wheel controller 1
-    TYPE_WC_2  /// wheel controller 2
-
-};
-
-
 /// @brief the position of the end effector platform
 struct type_linear_position
 {
@@ -173,19 +159,6 @@ struct bytestream;
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/// @brief serialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @param id - the processor id
-/// @pre there must be enough room in bs for the id
-void type_inject_processor_id(struct bytestream * bs,
-                              enum type_processor_id id);
-
-/// @brief deserialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @return the processor id
-/// @pre bs must contain a valid processor id
-enum type_processor_id type_extract_processor_id(struct bytestream * bs);
 
 /// @brief inject a joint state into a bytestream
 /// @param bs - bytestream which should contain space to store a joint_state
