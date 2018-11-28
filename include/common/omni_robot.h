@@ -43,7 +43,7 @@ void omni_robot_join_vels(const struct type_wheel_velocities u[], struct matrix_
 /// twist to the space frame and then integrates over time to update the pose.
 /// @param v - an input twist
 /// @param pose [out] - the robot's pose that is updated
-void omni_robot_update_odometry(const struct type_twist * v, struct omni_robot * pose, float time_step);
+void omni_robot_update_odometry(const struct type_twist * v, float * x, float * y, float * theta, const float time_step);
 
 #ifdef __cplusplus
 }
