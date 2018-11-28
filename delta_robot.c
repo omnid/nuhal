@@ -2,6 +2,7 @@
 #include "common/utilities.h"
 #include "common/error.h"
 #include "common/matrix.h"
+#include "common/parameters.h"
 #include <math.h>
 #include <stdbool.h>
 
@@ -10,6 +11,16 @@ static const float root3 = 1.73205080756887729353f;
 
 // sqrt(3)/2
 static const float root3_div_2 = 0.86602540378443864676f;
+
+
+// physical parameters for the delta robot
+const struct delta_robot DELTA_ROBOT =
+{
+    .base_radius = PARAMETERS_DELTA_BASE_RADIUS,
+    .platform_radius = PARAMETERS_DELTA_PLATFORM_RADIUS,
+    .lower_leg_length = PARAMETERS_DELTA_LOWER_LEG_LENGTH,
+    .upper_leg_length = PARAMETERS_DELTA_UPPER_LEG_LENGTH
+};
 
 /// define some helper functions that compute variables used
 /// in several equations
@@ -193,7 +204,7 @@ void delta_robot_inverse_kinematics(const struct delta_robot * params,
     const float theta3_minus = 2.0f * atan(s3_minus);
 
     // compute the knee bend inequalities to determine the correct angle to use
-    // see equations (22), (23), and (24) in delta_robot.pdf. 
+    // see equations (31), (32), and (33) in delta_robot.pdf. 
     const float knee1_lhs = (q - r + x)*sin(theta1_plus); 
     const float knee2_lhs = (q -r - x/2.0f + y *root3_div_2)*sin(theta2_plus); 
     const float knee3_lhs = (q -r - x/2.0f - y *root3_div_2)*sin(theta3_plus); 
@@ -551,4 +562,61 @@ void delta_robot_forward_force(const struct delta_robot * params,
     out->fx = u.data[0];
     out->fy = u.data[1];
     out->fz = u.data[2];
+}
+
+void delta_robot_knees(const struct delta_robot * params,
+                       const struct type_linear_position * pos,
+                       const struct type_angular_position * joints,
+                       struct delta_robot_knee_angles * knees)
+{
+    if(!params || !pos || !joints || !knees)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+
+    const float M = params->upper_leg_length;
+    const float L = params->lower_leg_length;
+    const float q = params->platform_radius;
+    const float r = params->base_radius;
+
+    // end effector platform position
+    const float x = pos->x;
+    const float y = pos->y;
+    const float z = pos->z;
+
+    // joint angles
+    const float theta1 = joints->theta1;
+    const float theta2 = joints->theta2;
+    const float theta3 = joints->theta3;
+
+    // sines and cosines of joint angles
+    const float C1 = cos(theta1);
+    const float S1 = sin(theta1);
+    const float C2 = cos(theta2);
+    const float S2 = sin(theta2);
+    const float C3 = cos(theta3);
+    const float S3 = sin(theta3);
+
+    // see delta_robot.nb for derivation.  This is also called \bar{M} in delta_robot.tex
+    // \bar{M1}
+    const float m11 = (C1*(q - r +x) + S1*z - L)/M;
+    const float m12 = y/M;
+    const float m13 = (C1*z-S1*(q-r+x))/M;
+
+    // \bar{M2}
+    const float m21 = (C2*(q -r -0.5f*x + root3_div_2 *y) + S2*z - L)/M;
+    const float m22 = (-0.5f *y - root3_div_2 *x)/M;
+    const float m23 = (S2*(r-q+0.5f*x-root3_div_2 *y) + C2*z)/M;
+ 
+    const float m31 = (C3*(q -r -0.5f*x - root3_div_2 *y) + S3*z - L)/M;
+    const float m32 = (-0.5f *y + root3_div_2 *x)/M;
+    const float m33 = (S3*(r-q+0.5f*x+root3_div_2 *y) + C3*z)/M;
+
+    knees->gamma[0] = -asinf(m12);
+    knees->gamma[1] = -asinf(m22);
+    knees->gamma[2] = -asinf(m32);
+
+    knees->beta[0] = atan2f(m13, m11);
+    knees->beta[1] = atan2f(m23, m21);
+    knees->beta[2] = atan2f(m33, m31);
 }

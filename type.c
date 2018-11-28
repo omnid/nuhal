@@ -3,25 +3,6 @@
 #include "common/utilities.h"
 #include "common/error.h"
 
-/// @brief serialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @param id - the processor id
-/// @pre there must be enough room in bs for the id
-void type_inject_processor_id(struct bytestream * bs,
-                              enum type_processor_id id)
-{
-    bytestream_inject_u16(bs, id);
-}
-
-/// @brief deserialize a processor id
-/// @param bs - the bytestream to place the id into
-/// @return the processor id
-/// @pre bs must contain a valid processor id
-enum type_processor_id type_extract_processor_id(struct bytestream * bs)
-{
-    return (enum type_processor_id)bytestream_extract_u16(bs);
-}
-
 void type_inject_joint_state(struct bytestream * bs,
                                    const struct type_joint_state * js)
 {

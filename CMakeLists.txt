@@ -27,7 +27,15 @@ add_library(common
   utilities.c uart.c time.c queue.c error.c
   motor.c bytestream.c pid.c delta_robot.c
 encoder.c type.c matrix.c omni_robot.c)
+# depending on common causes timestamp.h to be touched
 add_dependencies(common timestamp)
+
+# configure parameters.h.in
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/include/common/)
+include(parameters)
+# note parameters.h is placed in the build tree so we add include directories
+# for it in the build interface
+configure_file(include/common/parameters.h.in include/common/parameters.h)
 
 # host-specific sources
 target_sources(common PRIVATE
@@ -63,9 +71,11 @@ target_link_libraries(common PUBLIC
 # include/tiva headers are only added for the embedded platforms
 target_include_directories(common PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
   $<$<PLATFORM_ID:arm-none-eabi>:$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/tiva/include>>
   $<INSTALL_INTERFACE:include>
   )
+
 #use gnuinstalldirs to get the correct directories
 #gnuinstalldirs defines CMAKE_INSTAL_xxxx directories
 include(GNUInstallDirs)
