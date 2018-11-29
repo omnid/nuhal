@@ -30,12 +30,27 @@ encoder.c type.c matrix.c omni_robot.c)
 # depending on common causes timestamp.h to be touched
 add_dependencies(common timestamp)
 
-# configure parameters.h.in
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/include/common/)
-include(parameters)
-# note parameters.h is placed in the build tree so we add include directories
-# for it in the build interface
-configure_file(include/common/parameters.h.in include/common/parameters.h)
+# use parameters.cmake to create parameters.h from parameters.h.in
+# To this and handle dependencies properly we need to
+# 1. create a custom command to generate the file. This command depends
+#    on parameters.h.in and paramaters.cmake so it will be re-run when these files change
+# 2. create a custom target generate-parameters that depends on the parameters.h (the output of the custom command)
+# 3. add generate-parameters as a dependency of common.  This tells cmake that building common
+#    requires us to first create parameters.h
+# 4. Set parameters.h as a generated file so that cmake knows it does not always exist in the filesystem
+set(PARAMETERS_INFILE ${CMAKE_CURRENT_SOURCE_DIR}/include/common/parameters.h.in)
+set(PARAMETERS_OUTFILE ${CMAKE_CURRENT_BINARY_DIR}/include/common/parameters.h)
+# parameters.cmake generates parameters.h using parameters.h.in as an input
+set(PARAMETERS_CMAKE ${CMAKE_CURRENT_SOURCE_DIR}/include/common/parameters.cmake)
+add_custom_command(OUTPUT ${PARAMETERS_OUTFILE}
+  DEPENDS ${PARAMETERS_INFILE} ${PARAMETERS_CMAKE}
+  COMMAND cmake -DPARAMETERS_INFILE=${PARAMETERS_INFILE} -DPARAMETERS_OUTFILE=${PARAMETERS_OUTFILE} -P ${PARAMETERS_CMAKE}
+  COMMENT "Generating parameters.h from parameters.h.in"
+  )
+add_custom_target(generate-parameters DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/include/common/parameters.h)
+add_dependencies(common generate-parameters)
+set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/parameters.h PROPERTIES GENERATED TRUE)
+## END generating parameters.h
 
 # host-specific sources
 target_sources(common PRIVATE
