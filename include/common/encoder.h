@@ -39,7 +39,9 @@ struct encoder
     enum encoder_orientation orientation;
 };
 
-/// @brief raw data from an encoder
+/// @brief raw data from an encoder.
+/// These are the ticks of the encoder prior to going
+/// through any scaling or re-zeroing
 struct encoder_raw
 {
     // multi has a resolution of 1 tick per revolution
@@ -54,22 +56,26 @@ struct encoder_raw
 /// @brief encoders for the joint
 struct encoder_joints
 {
-    // ticks and radians of the before the joint encoder
-    uint32_t before_raw;
+    // calibrated ticks for the before-spring encoder
+    int32_t before_ticks;
+
+    // radians of the before-spring encoder
     float before_radians;
 
-    // ticks and radians of the after the joint encoder
-    uint32_t after_raw;
+    // calibrated ticks for the after-spring encoder
+    int32_t after_ticks;
+
+    /// radians of the after-spring encoder
     float after_radians;
 };
 
 /// @brief encoders for the gimbal
 struct encoder_gimbal
 {
-    /// raw encoder readings for each axis
-    uint32_t x_raw;
-    uint32_t y_raw;
-    uint32_t z_raw;
+    /// calibrated ticks for each axis
+    int32_t x_ticks;
+    int32_t y_ticks;
+    int32_t z_ticks;
 
     // radians for each axis
     float x_radians;

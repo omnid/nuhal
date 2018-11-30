@@ -96,6 +96,21 @@ void bytestream_inject_u32(struct bytestream * bs, uint32_t u32)
     bs->size += sizeof(uint32_t);
 }
 
+/// @brief get int32_t from the bytestream
+/// @param bs - the bytestream, which will be advanced by two bytes
+/// @return the next int32 from the stream
+int32_t bytestream_extract_i32(struct bytestream * bs)
+{
+    return (int32_t)bytestream_extract_u32(bs);
+}
+
+/// @brief place a uint16_t into the bytestream
+/// @param bs - the bytestream, which will be advanced by two bytes
+/// @param i32 - the data to place in the stream, in little endian format
+void bytestream_inject_i32(struct bytestream * bs, int32_t i32)
+{
+    bytestream_inject_u32(bs, (uint32_t)i32);
+}
 
 float bytestream_extract_f(struct bytestream * bs)
 {

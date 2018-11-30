@@ -111,9 +111,9 @@ void encoder_joints_inject(struct bytestream * bs,
     {
         error(FILE_LINE, "NULL ptr");
     }
-    bytestream_inject_u32(bs, enc->before_raw);
+    bytestream_inject_i32(bs, enc->before_ticks);
     bytestream_inject_f(bs, enc->before_radians);
-    bytestream_inject_u32(bs, enc->after_raw);
+    bytestream_inject_i32(bs, enc->after_ticks);
     bytestream_inject_f(bs, enc->after_radians);
 }
 
@@ -127,9 +127,9 @@ void encoder_joints_extract(struct bytestream * bs,
     {
         error(FILE_LINE, "NULL ptr");
     }
-    out->before_raw = bytestream_extract_u32(bs);
+    out->before_ticks = bytestream_extract_i32(bs);
     out->before_radians = bytestream_extract_f(bs);
-    out->after_raw = bytestream_extract_u32(bs);
+    out->after_ticks = bytestream_extract_i32(bs);
     out->after_radians = bytestream_extract_f(bs);
 }
 
@@ -143,9 +143,9 @@ void encoder_gimbal_inject(struct bytestream * bs,
     {
         error(FILE_LINE, "NULL ptr");
     }
-    bytestream_inject_u32(bs, enc->x_raw);
-    bytestream_inject_u32(bs, enc->y_raw);
-    bytestream_inject_u32(bs, enc->z_raw);
+    bytestream_inject_i32(bs, enc->x_ticks);
+    bytestream_inject_i32(bs, enc->y_ticks);
+    bytestream_inject_i32(bs, enc->z_ticks);
 
     bytestream_inject_f(bs, enc->x_radians);
     bytestream_inject_f(bs, enc->y_radians);
@@ -162,9 +162,9 @@ void encoder_gimbal_extract(struct bytestream * bs,
     {
         error(FILE_LINE, "NULL ptr");
     }
-    out->x_raw = bytestream_extract_u32(bs);
-    out->y_raw = bytestream_extract_u32(bs);
-    out->z_raw = bytestream_extract_u32(bs);
+    out->x_ticks = bytestream_extract_i32(bs);
+    out->y_ticks = bytestream_extract_i32(bs);
+    out->z_ticks = bytestream_extract_i32(bs);
 
     out->x_radians = bytestream_extract_f(bs);
     out->y_radians = bytestream_extract_f(bs);
