@@ -82,7 +82,7 @@
 #define PARAMETERS_WHEEL_VEL_SOFT_MAX 2.0f*PI*1.25f
 
 #define PARAMETERS_OMNI_LINEAR_VEL_MAX 1.0f
-#define PARAMETERS_OMNI_ANGULAR_VEL_MAX 1.0f
+#define PARAMETERS_OMNI_ANGULAR_VEL_MAX 2.5f
 
 
 /// Frequencies for some control loop
