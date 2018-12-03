@@ -21,6 +21,10 @@ enum led_color
     LED_COLOR_WHITE = 0x7,
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// @brief initialize the led pins
 /// This function requires a platform-specific implementation
 void led_setup(void);
@@ -57,4 +61,8 @@ void led_color_inject(struct bytestream * bs, enum led_color color);
 /// @param bs - the bytestream
 /// @return the color that was stored in the bytestream
 enum led_color led_color_extract(struct bytestream * bs);
+
+#ifdef __cplusplus
+}
+#endif
 #endif
