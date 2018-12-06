@@ -111,4 +111,9 @@
 
 #define PARAMETERS_SPRING_CONSTANT 17.0f
 
+/// The hard stop on the gimbal's X and y axis, in radians
+#define PARAMETERS_GIMBAL_XY_STOP 0.6674
+
+// the hard stop on the gimbal's z axis, in radians
+#define PARAMETERS_GIMBAL_Z_STOP 0.35377
 #endif
