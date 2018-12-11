@@ -1,6 +1,5 @@
 #include "common/matrix.h"
 #include "common/error.h"
-#include <cmath>
 
 void matrix_3x3_init(struct matrix_3x3 * out,
                      float a11, float a12, float a13,
@@ -60,9 +59,9 @@ void matrix_6x6_init(struct matrix_6x6 * out,
                      float a11, float a12, float a13, float a14, float a15, float a16,
                      float a21, float a22, float a23, float a24, float a25, float a26,
                      float a31, float a32, float a33, float a34, float a35, float a36,
-                     float a41, float a42, float a43, float a44, float a35, float a46,
-                     float a51, float a52, float a53, float a54, float a35, float a56,
-                     float a61, float a62, float a63, float a64, float a35, float a66)
+                     float a41, float a42, float a43, float a44, float a45, float a46,
+                     float a51, float a52, float a53, float a54, float a55, float a56,
+                     float a61, float a62, float a63, float a64, float a65, float a66)
 {
     if(!out)
     {
