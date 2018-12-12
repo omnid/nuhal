@@ -207,7 +207,7 @@ void matrix_4x3T_4x1_multiply_vector(const struct matrix_4x3 * A,
       + A->data[2][2]*x->data[2] + A->data[3][2]*x->data[3];
 }
 
-void matrix_6x6_6x1_multiply_vector(const struct matrix_6x6 * A,
+void matrix_6x6_multiply_vector(const struct matrix_6x6 * A,
                                     const struct matrix_6x1 * x,
                                     struct matrix_6x1 * v)
 {
@@ -248,4 +248,26 @@ void matrix_3x1_cross(const struct matrix_3x1 * w,
     out->data[0] = (w->data[1] * v->data[2]) - (v->data[1] * w->data[2]);
     out->data[1] = (v->data[0] * w->data[2]) - (w->data[0] * v->data[2]);
     out->data[2] = (w->data[0] * v->data[1]) - (v->data[0] * w->data[1]);
+}
+
+void matrix_3x3_multiply_matrix(const struct matrix_3x3 * A,
+                                const struct matrix_3x3 * x,
+                                struct matrix_3x3 * v)
+{
+    if(!A || !x || !v)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+
+    v->data[0][0] = A->data[0][0]*x->data[0][0] + A->data[0][1]*x->data[1][0] + A->data[0][2]*x->data[2][0];
+    v->data[0][1] = A->data[0][0]*x->data[0][1] + A->data[0][1]*x->data[1][1] + A->data[0][2]*x->data[2][1];
+    v->data[0][2] = A->data[0][0]*x->data[0][2] + A->data[0][1]*x->data[1][2] + A->data[0][2]*x->data[2][2];
+
+    v->data[1][0] = A->data[1][0]*x->data[0][0] + A->data[1][1]*x->data[1][0] + A->data[1][2]*x->data[2][0];
+    v->data[1][1] = A->data[1][0]*x->data[0][1] + A->data[1][1]*x->data[1][1] + A->data[1][2]*x->data[2][1];
+    v->data[1][2] = A->data[1][0]*x->data[0][2] + A->data[1][1]*x->data[1][2] + A->data[1][2]*x->data[2][2];
+
+    v->data[2][0] = A->data[2][0]*x->data[0][0] + A->data[2][1]*x->data[1][0] + A->data[2][2]*x->data[2][0];
+    v->data[2][1] = A->data[2][0]*x->data[0][1] + A->data[2][1]*x->data[1][1] + A->data[2][2]*x->data[2][1];
+    v->data[2][2] = A->data[2][0]*x->data[0][2] + A->data[2][1]*x->data[1][2] + A->data[2][2]*x->data[2][2];
 }

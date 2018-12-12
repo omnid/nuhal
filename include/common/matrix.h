@@ -123,7 +123,7 @@ void matrix_4x3T_4x1_multiply_vector(const struct matrix_4x3 * A,
 /// @param A - the matrix
 /// @param x - the vector
 /// @param v - the output vector v = Ax
-void matrix_6x6_6x1_multiply_vector(const struct matrix_6x6 * A,
+void matrix_6x6_multiply_vector(const struct matrix_6x6 * A,
                                     const struct matrix_6x1 * x,
                                     struct matrix_6x1 * v);
 
@@ -134,6 +134,14 @@ void matrix_6x6_6x1_multiply_vector(const struct matrix_6x6 * A,
 void matrix_3x1_cross(const struct matrix_3x1 * w,
                       const struct matrix_3x1 * v,
                       struct matrix_3x1 * out);
+
+/// @brief calculates the dot product of two 3x3 matrices
+/// @param A - input matrix
+/// @param x - input matrix
+/// @param b - output matrix
+void matrix_3x3_multiply_matrix(const struct matrix_3x3 * A,
+                                const struct matrix_3x3 * x,
+                                struct matrix_3x3 * v);
 
 #ifdef __cplusplus
 }
