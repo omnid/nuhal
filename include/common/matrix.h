@@ -119,6 +119,14 @@ void matrix_4x3T_4x1_multiply_vector(const struct matrix_4x3 * A,
                                      const struct matrix_4x1 * x,
                                      struct matrix_3x1 * v);
 
+/// @brief multiply a 6x6 matrix by a 6x1 vector
+/// @param A - the matrix
+/// @param x - the vector
+/// @param v - the output vector v = Ax
+void matrix_6x6_6x1_multiply_vector(const struct matrix_6x6 * A,
+                                    const struct matrix_6x1 * x,
+                                    struct matrix_6x1 * v);
+
 /// @brief calculates the cross product of two 3x1 matrices
 /// @param w - input matrix
 /// @param v - input matrix
