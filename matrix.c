@@ -216,24 +216,24 @@ void matrix_6x6_6x1_multiply_vector(const struct matrix_6x6 * A,
         error(FILE_LINE, "NULL ptr");
     }
 
-    v->data[0] = A->data[0][0]*x->data[0] + A->data[1][0]*x->data[1]
-        + A->data[2][0]*x->data[2] + A->data[3][0]*x->data[3]
-        + A->data[4][0]*x->data[4] + A->data[5][0]*x->data[5];
-    v->data[1] = A->data[0][1]*x->data[0] + A->data[1][1]*x->data[1]
-        + A->data[2][1]*x->data[2] + A->data[3][1]*x->data[3]
-        + A->data[4][1]*x->data[4] + A->data[5][1]*x->data[5];
-    v->data[2] = A->data[0][2]*x->data[0] + A->data[1][2]*x->data[1]
-        + A->data[2][2]*x->data[2] + A->data[3][2]*x->data[3]
-        + A->data[4][2]*x->data[4] + A->data[5][2]*x->data[5];
-    v->data[3] = A->data[0][3]*x->data[0] + A->data[1][3]*x->data[1]
-        + A->data[2][3]*x->data[2] + A->data[3][3]*x->data[3]
-        + A->data[4][3]*x->data[4] + A->data[5][3]*x->data[5];
-    v->data[4] = A->data[0][4]*x->data[0] + A->data[1][4]*x->data[1]
-        + A->data[2][4]*x->data[2] + A->data[3][4]*x->data[3]
-        + A->data[4][4]*x->data[4] + A->data[5][4]*x->data[5];
-    v->data[5] = A->data[0][5]*x->data[0] + A->data[1][5]*x->data[1]
-        + A->data[2][5]*x->data[2] + A->data[3][5]*x->data[3]
-        + A->data[4][5]*x->data[4] + A->data[5][5]*x->data[5];
+    v->data[0] = A->data[0][0]*x->data[0] + A->data[0][1]*x->data[1]
+        + A->data[0][2]*x->data[2] + A->data[0][3]*x->data[3]
+        + A->data[0][4]*x->data[4] + A->data[0][5]*x->data[5];
+    v->data[1] = A->data[1][0]*x->data[0] + A->data[1][1]*x->data[1]
+        + A->data[1][2]*x->data[2] + A->data[1][3]*x->data[3]
+        + A->data[1][4]*x->data[4] + A->data[1][5]*x->data[5];
+    v->data[2] = A->data[2][0]*x->data[0] + A->data[2][1]*x->data[1]
+        + A->data[2][2]*x->data[2] + A->data[2][3]*x->data[3]
+        + A->data[2][4]*x->data[4] + A->data[2][5]*x->data[5];
+    v->data[3] = A->data[3][0]*x->data[0] + A->data[3][1]*x->data[1]
+        + A->data[3][2]*x->data[2] + A->data[3][3]*x->data[3]
+        + A->data[3][4]*x->data[4] + A->data[3][5]*x->data[5];
+    v->data[4] = A->data[4][0]*x->data[0] + A->data[4][1]*x->data[1]
+        + A->data[4][2]*x->data[2] + A->data[4][3]*x->data[3]
+        + A->data[4][4]*x->data[4] + A->data[4][5]*x->data[5];
+    v->data[5] = A->data[5][0]*x->data[0] + A->data[5][1]*x->data[1]
+        + A->data[5][2]*x->data[2] + A->data[5][3]*x->data[3]
+        + A->data[5][4]*x->data[4] + A->data[5][5]*x->data[5];
 }
 
 void matrix_3x1_cross(const struct matrix_3x1 * w,
