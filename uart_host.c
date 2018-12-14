@@ -231,8 +231,10 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         error_with_errno(FILE_LINE);
     }
 
-    // flush serial buffers
-    // TODO: might need a slight delay prior to flushing
+    // flush serial buffers.  The FTDI driver has a latency of 1ms
+    // therefore, we wait 1 ms before flushing so there if data was sent
+    // it has been picked up by the driver
+    usleep(1000);
     if(tcflush(port->fd, TCIOFLUSH) != 0)
     {
         error_with_errno(FILE_LINE);
