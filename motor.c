@@ -29,8 +29,8 @@
 /// time to wait, in ms for powerup
 static const uint32_t POWERUP_WAIT_MS = 2000;
 
-static const uint32_t MOTOR_GEAR_RATIO = 12; // motor turns to gearbox turns
-static const uint32_t MOTOR_TICKS_PER_REV = 20000; // encoder ticks per rev
+static const uint32_t MOTOR_GEAR_RATIO = 25; // motor turns to gearbox turns
+static const uint32_t MOTOR_TICKS_PER_REV = 10000; // encoder ticks per rev
 static const float MAX_GOTO_SPEED = 0.1f;
 
 // the type of the argument
