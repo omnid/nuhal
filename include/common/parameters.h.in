@@ -109,6 +109,8 @@
 #define PARAMETERS_OMNI_LENGTH 0.2064f
 #define PARAMETERS_OMNI_WIDTH 0.2159f
 
+// @brief spring consant in Nm/radian. See spring_calibrate and
+// spring_independent_calibrate.nb
 #define PARAMETERS_SPRING_CONSTANT 17.0f
 
 /// The hard stop on the gimbal's X and y axis, in radians
