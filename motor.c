@@ -542,7 +542,7 @@ void motor_stop(struct motor_port * port)
     {
         motor_command_arg0(port, "SK", true);
     }
-    else
+    else // SK does not work in motor mode
     {
         motor_command_i32_block(port, "GC", 0);
     }
