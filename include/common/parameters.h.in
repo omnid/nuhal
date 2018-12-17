@@ -42,6 +42,13 @@
 
 /// length of the upper leg (this is made from aluminum tubes)
 #define PARAMETERS_DELTA_UPPER_LEG_LENGTH @DELTA_UPPER_LEG_LENGTH@f
+
+// mass of the lower leg, in kg
+#define DELTA_LOWER_LEG_MASS @DELTA_LOWER_LEG_MASS@f
+
+// distance from the lower leg joint to its center of mass, in m
+#define DELTA_LOWER_LEG_CENTER_OF_MAS @DELTA_LOWER_LEG_CENTER_OF_MASS@f
+
 ///// ------ END CMAKE defined parameters
 
 

@@ -15,7 +15,9 @@ set(DELTA_PLATFORM_THICKNESS 0.01)
 set(DELTA_PLATFORM_MASS 0.5)
 set(DELTA_LOWER_LEG_LENGTH 0.200)
 set(DELTA_UPPER_LEG_LENGTH 0.368)
-
+set(DELTA_LOWER_LEG_MASS 0.261)
+set(DELTA_LOWER_LEG_CENTER_OF_MASS 0.0925)
+  
 # make sure we were invoked with -P to actually call configure_file
 if(CMAKE_SCRIPT_MODE_FILE AND NOT CMAKE_PARENT_LIST_FILE)
   # note parameters.h is placed in the build tree so we add include directories
