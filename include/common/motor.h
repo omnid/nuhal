@@ -1,6 +1,8 @@
 #ifndef COMMON_MOTOR_H
 #define COMMON_MOTOR_H
+/// @file
 /// @brief file for controlling TSM-23Q using SCL commands
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -147,6 +149,24 @@ void motor_current_set(struct motor_port * port, float current);
 /// @param port - the motor port
 /// @param newton_meters - motor torque
 void motor_torque_set(struct motor_port * port, float newton_meters);
+
+
+enum motor_brake
+{
+    MOTOR_BRAKE_OFF, // disable the brake regardless of motor state
+    MOTOR_BRAKE_AUTO // brake is on when motor is disabled
+};
+
+/// @brief set the motor braking mode
+/// @param mode - the mode to set.  MOTOR_BRAKE_AUTO is the usual mode,
+/// this engages the brake whenever the motor is disabled and disengages
+/// the brake whenever it is enabled
+/// MOTOR_BRAKE_OFF completely disabled the brake, so it is never engaged.
+/// This is mainly a debugging feature that allows the mechanism
+/// to move freely even when the motor is disabled
+/// NOTE:  Calling this function will stop and disable the motors before
+/// changing the brake setting
+void motor_brake_set(struct motor_port * port, enum motor_brake mode);
 
 // actual max speed is 60, 
 #define MOTOR_MAX_REV_SEC  60.0f

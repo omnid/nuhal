@@ -34,7 +34,7 @@ static const uint32_t MOTOR_TICKS_PER_REV = 10000; // encoder ticks per rev
 static const float MAX_GOTO_SPEED = 0.1f;
 
 // the type of the argument
-typedef enum {NO_ARG, INT32_ARG, FLOAT_ARG} arg_t;
+typedef enum {NO_ARG, INT32_ARG, FLOAT_ARG, STRING_ARG} arg_t;
 
 /// motor control modes. these correspond to arguments for the CM command
 enum motor_mode {POINT_TO_POINT = 21, CURRENT_CONTROL = 1};
@@ -81,7 +81,7 @@ struct motor_port
 static void motor_command_generic_send(struct motor_port * port,
                                        const char cmd[3],
                                        arg_t nargs,
-                                       void * arg,
+                                       const void * arg,
                                        bool has_response)
 {
     if(!port)
@@ -126,13 +126,17 @@ static void motor_command_generic_send(struct motor_port * port,
         mesg_len = snprintf(message,
                             MSG_LEN,
                             "0%c%c%"PRIi32"\r",
-                            cmd[0], cmd[1], *((int32_t *)arg)) ;
+                            cmd[0], cmd[1], *((const int32_t *)arg)) ;
         break;
     case FLOAT_ARG:
         mesg_len = snprintf(message,
                             MSG_LEN,
                             "0%c%c%.4f\r",
-                            cmd[0], cmd[1], (double)*((float*)arg));
+                            cmd[0], cmd[1], (double)*((const float*)arg));
+        break;
+    case STRING_ARG:
+        mesg_len = snprintf(message, MSG_LEN,
+                            "0%c%c%s\r", cmd[0], cmd[1], (const char *) arg);
         break;
     default:
         error(FILE_LINE,"nargs must be 0 or 1");
@@ -258,7 +262,7 @@ static int motor_command_generic_receive(struct motor_port * port,
 static int motor_command_generic(struct motor_port * port,
                                  const char cmd[3],
                                  arg_t nargs,
-                                 void * arg,
+                                 const void * arg,
                                  char result[MSG_LEN])
 {
     motor_command_generic_send(port, cmd, nargs, arg, NULL != result);
@@ -335,6 +339,18 @@ static void motor_command_i32_block(struct motor_port * port,
 {
     char result[MSG_LEN] = "";
     motor_command_generic(port, cmd, INT32_ARG, &arg, result);
+}
+
+/// @brief send an scl command that takes a string argument to the motor
+/// wait for a response
+/// @param port the port on which to send the command
+/// @param cmd - the cmd bytes as a string
+/// @param arg - the argument
+static void motor_command_string_block(struct motor_port * port,
+                                       const char cmd[3], const char * arg)
+{
+    char result[MSG_LEN] = "";
+    motor_command_generic(port, cmd, STRING_ARG, arg, result);
 }
 
 /// @brief send an scl command to the motor that takes a floating point argument
@@ -663,3 +679,24 @@ void motor_torque_set(struct motor_port * port, float newton_meters)
 {
     motor_current_set(port, newton_meters/(MOTOR_TORQUE_CONSTANT*(float)MOTOR_GEAR_RATIO));
 }
+
+void motor_brake_set(struct motor_port * port, enum motor_brake mode)
+{
+    motor_stop(port);
+    motor_disable(port);
+    switch(mode)
+    {
+    case MOTOR_BRAKE_AUTO:
+        motor_command_i32_block(port, "BO", 1);
+        break;
+    case MOTOR_BRAKE_OFF:
+        motor_command_i32_block(port, "BO", 3);
+        // set output Y1 high
+        motor_command_string_block(port, "BO", "Y1H");
+        break;
+    default:
+        error(FILE_LINE, "Unknown brake mode");
+    }
+}
+        
+    
