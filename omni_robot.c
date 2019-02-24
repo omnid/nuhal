@@ -70,9 +70,14 @@ void omni_robot_join_vels(const struct type_wheel_velocities u[], struct matrix_
 /// @param pose [out] - the robot's updated pose
 void omni_robot_update_odometry(const struct type_twist * v, float * x, float * y, float * theta, const float time_step)
 {
+    // multiply twist components by timestep
+    v->wz = v->wz * timestep;
+    v->vx = v->vx * timestep;
+    v->vy = v->vy * timestep;
+
     // Get change in position from input twist in body frame
     float wz = 0.0f, vx = 0.0f, vy = 0.0f;
-    if(fabs(v->wz) < 0.0001f)     // Precision up to 10^-5 for determining if a number should be rounded down to 0.0
+    if(fabs(v->wz) < 0.000001f)     // Precision up to 10^-6 for determining if a number should be rounded down to 0.0
     {
         wz = 0.0f;
         vx = v->vx;
@@ -100,7 +105,7 @@ void omni_robot_update_odometry(const struct type_twist * v, float * x, float * 
     matrix_3x3_multiply_vector(&fixed_transform, &delta_body, &delta_fixed);
 
     // Update robot position and orientation
-    *theta += (delta_fixed.data[0] * time_step);
-    *x += (delta_fixed.data[1] * time_step);
-    *y += (delta_fixed.data[2] * time_step);
+    *theta += delta_fixed.data[0];
+    *x += delta_fixed.data[1];
+    *y += delta_fixed.data[2];
 }
