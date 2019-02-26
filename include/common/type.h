@@ -111,6 +111,13 @@ struct type_twist
   float vy;
 };
 
+struct type_pose2D
+{
+    float theta;
+    float x;
+    float y;
+};
+
 struct type_omni_velocities
 {
   // Front left
