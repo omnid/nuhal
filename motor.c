@@ -699,6 +699,7 @@ void motor_brake_set(struct motor_port * port, enum motor_brake mode)
         error(FILE_LINE, "Unknown brake mode");
     }
     */
+	;//do nothing, for debugging
 }
         
     
