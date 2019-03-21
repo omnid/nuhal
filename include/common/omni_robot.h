@@ -45,6 +45,18 @@ void omni_robot_join_vels(const struct type_wheel_velocities u[], struct matrix_
 /// @param pose [out] - the robot's pose that is updated
 void omni_robot_update_odometry(const struct type_twist * v, float * x, float * y, float * theta, const float time_step);
 
+/// @brief Calculates Adjoint when in FORMATION control
+/// @param pivot - 2Dpose of pivot point
+/// @param Tsb_pose2D - transform of robot relative to map frame
+/// @param adjoint [out] - the Adjoint map Ad_Tbr from the robot to the pivot
+void omni_robot_compute_adjoint(const struct type_pose2D pivot, const struct type_pose2D Tsb_pose2D, struct matrix_6x6 *adjoint);
+
+/// @brief Computes the body twist of the robot V_body from the pivot Twist V_piv using the adjoint - used in FORMATION control
+/// @param adjoint - Adjoint map of the pivot frame wrt the body frame
+/// @param V_piv - Twist wrt the pivot frame
+/// @param V_body [out] - Twist wrt the body frame
+void omni_robot_compute_Vb(const struct matrix_6x6 *adjoint, const struct type_twist * V_piv, struct type_twist * V_body);
+
 #ifdef __cplusplus
 }
 #endif

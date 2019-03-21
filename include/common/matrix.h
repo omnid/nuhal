@@ -91,6 +91,11 @@ void matrix_6x6_init(struct matrix_6x6 * out,
 /// @param mat - the matrix to transpose
 void matrix_3x3_transpose(struct matrix_3x3 * mat);
 
+/// @brief transposes a 3x3 matrix and returns it as a new matrix
+/// @param mat - the matrix to transpose
+/// @param mat_tr [out] - the transposed matrix
+void matrix_3x3_return_transpose(struct matrix_3x3 * mat, struct matrix_3x3 * mat_tr);
+
 /// @brief transpose the 4x3 matrix
 /// @param mat - the matrix to transpose
 void matrix_4x3_transpose(struct matrix_4x3 * mat);

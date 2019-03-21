@@ -121,6 +121,26 @@ void matrix_3x3_transpose(struct matrix_3x3 * mat)
     mat->transpose = !mat->transpose;
 }
 
+void matrix_3x3_return_transpose(struct matrix_3x3 * mat, struct matrix_3x3 * mat_tr)
+{
+    if(!mat || !mat_tr)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+
+    mat_tr->data[0][0] = mat->data[0][0];
+    mat_tr->data[0][1] = mat->data[1][0];
+    mat_tr->data[0][2] = mat->data[2][0];
+
+    mat_tr->data[1][0] = mat->data[0][1];
+    mat_tr->data[1][1] = mat->data[1][1];
+    mat_tr->data[1][2] = mat->data[2][1];
+
+    mat_tr->data[2][0] = mat->data[0][2];
+    mat_tr->data[2][1] = mat->data[1][2];
+    mat_tr->data[2][2] = mat->data[2][2];
+}
+
 void matrix_4x3_transpose(struct matrix_4x3 * mat)
 {
     if(!mat)
