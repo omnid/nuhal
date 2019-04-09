@@ -16,4 +16,11 @@
 void uart_passthrough(const struct uart_port * port1,
                       const struct uart_port * port2);
 
+/// @brief blocks until the uart transmit FIFO is empty and transmit is done
+/// @param port - the port to wait for
+/// @param timeout - time inms to wait for transmit
+///    if it takes longer a fatal error occurs. 0 disables timeout
+/// @post all errors (including timeouts) result in program termination
+void uart_transmit_sync(const struct uart_port * port, uint32_t timeout);
+
 #endif
