@@ -225,14 +225,41 @@ void uart_close(const struct uart_port * port)
 
 void uart_transmit_sync(const struct uart_port * port, uint32_t timeout)
 {
+    if(!port)
+    {
+        error(FILE_LINE, "Null pointer");
+    }
     struct time_elapsed_ms stamp = time_elapsed_ms_init();
 
     while(0 == timeout || time_elapsed_ms(&stamp) < timeout)
     {
         if(!UARTBusy(port->base))
-	{
+	    {
             return;
-	}
+	    }
+    }
+    // if we get here we have timed out
+    error(FILE_LINE, "Timeout on transmit sync.");
+    return;
+}
+
+void uart_rx_clear(const struct uart_port * port, uint32_t timeout)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "Null pointer");
+    }
+    struct time_elapsed_ms stamp = time_elapsed_ms_init();
+    while(0 == timeout || time_elapsed_ms(&stamp) < timeout)
+    {
+        if(UARTCharsAvail(port->base)) {
+            UARTCharGetNonBlocking(port->base);
+        }
+        else
+        {
+            UARTRxErrorClear(port->base);
+            return;
+        }
     }
     // if we get here we have timed out
     error(FILE_LINE, "Timeout on transmit sync.");
