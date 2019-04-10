@@ -16,18 +16,5 @@
 void uart_passthrough(const struct uart_port * port1,
                       const struct uart_port * port2);
 
-/// @brief blocks until the uart transmit FIFO is empty and transmit is done
-/// @param port - the port to wait for
-/// @param timeout - time in ms to wait for transmit
-///    if it takes longer a fatal error occurs. 0 disables timeout
-/// @post all errors (including timeouts) result in program termination
-void uart_transmit_sync(const struct uart_port * port, uint32_t timeout);
-
-/// @brief empties the uart receive FIFO and clears uart error flags
-/// @param port - the port to flush
-/// @param timeout - time in ms to wait for clearance
-///    if it takes longer a fatal error occurs. 0 disables timeout
-/// @post all errors (including timeouts) result in program termination
-void uart_rx_clear(const struct uart_port * port, uint32_t timeout);
 
 #endif
