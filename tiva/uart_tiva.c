@@ -4,6 +4,8 @@
 #include "common/time.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_ints.h"
+#include "inc/hw_types.h"
+#include "inc/hw_uart.h"
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
@@ -211,6 +213,43 @@ int uart_write_nonblock(const struct uart_port * port, const void * data,
     return len;
 }
 
+void uart_set_receive_enable(const struct uart_port * port, bool enable)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "Null pointer");
+    }
+
+    if (enable)
+    {
+        HWREG(port->base + UART_O_CTL) |= UART_CTL_RXE;            // Enable receive
+    }
+    else
+    {
+        HWREG(port->base + UART_O_CTL) &= ~(UART_CTL_RXE);         // Disable receive
+    }
+}
+
+void uart_transmit_sync(const struct uart_port * port, uint32_t timeout)
+{
+    if(!port)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+
+    struct time_elapsed_ms stamp = time_elapsed_ms_init();
+
+    while(timeout == 0 || time_elapsed_ms(&stamp) < timeout)
+    {
+        if(!(HWREG(port->base + UART_O_FR) & UART_FR_BUSY))     // Wait for commad char to send
+        {
+            return;
+        }
+    }
+
+    // if we get here we have timed out
+    error(FILE_LINE, "Timeout on blocking read.");
+}
 
 void uart_close(const struct uart_port * port)
 {

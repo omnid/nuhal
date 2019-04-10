@@ -16,5 +16,19 @@
 void uart_passthrough(const struct uart_port * port1,
                       const struct uart_port * port2);
 
+/// @brief enables or disables the uart receive functionality
+/// @param port - the port
+/// @param enable - if true, the uart receiver is enabled. If false, the uart
+///    receiver is disabled
+void uart_set_receive_enable(const struct uart_port * port, bool enable);
+
+/// @brief waits until the uart is finished transmitting all characters in the buffer,
+///    including the stop bit of the last character
+/// @param port - the port
+/// @param timeout - time in ms to wait for new characters.
+///   if more than this time elapses, a fatal error occurs. if 0,
+///   the timeout is disabled 
+/// @post errors (including timeouts) result in program termination
+void uart_transmit_sync(const struct uart_port * port, uint32_t timeout);
 
 #endif
