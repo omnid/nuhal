@@ -238,7 +238,18 @@ void uart_transmit_sync(const struct uart_port * port, uint32_t timeout)
     }
 
     struct time_elapsed_ms stamp = time_elapsed_ms_init();
-
+    // TODO: Commented here is a proposed faster solution to timeout
+    
+    /*
+    while(UARTBusy(port->base))
+    {
+        if(timeout != 0 && time_elapsed_ms(&stamp) > timeout)
+        {
+            error(FILE_LINE, "Timeout");
+        }
+    }*/
+    
+    
     while(timeout == 0 || time_elapsed_ms(&stamp) < timeout)
     {
         if(!(HWREG(port->base + UART_O_FR) & UART_FR_BUSY))     // Wait for commad char to send
@@ -248,7 +259,8 @@ void uart_transmit_sync(const struct uart_port * port, uint32_t timeout)
     }
 
     // if we get here we have timed out
-    error(FILE_LINE, "Timeout on blocking read.");
+    error(FILE_LINE, "Timeout");
+    
 }
 
 void uart_close(const struct uart_port * port)
