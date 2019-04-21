@@ -17,14 +17,9 @@
 /// @return the port number
 /// @pre the pin must be a valid pin
 /// @post the port returned is always valid, otherwise an error occurs
-static uint8_t pin_port(uint32_t pin)
+static inline uint8_t pin_port(uint32_t pin)
 {
-    const uint8_t port = (pin >> 16) & 0xFF;
-    if(port >= TIVA_NUM_PORTS)
-    {
-        error(FILE_LINE, "Invalid port");
-    }
-    return port;
+    return (pin >> 16) & 0xFF;
 }
 
 /// @brief Get the pin number from the pin
@@ -34,21 +29,16 @@ static uint8_t pin_port(uint32_t pin)
 /// @pre pin must be a valid pin
 /// @post the pin number returned is guaranteed to be valid otherwise
 /// an error occurs
-static uint8_t pin_number(uint32_t pin)
+static inline uint8_t pin_number(uint32_t pin)
 {
-    const uint8_t number = ((pin >> 8) & 0xFF) / 4;
-    if(number >= TIVA_PINS_PER_PORT)
-    {
-        error(FILE_LINE, "Invalid pin");
-    }
-    return number;
+    return ((pin >> 8) & 0xFF) / 4;
 }
 
 /// @brief get the base address of an gpio port that holds the given pin
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h
 /// or PIN(port, number).
 /// @return the address of the port base register for the port containing pin
-static uint32_t pin_base(uint32_t pin)
+static inline uint32_t pin_base(uint32_t pin)
 {
     // port SFR bases
     static const uint32_t port_bases[TIVA_NUM_PORTS] = {
@@ -65,7 +55,7 @@ static uint32_t pin_base(uint32_t pin)
 /// or PIN(port, number).
 /// @return a mask with all bits equal to zero except a 1 in the position
 /// of the pin number
-static uint32_t pin_mask(uint32_t pin)
+static inline uint32_t pin_mask(uint32_t pin)
 {
     // pin constants
     static const uint32_t port_pins[TIVA_PINS_PER_PORT] = {
@@ -192,6 +182,7 @@ void pin_write(uint32_t pin, bool value)
     const uint32_t base = pin_base(pin);
     const uint32_t mask = pin_mask(pin);
     GPIOPinWrite(base, mask, value ? mask : ~mask);
+    HWREG(base + (GPIO_O_DATA + (mask << 2))) = value ? mask : ~mask;
 }
 
 bool pin_read(uint32_t pin)
