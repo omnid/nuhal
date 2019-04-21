@@ -181,7 +181,9 @@ void pin_write(uint32_t pin, bool value)
 {
     const uint32_t base = pin_base(pin);
     const uint32_t mask = pin_mask(pin);
-    HWREG(base + (GPIO_O_DATA + (mask << 2))) = value ? mask : ~mask;
+    // the mask << 2 is bits [9:2] in the address and it serves as a mask
+    // for which bit to set (see datasheet)
+    HWREG(base + (GPIO_O_DATA + (mask << 2))) = value ? 0xFF : 0;
 }
 
 bool pin_read(uint32_t pin)
