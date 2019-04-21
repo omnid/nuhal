@@ -181,7 +181,6 @@ void pin_write(uint32_t pin, bool value)
 {
     const uint32_t base = pin_base(pin);
     const uint32_t mask = pin_mask(pin);
-    GPIOPinWrite(base, mask, value ? mask : ~mask);
     HWREG(base + (GPIO_O_DATA + (mask << 2))) = value ? mask : ~mask;
 }
 
