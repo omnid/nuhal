@@ -26,7 +26,8 @@ add_custom_target(timestamp ALL
 add_library(common
   utilities.c uart.c time.c queue.c error.c led.c
   motor.c bytestream.c pid.c delta_robot.c
-encoder.c type.c matrix.c omni_robot.c)
+  encoder.c type.c matrix.c omni_robot.c)
+  
 # depending on common causes timestamp.h to be touched
 add_dependencies(common timestamp)
 
