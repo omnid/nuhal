@@ -190,7 +190,8 @@ bool pin_read(uint32_t pin)
 {
     const uint32_t base = pin_base(pin);
     const uint32_t mask = pin_mask(pin);
-    return GPIOPinRead(base, mask) & 0xFF;
+    return HWREG(base + (GPIO_O_DATA + (mask << 2)));
+
 }
 
 void pin_invert(uint32_t pin)
