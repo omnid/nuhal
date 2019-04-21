@@ -15,8 +15,7 @@
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h,
 /// or PIN(port, number).
 /// @return the port number
-/// @pre the pin must be a valid pin
-/// @post the port returned is always valid, otherwise an error occurs
+/// @pre the pin must be a valid pin otherwise this fails silently
 static inline uint8_t pin_port(uint32_t pin)
 {
     return (pin >> 16) & 0xFF;
@@ -26,9 +25,7 @@ static inline uint8_t pin_port(uint32_t pin)
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h
 /// or PIN(port, number).
 /// @return the pin number.
-/// @pre pin must be a valid pin
-/// @post the pin number returned is guaranteed to be valid otherwise
-/// an error occurs
+/// @pre pin must be a valid pin otherwise this fails silently
 static inline uint8_t pin_number(uint32_t pin)
 {
     return ((pin >> 8) & 0xFF) / 4;
@@ -38,6 +35,7 @@ static inline uint8_t pin_number(uint32_t pin)
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h
 /// or PIN(port, number).
 /// @return the address of the port base register for the port containing pin
+/// @pre pin must be a valid pin otherwise this fails silently
 static inline uint32_t pin_base(uint32_t pin)
 {
     // port SFR bases
@@ -55,6 +53,7 @@ static inline uint32_t pin_base(uint32_t pin)
 /// or PIN(port, number).
 /// @return a mask with all bits equal to zero except a 1 in the position
 /// of the pin number
+/// @pre pin must be a valid pin otherwise this fails silently
 static inline uint32_t pin_mask(uint32_t pin)
 {
     // pin constants
@@ -85,7 +84,17 @@ static void pin_configure(uint32_t pin, enum pin_type type)
     static uint32_t assigned_pins[TIVA_NUM_PORTS] = {0};
 
     const uint8_t port = pin_port(pin); // the port number
+    if(port >= TIVA_NUM_PORTS)
+    {
+        error(FILE_LINE, "Invalid port");
+    }
+
     const uint8_t number = pin_number(pin);
+    if(number >= TIVA_PINS_PER_PORT)
+    {
+        error(FILE_LINE, "Invalid pin");
+    }
+
     const uint32_t base = pin_base(pin);
     const uint32_t mask = pin_mask(pin);
 
