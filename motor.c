@@ -687,12 +687,14 @@ void motor_brake_set(struct motor_port * port, enum motor_brake mode)
     switch(mode)
     {
     case MOTOR_BRAKE_AUTO:
+        // break output Y2 is controlled by enable/disable state
         motor_command_i32_block(port, "BO", 1);
         break;
     case MOTOR_BRAKE_OFF:
+        // brake output Y2 will now be commanded individually
         motor_command_i32_block(port, "BO", 3);
-        // set output Y1 high
-        motor_command_string_block(port, "SO", "Y1H");
+        // set output Y2 to low, this will disengage the brake
+        motor_command_string_block(port, "SO", "Y2L");
         break;
     default:
         error(FILE_LINE, "Unknown brake mode");
