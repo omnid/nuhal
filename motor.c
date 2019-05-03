@@ -682,7 +682,6 @@ void motor_torque_set(struct motor_port * port, float newton_meters)
 
 void motor_brake_set(struct motor_port * port, enum motor_brake mode)
 {
-	/*
     motor_stop(port);
     motor_disable(port);
     switch(mode)
@@ -693,13 +692,11 @@ void motor_brake_set(struct motor_port * port, enum motor_brake mode)
     case MOTOR_BRAKE_OFF:
         motor_command_i32_block(port, "BO", 3);
         // set output Y1 high
-        motor_command_string_block(port, "BO", "Y1H");
+        motor_command_string_block(port, "SO", "Y1H");
         break;
     default:
         error(FILE_LINE, "Unknown brake mode");
     }
-    */
-	;//do nothing, for debugging
 }
         
     
