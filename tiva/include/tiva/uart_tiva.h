@@ -27,11 +27,11 @@ void uart_set_receive_enable(const struct uart_port * port, bool enable);
 ///    including the stop bit of the last character. This function has no timeout
 ///    and will block indefinitely if the transmitter cannot send the character!
 /// @param port - the port
-/// @param data - buffer storing the data to be written
+/// @param data - the single character (8 bits) to be written
 /// @param timeout - time in ms to wait for new characters.
 ///   if more than this time elapses, a fatal error occurs. if 0,
 ///   the timeout is disabled 
 /// @post errors (including timeouts) result in program termination
-void uart_transmit_single_block(const struct uart_port * port, const void * data);
+void uart_transmit_single_block(const struct uart_port * port, const uint8_t data);
 
 #endif
