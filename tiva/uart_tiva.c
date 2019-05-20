@@ -237,11 +237,12 @@ void uart_transmit_single_block(const struct uart_port * port, const uint8_t dat
         error(FILE_LINE, "NULL ptr");
     }
 
-    struct time_elapsed_ms stamp = time_elapsed_ms_init();
-
     UARTCharPutNonBlocking(port->base, data);
 
-    while(HWREG(port->base + UART_O_FR) & UART_FR_BUSY){}
+    while(HWREG(port->base + UART_O_FR) & UART_FR_BUSY)
+    {
+        ;
+    }
 }
 
 void uart_close(const struct uart_port * port)
