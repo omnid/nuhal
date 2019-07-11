@@ -16,10 +16,11 @@
 cmake_minimum_required(VERSION 3.9)
 project(common C)
 
-# touch timestamp.h so any file including it gets recompiled
-add_custom_target(timestamp ALL
-  COMMAND ${CMAKE_COMMAND} -E touch "${PROJECT_SOURCE_DIR}/include/common/timestamp.h"
-  COMMENT "Updating timestamp.h"
+# Whenever make all (the default target) is built, update git_hash.h
+add_custom_target(git_hash ALL
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/make_git_hash_h.sh ${CMAKE_CURRENT_BINARY_DIR}/include/common/git_hash.h
+  COMMENT "Updating git_hash.h"
+  BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/include/common/git_hash.h
   )
 
 # Add files that are compiled for any platform
@@ -27,9 +28,8 @@ add_library(common
   utilities.c uart.c time.c queue.c error.c led.c
   motor.c bytestream.c pid.c delta_robot.c
   encoder.c type.c matrix.c omni_robot.c)
-  
-# depending on common causes timestamp.h to be touched
-add_dependencies(common timestamp)
+# depent on git_hash so that git_hash.h will be modified before common is built
+add_dependencies(common git_hash)
 
 # use parameters.cmake to create parameters.h from parameters.h.in
 # To this and handle dependencies properly we need to
