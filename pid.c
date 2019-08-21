@@ -29,7 +29,7 @@ float pid_compute(struct pid_state * st, float reference, float measurement)
     // see https://jagger.berkeley.edu/~pack/me132/Section15.pdf
     if((st->u_min < u && u < st->u_max)
        || (error < 0 && u > st->u_max)
-       || (error > 0 && u < st->u_max))
+       || (error > 0 && u < st->u_min))
     {
         st->i_error = i_error;
     }
