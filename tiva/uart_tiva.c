@@ -47,6 +47,11 @@ void uart_passthrough(const struct uart_port * port1,
         // exit the loop if we get a BREAK signal
         if(UARTRxErrorGet(port1->base) & UART_RXERROR_BREAK)
         {
+            // it is possible for the BREAK signal to last as long as 0.5s,
+            // which the tiva uart may interpret as multiple BREAK signals.
+            
+            // therefore delay for this time before exiting passthrough
+            time_delay_ms(500);
             UARTRxErrorClear(port1->base);
             break;
         }
