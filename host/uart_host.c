@@ -142,10 +142,13 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     rs485conf.flags |= SER_RS485_RX_DURING_TX;
     if(-1 == ioctl(port->fd, TIOCSRS485, &rs485conf))
     {
-        error_with_errno(FILE_LINE);
+        // if the operation is not supported on this particular
+        // device, just ignore the error
+        if(errno != ENOTSUP)
+        {
+            error_with_errno(FILE_LINE);
+        }
     }
-
-
 
     struct termios tio = {0};
     tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
