@@ -28,6 +28,7 @@ struct uart_port
 {
     int fd;
     bool is_open;
+    bool is_usb;
     struct termios old_tio;
     struct serial_struct old_serial;
 
@@ -127,13 +128,20 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     struct serial_struct serial = port->old_serial;
     // the below is defined in serial.h
     serial.flags |= ASYNC_LOW_LATENCY;
+    // start this process assuming we have a USB-serial device
+    port->is_usb = true;
     if(-1 == ioctl(port->fd, TIOCSSERIAL, &serial))
     {
         // if the operation is not supported on this particular
-        // device, just ignore the error
+        // device, ignore the error and record the device as a 
+        // non-usb device
         if(errno != ENOTSUP)
         {
             error_with_errno(FILE_LINE);
+        }
+        else
+        {
+            port->is_usb = false;
         }
     }
 
@@ -365,38 +373,46 @@ void uart_close(const struct uart_port * port)
 
 void uart_send_break(const struct uart_port * port, uint32_t timeout)
 {
-    struct termios tio;
-    // get the current settings
-    if(0 != tcgetattr(port->fd, &tio) )
+    if(port->is_usb)
     {
-        error_with_errno(FILE_LINE);
-    }
-
-    const tcflag_t cflag = tio.c_cflag;
-    if(cflag & PARENB)
-    {
-        error(FILE_LINE, "Cannot send break when using parity");
-    }
-
-    // set even parity
-    tio.c_cflag |= PARENB;
-    tio.c_cflag &= ~PARODD;
-
-    // set the attributes so we have even parity
-    if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
-    {
-        error_with_errno(FILE_LINE);
-    }
+        struct termios tio;
+        // get the current settings
+        if(0 != tcgetattr(port->fd, &tio) )
+        {
+            error_with_errno(FILE_LINE);
+        }
     
-    // send a zero byte
-    static const uint8_t zero = 0x00;
-    uart_write_block(port, &zero, 1, timeout);
-
-    // restore the old settings
-    tio.c_cflag = cflag;
-    if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
+        const tcflag_t cflag = tio.c_cflag;
+        if(cflag & PARENB)
+        {
+            error(FILE_LINE, "Cannot send break when using parity");
+        }
+    
+        // set even parity
+        tio.c_cflag |= PARENB;
+        tio.c_cflag &= ~PARODD;
+    
+        // set the attributes so we have even parity
+        if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
+        {
+            error_with_errno(FILE_LINE);
+        }
+        // send a zero byte
+        static const uint8_t zero = 0x00;
+        uart_write_block(port, &zero, 1, timeout);
+    
+        // restore the old settings
+        tio.c_cflag = cflag;
+        if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
+        {
+            error_with_errno(FILE_LINE);
+        }
+    }
+    else
     {
-        error_with_errno(FILE_LINE);
+	// send zero value for at least 0.25 seconds,
+        // and not more than 0.5 seconds
+        tcsendbreak(port->fd, 0);
     }
 }
 
