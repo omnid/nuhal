@@ -128,8 +128,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     struct serial_struct serial = port->old_serial;
     // the below is defined in serial.h
     serial.flags |= ASYNC_LOW_LATENCY;
-    // start this process assuming we have a USB-serial device
-    port->is_usb = true;
+
     if(-1 == ioctl(port->fd, TIOCSSERIAL, &serial))
     {
         // if the operation is not supported on this particular
@@ -139,10 +138,14 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         {
             error_with_errno(FILE_LINE);
         }
-        else
-        {
-            port->is_usb = false;
-        }
+
+        port->is_usb = false;
+    }
+    else
+    {
+        // if the latency configuration is successful then we
+        // assume we have a usb device
+        port->is_usb = true;
     }
 
     struct serial_rs485 rs485conf = {0};
@@ -381,17 +384,17 @@ void uart_send_break(const struct uart_port * port, uint32_t timeout)
         {
             error_with_errno(FILE_LINE);
         }
-    
+
         const tcflag_t cflag = tio.c_cflag;
         if(cflag & PARENB)
         {
             error(FILE_LINE, "Cannot send break when using parity");
         }
-    
+
         // set even parity
         tio.c_cflag |= PARENB;
         tio.c_cflag &= ~PARODD;
-    
+
         // set the attributes so we have even parity
         if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
         {
@@ -400,7 +403,7 @@ void uart_send_break(const struct uart_port * port, uint32_t timeout)
         // send a zero byte
         static const uint8_t zero = 0x00;
         uart_write_block(port, &zero, 1, timeout);
-    
+
         // restore the old settings
         tio.c_cflag = cflag;
         if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
@@ -410,9 +413,9 @@ void uart_send_break(const struct uart_port * port, uint32_t timeout)
     }
     else
     {
-	// send zero value for at least 0.25 seconds,
-        // and not more than 0.5 seconds
-        tcsendbreak(port->fd, 0);
+	// send zero value for 1ms on non-usb linux
+        // serial ports
+        tcsendbreak(port->fd, 1);
     }
 }
 
