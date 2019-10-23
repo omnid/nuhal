@@ -155,12 +155,15 @@ int uart_printf(const struct uart_port * port, const char * fmt, ...)
 int uart_scanf(const struct uart_port * port, const char * fmt, ...)
     __attribute__((format (scanf, 2, 3)));
 
-/// @brief send a break signal.  This consists of all 0 data bits plus
+/// @brief send a break signal. This consists of all 0 data bits plus
 ///  a stop bit of zero.  Some USB-serial converters cannot do this,
-/// therefore, on the host system a break is emulated by
-/// switching the port to even parity and sending all zeros.
-/// If your protocol is using even parity then the break generated
-/// by this function is indistinguishable from a parity error
+///  therefore, on a host usb-converter a break is emulated by
+///  switching the port to even parity and sending all zeros.
+///  If your protocol is using even parity then the break generated
+///  by this function is indistinguishable from a parity error.
+///  If the port is a non-usb port, a true break will be sent. On linux
+///  hosts the duration of the break will be 1ms.
+///
 /// @param port - the port over which to send the break
 /// @param timeout - 0 no timeout, otherwise may timeout when sending the break
 /// @post error results in program termination
