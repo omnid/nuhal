@@ -155,7 +155,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     {
         // if the operation is not supported on this particular
         // device, just ignore the error
-        if(errno != ENOTSUP)
+        if(errno != ENOTSUP && errno != ENOTTY)
         {
             error_with_errno(FILE_LINE);
         }
