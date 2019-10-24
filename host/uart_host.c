@@ -71,6 +71,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         }
     }
 
+
     // allocate a new port struct
     struct uart_port * port =  (struct uart_port *)malloc(sizeof(struct uart_port));
     if(NULL == port)
@@ -100,9 +101,22 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         port->prev = curr_port;
     }
 
+    // determine whether the device is a usb-serial converter
+    // any device that starts with /dev/ttyUSB or /dev/ttyACM counts
+    // as a USB serial device, other devices are treated as physical ports.
+    // We first resolve the absolute device name in case the name provided
+    // is a symlink or has relative paths.
+    char realname[PATH_MAX] = {0};
+    if(!realpath(name, realname))
+    {
+        error_with_errno(FILE_LINE);
+    }
+    port->is_usb = strncmp("/dev/ttyUSB", realname, 11) == 0
+                   || strncmp("/dev/ttyACM", realname, 11) == 0;
+
 
     // open serial port for non-blocking reads
-    port->fd = open(name, O_RDWR | O_NOCTTY | O_NONBLOCK);
+    port->fd = open(realname, O_RDWR | O_NOCTTY | O_NONBLOCK);
 
     if (-1 == port->fd)
     {
@@ -132,37 +146,31 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     if(-1 == ioctl(port->fd, TIOCSSERIAL, &serial))
     {
         // if the operation is not supported on this particular
-        // device, ignore the error and record the device as a 
-        // non-usb device
+        // device, ignore the error
         if(errno != ENOTSUP)
         {
             error_with_errno(FILE_LINE);
         }
-
-        port->is_usb = false;
-    }
-    else
-    {
-        // if the latency configuration is successful then we
-        // assume we have a usb device
-        port->is_usb = true;
     }
 
-    struct serial_rs485 rs485conf = {0};
-    rs485conf.flags |= SER_RS485_ENABLED;
-    rs485conf.flags |= SER_RS485_RX_DURING_TX;
-    if(-1 == ioctl(port->fd, TIOCSRS485, &rs485conf))
+    if(!port->is_usb)
     {
-        // if the operation is not supported on this particular
-        // device, just ignore the error
-        if(errno != ENOTSUP && errno != ENOTTY)
+        struct serial_rs485 rs485conf = {0};
+        rs485conf.flags |= SER_RS485_ENABLED;
+        rs485conf.flags |= SER_RS485_RX_DURING_TX;
+        if(-1 == ioctl(port->fd, TIOCSRS485, &rs485conf))
         {
-            error_with_errno(FILE_LINE);
+            // if the operation is not supported on this particular
+            // device, just ignore the error
+            if(errno != ENOTSUP && errno != ENOTTY)
+            {
+                error_with_errno(FILE_LINE);
+            }
         }
     }
 
     struct termios tio = {0};
-    tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
+    tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h
 
     // set raw input mode
     tio.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
@@ -413,7 +421,7 @@ void uart_send_break(const struct uart_port * port, uint32_t timeout)
     }
     else
     {
-	// send zero value for 1ms on non-usb linux
+	    // send zero value for 1ms on non-usb linux
         // serial ports
         tcsendbreak(port->fd, 1);
     }

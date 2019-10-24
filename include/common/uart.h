@@ -62,6 +62,10 @@ extern "C" {
 
 /// @brief open a uart with given baud, flow control, parity, and 1 stop bit.
 ///  The port should be opened in non-blocking mode
+///  If the port supports full-duplex RS485 mode, it will be put into that mode.
+///  If the port is a USB-serial converter (has '/dev/ttyUSB' or '/dev/ttyACM' in its
+///  kernel name) no attempt is made to change RS485 vs. RS232 settings. However, USB
+///  polling interval will be set to the minimum, which is 1ms.
 /// @param name - the name of the port to open
 /// @param baud - the baud rate of the port
 /// @param flow - the type of flow control to use
