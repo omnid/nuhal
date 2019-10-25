@@ -34,7 +34,8 @@ static const struct uart_port ports[] = {
 };
 
 void uart_passthrough(const struct uart_port * port1,
-                      const struct uart_port * port2)
+                      const struct uart_port * port2,
+                      uint32_t timeout)
 {
     if(!port1 || !port2)
     {
@@ -63,6 +64,18 @@ void uart_passthrough(const struct uart_port * port1,
         {
             const uint8_t rxchar = rx2;
             uart_write_nonblock(port1, &rxchar, 1);
+        }
+    }
+
+    // keep waiting for the break signal to end
+    // for up to the timeout
+    struct time_elapsed_ms stamp = time_elapsed_ms_init();
+    while(UARTRxErrorGet(port1->base) & UART_RXERROR_BREAK)
+    {
+        UARTRxErrorClear(port1->base);
+        if(time_elapsed_ms(&stamp) > timeout && timeout != 0)
+        {
+            error(FILE_LINE, "Timeout pending end of break signal");
         }
     }
 }

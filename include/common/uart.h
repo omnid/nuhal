@@ -62,6 +62,10 @@ extern "C" {
 
 /// @brief open a uart with given baud, flow control, parity, and 1 stop bit.
 ///  The port should be opened in non-blocking mode
+///  If the port supports full-duplex RS485 mode, it will be put into that mode.
+///  If the port is a USB-serial converter (has '/dev/ttyUSB' or '/dev/ttyACM' in its
+///  kernel name) no attempt is made to change RS485 vs. RS232 settings. However, USB
+///  polling interval will be set to the minimum, which is 1ms.
 /// @param name - the name of the port to open
 /// @param baud - the baud rate of the port
 /// @param flow - the type of flow control to use
@@ -155,12 +159,15 @@ int uart_printf(const struct uart_port * port, const char * fmt, ...)
 int uart_scanf(const struct uart_port * port, const char * fmt, ...)
     __attribute__((format (scanf, 2, 3)));
 
-/// @brief send a break signal.  This consists of all 0 data bits plus
+/// @brief send a break signal. This consists of all 0 data bits plus
 ///  a stop bit of zero.  Some USB-serial converters cannot do this,
-/// therefore, on the host system a break is emulated by
-/// switching the port to even parity and sending all zeros.
-/// If your protocol is using even parity then the break generated
-/// by this function is indistinguishable from a parity error
+///  therefore, on a host usb-converter a break is emulated by
+///  switching the port to even parity and sending all zeros.
+///  If your protocol is using even parity then the break generated
+///  by this function is indistinguishable from a parity error.
+///  If the port is a non-usb port, a true break will be sent. On linux
+///  hosts the duration of the break will be 1ms.
+///
 /// @param port - the port over which to send the break
 /// @param timeout - 0 no timeout, otherwise may timeout when sending the break
 /// @post error results in program termination

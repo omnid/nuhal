@@ -13,8 +13,12 @@
 /// A break consists of all zeros, followed by a zero for the stop bit 
 /// @param port1 - one of the ports
 /// @param port2 - another one of the ports
+/// @param timeout - time in ms to wait for break condition to clear
+///   if more than this time elapses, a fatal error ocdcurs. if 0, the
+///   timeout is disabled
 void uart_passthrough(const struct uart_port * port1,
-                      const struct uart_port * port2);
+                      const struct uart_port * port2,
+                      uint32_t timeout);
 
 /// @brief enables or disables the uart receive functionality
 /// @param port - the port

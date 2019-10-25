@@ -28,6 +28,7 @@ struct uart_port
 {
     int fd;
     bool is_open;
+    bool is_usb;
     struct termios old_tio;
     struct serial_struct old_serial;
 
@@ -70,6 +71,7 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         }
     }
 
+
     // allocate a new port struct
     struct uart_port * port =  (struct uart_port *)malloc(sizeof(struct uart_port));
     if(NULL == port)
@@ -99,9 +101,22 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
         port->prev = curr_port;
     }
 
+    // determine whether the device is a usb-serial converter
+    // any device that starts with /dev/ttyUSB or /dev/ttyACM counts
+    // as a USB serial device, other devices are treated as physical ports.
+    // We first resolve the absolute device name in case the name provided
+    // is a symlink or has relative paths.
+    char realname[PATH_MAX] = {0};
+    if(!realpath(name, realname))
+    {
+        error_with_errno(FILE_LINE);
+    }
+    port->is_usb = strncmp("/dev/ttyUSB", realname, 11) == 0
+                   || strncmp("/dev/ttyACM", realname, 11) == 0;
+
 
     // open serial port for non-blocking reads
-    port->fd = open(name, O_RDWR | O_NOCTTY | O_NONBLOCK);
+    port->fd = open(realname, O_RDWR | O_NOCTTY | O_NONBLOCK);
 
     if (-1 == port->fd)
     {
@@ -127,19 +142,35 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     struct serial_struct serial = port->old_serial;
     // the below is defined in serial.h
     serial.flags |= ASYNC_LOW_LATENCY;
+
     if(-1 == ioctl(port->fd, TIOCSSERIAL, &serial))
     {
         // if the operation is not supported on this particular
-        // device, just ignore the error
+        // device, ignore the error
         if(errno != ENOTSUP)
         {
             error_with_errno(FILE_LINE);
         }
     }
 
+    if(!port->is_usb)
+    {
+        struct serial_rs485 rs485conf = {0};
+        rs485conf.flags |= SER_RS485_ENABLED;
+        rs485conf.flags |= SER_RS485_RX_DURING_TX;
+        if(-1 == ioctl(port->fd, TIOCSRS485, &rs485conf))
+        {
+            // if the operation is not supported on this particular
+            // device, just ignore the error
+            if(errno != ENOTSUP && errno != ENOTTY)
+            {
+                error_with_errno(FILE_LINE);
+            }
+        }
+    }
 
     struct termios tio = {0};
-    tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h 
+    tio.c_cflag |= CS8 | CREAD | CLOCAL; // 8n1, see termios.h
 
     // set raw input mode
     tio.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
@@ -353,38 +384,46 @@ void uart_close(const struct uart_port * port)
 
 void uart_send_break(const struct uart_port * port, uint32_t timeout)
 {
-    struct termios tio;
-    // get the current settings
-    if(0 != tcgetattr(port->fd, &tio) )
+    if(port->is_usb)
     {
-        error_with_errno(FILE_LINE);
+        struct termios tio;
+        // get the current settings
+        if(0 != tcgetattr(port->fd, &tio) )
+        {
+            error_with_errno(FILE_LINE);
+        }
+
+        const tcflag_t cflag = tio.c_cflag;
+        if(cflag & PARENB)
+        {
+            error(FILE_LINE, "Cannot send break when using parity");
+        }
+
+        // set even parity
+        tio.c_cflag |= PARENB;
+        tio.c_cflag &= ~PARODD;
+
+        // set the attributes so we have even parity
+        if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
+        {
+            error_with_errno(FILE_LINE);
+        }
+        // send a zero byte
+        static const uint8_t zero = 0x00;
+        uart_write_block(port, &zero, 1, timeout);
+
+        // restore the old settings
+        tio.c_cflag = cflag;
+        if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
+        {
+            error_with_errno(FILE_LINE);
+        }
     }
-
-    const tcflag_t cflag = tio.c_cflag;
-    if(cflag & PARENB)
+    else
     {
-        error(FILE_LINE, "Cannot send break when using parity");
-    }
-
-    // set even parity
-    tio.c_cflag |= PARENB;
-    tio.c_cflag &= ~PARODD;
-
-    // set the attributes so we have even parity
-    if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
-    {
-        error_with_errno(FILE_LINE);
-    }
-    
-    // send a zero byte
-    static const uint8_t zero = 0x00;
-    uart_write_block(port, &zero, 1, timeout);
-
-    // restore the old settings
-    tio.c_cflag = cflag;
-    if(tcsetattr(port->fd, TCSANOW, &tio) != 0)
-    {
-        error_with_errno(FILE_LINE);
+	    // send zero value for 1ms on non-usb linux
+        // serial ports
+        tcsendbreak(port->fd, 1);
     }
 }
 
