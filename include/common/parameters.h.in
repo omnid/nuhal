@@ -76,7 +76,7 @@
 
 /// height of the calibration fixture (m), from the drive axes to the axes
 /// of the joints connected to the platform
-#define PARAMETERS_CALIBRATION_FIXTURE_HEIGHT 0.2467737f
+#define PARAMETERS_CALIBRATION_FIXTURE_HEIGHT 0.2809875f
 
 /// mass of the robot above the spring, in kg, excluding the gimbal
 #define PARAMETERS_CALIBRATION_SPRUNG_MASS 0.9f
