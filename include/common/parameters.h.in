@@ -112,6 +112,8 @@
 /// controller to effectively miss messages from its parent as it waits for the lower level board.
 STATIC_ASSERT(PARAMETERS_WHEEL_CONTROL_LOOP_HZ >= PARAMETERS_OMNI_CONTROL_LOOP_HZ*2,
               control_freq_mismatch_1);
+STATIC_ASSERT(PARAMETERS_JOINT_CONTROL_HZ >= PARAMETERS_DELTA_CONTROL_LOOP_HZ*2,
+              control_freq_mismatch_1);
 
 /// @brief Mobile base configuration (units are in m)
 #define PARAMETERS_OMNI_WHEEL_RADIUS 0.1016f
