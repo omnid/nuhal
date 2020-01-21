@@ -95,7 +95,7 @@
 /// a motor command.  It could be possible to circumvent this limitation by
 /// not waiting for the response; however, the commands would then fill the
 /// motor's queue and be buffered, which does not help much
-#define PARAMETERS_JOINT_CONTROL_HZ 800u
+#define PARAMETERS_JOINT_CONTROL_LOOP_HZ 800u
 
 /// @brief frequency of the control loop on the main delta controller
 #define PARAMETERS_DELTA_CONTROL_LOOP_HZ 100u
@@ -112,7 +112,7 @@
 /// controller to effectively miss messages from its parent as it waits for the lower level board.
 STATIC_ASSERT(PARAMETERS_WHEEL_CONTROL_LOOP_HZ >= PARAMETERS_OMNI_CONTROL_LOOP_HZ*2,
               control_freq_mismatch_1);
-STATIC_ASSERT(PARAMETERS_JOINT_CONTROL_HZ >= PARAMETERS_DELTA_CONTROL_LOOP_HZ*2,
+STATIC_ASSERT(PARAMETERS_JOINT_CONTROL_LOOP_HZ >= PARAMETERS_DELTA_CONTROL_LOOP_HZ*2,
               control_freq_mismatch_1);
 
 /// @brief Mobile base configuration (units are in m)
