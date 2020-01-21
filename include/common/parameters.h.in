@@ -104,7 +104,14 @@
 #define PARAMETERS_WHEEL_CONTROL_LOOP_HZ 400u
 
 /// @brief omni control loop in hz.
-#define PARAMETERS_OMNI_CONTROL_LOOP_HZ 100u
+#define PARAMETERS_OMNI_CONTROL_LOOP_HZ 200u
+
+/// We must always run lower-level embedded control loops with at least twice the frequency
+/// of higher level loops. This is because each command to a lower-level board
+/// blocks the control task on the higher level board, and it is possible for the higher level
+/// controller to effectively miss messages from its parent as it waits for the lower level board.
+STATIC_ASSERT(PARAMETERS_WHEEL_CONTROL_LOOP_HZ >= PARAMETERS_OMNI_CONTROL_LOOP_HZ*2,
+              control_freq_mismatch_1);
 
 /// @brief Mobile base configuration (units are in m)
 #define PARAMETERS_OMNI_WHEEL_RADIUS 0.1016f
