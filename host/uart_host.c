@@ -15,8 +15,8 @@
 #include <errno.h>
 #include <limits.h>
 #include <sys/file.h>
+#include <sys/ioctl.h>
 #include <linux/serial.h>
-#include <stropts.h>
 #include <asm/ioctls.h>
 
 // timeout to wait for pending writes to finish before closing the port
