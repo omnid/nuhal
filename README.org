@@ -17,7 +17,8 @@ At one time there was code for Windows and PIC32 as well and maybe one day it wi
 6. Generic interface for doing math with multi-turn encoders
 7. Static assertions
 8. Serialization library
-9. Red/Green/Blue LED control
+9. Functions for handling time.
+10. Red/Green/Blue LED control
 
 * Installation
 1. It is not useful to install this library independently of one of the platform-specific libraries [[https://github.com/m-elwin/nutilities_x64_linux]] or [[https://github.com/m-elwin/nutilities_tiva]].
