@@ -1,0 +1,31 @@
+#+TITLE: Northwestern Utilities
+* Introduction
+An assortment of C utilities and hardware abstractions that work on multiple platforms including x86 PC's and microcontrollers.  
+This is a work in progress and features are currently developed according to the needs of a specific robotics project and the specific needs of that project are 
+currently prioritized over being generically useful.
+
+This repository contains platform-independent code. It requires platform specific modules, currently ~nutilities_x64_linux~ and ~nutilities_tiva~.
+At one time there was code for Windows and PIC32 as well and maybe one day it will be supported.
+
+* Main Features
+1. UART serial library with special code to lower the default latency of FTDI USB to serial converters and to use RS-485 serial devices on linux.
+   - Only some fixed baud rates are supported, but they are added on an as-needed basis
+2. Lock-free single-producer single-consumer queue
+3. Basic CMake utilities that I find useful
+4. Flexible error handling code.  Designed to immediately terminate program while preserving debugging information.
+5. A PID controller implementation
+6. Generic interface for doing math with multi-turn encoders
+7. Static assertions
+8. Serialization library
+9. Red/Green/Blue LED control
+
+* Installation
+1. It is not useful to install this library independently of one of the platform-specific libraries [[https://github.com/m-elwin/nutilities_x64_linux]] or [[https://github.com/m-elwin/nutilities_tiva]].
+2. However, you may use standard CMake commands to install the source code to a common directory on your computer:
+   #+BEGIN_SRC bash
+   git clone https://github.com/m-elwin/nutilities
+   cd nutilities
+   cmake -B build .
+   cmake --build nutilities
+   #+END_SRC
+
