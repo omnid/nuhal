@@ -3,9 +3,12 @@
 #include "nutilities/bytestream.h"
 #include<math.h>
 
-float pid_compute(struct pid_state * st, float reference, float measurement)
+float pid_compute(const struct pid_gains * gains,
+                  struct pid_state * st,
+                  float reference,
+                  float measurement)
 {
-    if(!st)
+    if(!st || !gains)
     {
         error(FILE_LINE, "NULL ptr");
     }
@@ -17,9 +20,9 @@ float pid_compute(struct pid_state * st, float reference, float measurement)
     st->p_error = error;
 
     // control effort
-    const float u = st->gains.kp * st->p_error
-        + st->gains.ki * i_error
-        + st->gains.kd * st->d_error;
+    const float u = gains->kp * st->p_error
+        + gains->ki * i_error
+        + gains->kd * st->d_error;
 
     // integral anti-windup:
     // only increase the integral error under certain conditions
@@ -27,9 +30,9 @@ float pid_compute(struct pid_state * st, float reference, float measurement)
     // if input is saturated HIGH but integral error is getting smaller
     // if input is saturated LOW but integral error is getting bigger
     // see https://jagger.berkeley.edu/~pack/me132/Section15.pdf
-    if((st->u_min < u && u < st->u_max)
-       || (error < 0 && u > st->u_max)
-       || (error > 0 && u < st->u_min))
+    if((gains->u_min < u && u < gains->u_max)
+       || (error < 0 && u > gains->u_max)
+       || (error > 0 && u < gains->u_min))
     {
         st->i_error = i_error;
     }
@@ -46,6 +49,8 @@ void pid_inject_gains(struct bytestream * bs, const struct pid_gains * gains)
     bytestream_inject_f(bs, gains->kp);
     bytestream_inject_f(bs, gains->ki);
     bytestream_inject_f(bs, gains->kd);
+    bytestream_inject_f(bs, gains->u_max);
+    bytestream_inject_f(bs, gains->u_min);
 }
 
 void pid_extract_gains(struct bytestream * bs, struct pid_gains * gains)
@@ -57,33 +62,25 @@ void pid_extract_gains(struct bytestream * bs, struct pid_gains * gains)
     gains->kp = bytestream_extract_f(bs);
     gains->ki = bytestream_extract_f(bs);
     gains->kd = bytestream_extract_f(bs);
+    gains->u_max = bytestream_extract_f(bs);
+    gains->u_min = bytestream_extract_f(bs);
 }
 
-void pid_inject_data(struct bytestream * bs, struct pid_data * data)
+void pid_inject_state(struct bytestream * bs, const struct pid_state * state)
 {
-    if(!bs || !data)
+    if(!bs || !state)
     {
         error(FILE_LINE, "NULL ptr");
     }
-    bytestream_inject_f(bs, data->p_error);
-    bytestream_inject_f(bs, data->i_error);
-    bytestream_inject_f(bs, data->d_error);
-    bytestream_inject_f(bs, data->u_effort);
-    bytestream_inject_f(bs, data->r_reference);
-    bytestream_inject_f(bs, data->z_measurement);
-    bytestream_inject_u8(bs, data->sequence);
-    bytestream_inject_u8(bs, data->missed);
+    bytestream_inject_f(bs, state->p_error);
+    bytestream_inject_f(bs, state->i_error);
+    bytestream_inject_f(bs, state->d_error);
 }
 
 
-void pid_extract_data(struct bytestream * bs, struct pid_data * data)
+void pid_extract_state(struct bytestream * bs, struct pid_state * state)
 {
-    data->p_error = bytestream_extract_f(bs);
-    data->i_error = bytestream_extract_f(bs);
-    data->d_error = bytestream_extract_f(bs);
-    data->u_effort = bytestream_extract_f(bs);
-    data->r_reference = bytestream_extract_f(bs);
-    data->z_measurement = bytestream_extract_f(bs);
-    data->sequence = bytestream_extract_u8(bs);
-    data->missed = bytestream_extract_u8(bs);
+    state->p_error = bytestream_extract_f(bs);
+    state->i_error = bytestream_extract_f(bs);
+    state->d_error = bytestream_extract_f(bs);
 }
