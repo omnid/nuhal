@@ -14,12 +14,6 @@
 extern "C" {
 #endif
 
-/// @brief initialize the error handling system
-/// @param data - this pointer is passed to the error hook
-/// function when an error is triggered. If this function
-/// is never called, the hook will receive a NULL as its data
-void error_setup(const void * data);
-
 /// @brief Trigger an error condition.  This will call the
 /// platform/application-specific error_handler.  It also prevents
 /// recursive calls to error.  If a function used in the error handler
