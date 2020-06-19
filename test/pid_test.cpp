@@ -45,3 +45,22 @@ TEST_CASE("pid_serialize_state", "[pid]")
     CHECK(results.i_error == state.i_error);
     CHECK(results.d_error == state.d_error);
 }
+
+TEST_CASE("pid_basics", "[pid]")
+{
+    const struct pid_gains gains{4.0, 3.0, 2.0, 20.0, -20.0};
+
+    struct pid_state state{0.0, 0.0, 0.0};
+
+    const auto u1 = pid_compute(&gains, &state, 1.0, -0.5);
+    CHECK(u1 == Approx(13.5));
+    CHECK(state.p_error == Approx(1.5));
+    CHECK(state.i_error == Approx(1.5));
+    CHECK(state.d_error == Approx(1.5));
+
+    const auto u2 = pid_compute(&gains, &state, 1.0, 1.2);
+    CHECK(u2 == Approx(-0.3));
+    CHECK(state.p_error == Approx(-0.2));
+    CHECK(state.i_error == Approx(1.3));
+    CHECK(state.d_error == Approx(-1.7)); 
+}
