@@ -8,14 +8,34 @@ enable_testing()
 
 include(GNUInstallDirs)
 
-add_library(nutilities_interface INTERFACE)
+# Test the platform independent code
+add_library(nutilities_lib
+  src/bytestream.c
+  src/encoder.c
+  src/error.c
+  src/led.c
+  src/pid.c
+  src/queue.c
+  src/time.c
+  src/uart.c
+  src/utilities.c)
+target_include_directories(nutilities_lib PUBLIC include/)
 
-add_executable(nutilities_test src/utilities.c src/bytestream.c test/bytestream_test.cpp)
-target_include_directories(nutilities_test PUBLIC include/)
+add_executable(nutilities_test
+  test/bytestream_test.cpp
+  test/encoder_test.cpp
+  test/error_stub.cpp
+  test/queue_test.cpp
+  test/time_stub.cpp
+  test/utilities_test.cpp
+  )
+target_link_libraries(nutilities_test PUBLIC nutilities_lib) 
 add_test(NAME nutilities COMMAND nutilities_test)
 
 
 set(INSTALL_ROOT ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/nutilities_interface)
+
+add_library(nutilities_interface INTERFACE)
 
 target_sources(nutilities_interface INTERFACE
   ${INSTALL_ROOT}/src/encoder.c
