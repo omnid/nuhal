@@ -4,6 +4,7 @@
 # The reason for this is that we do not know a priori what compilers need to be used
 cmake_minimum_required(VERSION 3.14)
 project(nutilities)
+enable_testing()
 
 include(GNUInstallDirs)
 
@@ -11,6 +12,8 @@ add_library(nutilities_interface INTERFACE)
 
 add_executable(nutilities_test src/utilities.c src/bytestream.c test/bytestream_test.cpp)
 target_include_directories(nutilities_test PUBLIC include/)
+add_test(NAME nutilities COMMAND nutilities_test)
+
 
 set(INSTALL_ROOT ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/nutilities_interface)
 
