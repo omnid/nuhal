@@ -29,4 +29,5 @@ At one time there was code for Windows and PIC32 as well and maybe one day it wi
    cmake -B build .
    cmake --build nutilities
    #+END_SRC
+3. To run the unit tests: ~cmake --build build --target test~
 
