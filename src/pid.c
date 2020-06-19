@@ -1,6 +1,6 @@
-#include "common/pid.h"
-#include "common/error.h"
-#include "common/bytestream.h"
+#include "nutilities/pid.h"
+#include "nutilities/error.h"
+#include "nutilities/bytestream.h"
 #include<math.h>
 
 float pid_compute(struct pid_state * st, float reference, float measurement)

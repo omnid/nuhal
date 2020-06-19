@@ -1,5 +1,5 @@
-#include "common/bytestream.h"
-#include "common/error.h"
+#include "nutilities/bytestream.h"
+#include "nutilities/error.h"
 #include <string.h>
 // ensure that we can use floats and u32's in memory the same via unions
 STATIC_ASSERT(sizeof(float) == sizeof(uint32_t), sizeof_float_u32);

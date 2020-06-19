@@ -1,6 +1,6 @@
-#include "common/encoder.h"
-#include "common/error.h"
-#include "common/bytestream.h"
+#include "nutilities/encoder.h"
+#include "nutilities/error.h"
+#include "nutilities/bytestream.h"
 
 int32_t encoder_ticks(const struct encoder * enc, struct encoder_raw raw)
 {

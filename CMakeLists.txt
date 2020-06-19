@@ -9,6 +9,9 @@ include(GNUInstallDirs)
 
 add_library(nutilities_interface INTERFACE)
 
+add_executable(nutilities_test src/utilities.c src/bytestream.c test/bytestream_test.cpp)
+target_include_directories(nutilities_test PUBLIC include/)
+
 set(INSTALL_ROOT ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/nutilities_interface)
 
 target_sources(nutilities_interface INTERFACE

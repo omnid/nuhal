@@ -1,5 +1,5 @@
-#include "common/time.h"
-#include "common/error.h"
+#include "nutilities/time.h"
+#include "nutilities/error.h"
 #include <stdbool.h>
 
 void time_delay_ms(uint32_t ms)

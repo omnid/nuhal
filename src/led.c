@@ -1,7 +1,7 @@
-#include "common/led.h"
-#include "common/error.h"
-#include "common/time.h"
-#include "common/bytestream.h"
+#include "nutilities/led.h"
+#include "nutilities/error.h"
+#include "nutilities/time.h"
+#include "nutilities/bytestream.h"
 
 void led_error_basic(void)
 {
