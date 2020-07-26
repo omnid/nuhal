@@ -1,5 +1,5 @@
-#include "nutilities/utilities.h"
-#include "nutilities/error.h"
+#include "nuhal/utilities.h"
+#include "nuhal/error.h"
 #include <string.h>
 
 size_t utilities_strlen(const char str[], size_t maxlen)

@@ -1,4 +1,4 @@
-#include "nutilities/utilities.h"
+#include "nuhal/utilities.h"
 #include "catch.hpp"
 
 TEST_CASE("utilities_strlen", "[utilities]")

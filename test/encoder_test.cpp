@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "nutilities/encoder.h"
-#include "nutilities/utilities.h"
+#include "nuhal/encoder.h"
+#include "nuhal/utilities.h"
 
 TEST_CASE("encoder_ticks", "[encoder]")
 {

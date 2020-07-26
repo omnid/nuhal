@@ -1,5 +1,5 @@
-#ifndef NUTILITIES_ERROR_H_INCLUDE_GUARD
-#define NUTILITIES_ERROR_H_INCLUDE_GUARD
+#ifndef NUHAL_ERROR_H_INCLUDE_GUARD
+#define NUHAL_ERROR_H_INCLUDE_GUARD
 
 /// @brief platform-independent error handling code
 /// @file
@@ -7,7 +7,7 @@
 ///  Notify the user and exit the program. On a microcontroller
 ///  we may loop infinitely to preserve state instead of exiting
 
-#include "nutilities/utilities.h"
+#include "nuhal/utilities.h"
 #include <stdbool.h>
 
 #ifdef __cplusplus

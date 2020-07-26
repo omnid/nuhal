@@ -1,9 +1,9 @@
 /// \file
 /// \brief test the PID controller implmeentation
 #include "catch.hpp"
-#include "nutilities/pid.h"
-#include "nutilities/bytestream.h"
-#include "nutilities/utilities.h"
+#include "nuhal/pid.h"
+#include "nuhal/bytestream.h"
+#include "nuhal/utilities.h"
 
 
 TEST_CASE("pid_serialize_gains", "[pid]")

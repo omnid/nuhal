@@ -1,6 +1,6 @@
-#include "nutilities/queue.h"
-#include "nutilities/error.h"
-#include "nutilities/time.h"
+#include "nuhal/queue.h"
+#include "nuhal/error.h"
+#include "nuhal/time.h"
 
 #if defined(__GNUC__)
 

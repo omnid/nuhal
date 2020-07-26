@@ -1,4 +1,4 @@
-#+TITLE: Northwestern Utilities
+#+TITLE: Northwestern Utilities and Hardware Abstraction Layer (nuhal)
 * Introduction
 An assortment of C utilities and hardware abstractions that work on multiple platforms including x86 PC's and microcontrollers.  
 This is a work in progress and features are currently developed according to the needs of a specific robotics project and the specific needs of that project are 

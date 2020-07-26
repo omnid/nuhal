@@ -1,8 +1,8 @@
 /// \file
 /// \brief stub functions for time that are not implemented in a platform-independent way.  None of the platform-dependent behavior should be tested so all these functions throw exceptions
 #include<stdexcept>
-#include"nutilities/utilities.h"
-#include"nutilities/time.h"
+#include"nuhal/utilities.h"
+#include"nuhal/time.h"
 
 
 uint32_t time_current_ms(void)

@@ -1,6 +1,6 @@
-#include "nutilities/pid.h"
-#include "nutilities/error.h"
-#include "nutilities/bytestream.h"
+#include "nuhal/pid.h"
+#include "nuhal/error.h"
+#include "nuhal/bytestream.h"
 #include<math.h>
 
 float pid_compute(const struct pid_gains * gains,

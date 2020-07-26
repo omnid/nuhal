@@ -1,6 +1,6 @@
-#include "nutilities/uart.h"
-#include "nutilities/time.h"
-#include "nutilities/error.h"
+#include "nuhal/uart.h"
+#include "nuhal/time.h"
+#include "nuhal/error.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>

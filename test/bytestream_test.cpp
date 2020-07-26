@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "nutilities/bytestream.h"
-#include "nutilities/utilities.h"
+#include "nuhal/bytestream.h"
+#include "nuhal/utilities.h"
 #include <limits>
 
 /// @brief test bytestream injection and extraction

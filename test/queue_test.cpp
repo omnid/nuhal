@@ -1,6 +1,6 @@
-#include "nutilities/queue.h"
-#include "nutilities/utilities.h"
-#include "nutilities/time.h"
+#include "nuhal/queue.h"
+#include "nuhal/utilities.h"
+#include "nuhal/time.h"
 #include "catch.hpp"
 #include <thread>
 
