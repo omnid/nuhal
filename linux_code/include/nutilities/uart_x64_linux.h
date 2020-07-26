@@ -1,5 +1,5 @@
-#ifndef COMMON_HOST_UART_HOST_INCLUDE_GUARD
-#define COMMON_HOST_UART_HOST_INCLUDE_GUARD
+#ifndef NUTILITIES_X64_LINUX_UART_HOST_INCLUDE_GUARD
+#define NUTILITIES_X64_LINUX_UART_HOST_INCLUDE_GUARD
 /// @file
 /// @brief host-specific uart functions
 
@@ -9,9 +9,9 @@ extern "C" {
 
 /// @brief acquire a lock on the uart.  no other program
 /// may access the uart while the lock is held.
-/// this is useful to mediate multiple programs accessing the uart
-/// simultaneously (for example, a ros node and packet_console.
-/// uart_lock will block until the lock is acquired
+/// Useful to mediate multiple programs accessing the uart
+/// simultaneously. uart_lock blocks until the lock is acquired
+/// locking is cooperative, so a program that does not acquire the lock can still access the port
 /// @param port - the uart port to obtain exclusive access to
 void uart_lock(const struct uart_port * port);
 
