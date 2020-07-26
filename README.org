@@ -19,6 +19,7 @@ One day this library could be more generically useful, but currently it is devel
 8. Serialization library
 9. Functions for handling time.
 10. Red/Green/Blue LED control that convert to print statements on a host pc
+11. Redistribute catch.hpp unit testing framework for use in other projects
 
 * Installation
 1. Clone the repository
@@ -34,3 +35,9 @@ One day this library could be more generically useful, but currently it is devel
    #+END_SRC
 3. To run the unit tests: ~cmake --build build --target test~
 
+* Usage
+- Use ~find_package(nuhal)~ then add ~nuhal~ to the ~target_link_libraries~
+  - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
+- If you would like to not add the default compile flags that ~nuhal~ uses,  use ~nuhal_noflags~ instead
+- If you would like to link against a platform-specific version, use ~nuhal_<platform>~. Flags are not included
+- If you would like to use just the flags, add ~nuhal_flags~ to ~target_link_libraries~
