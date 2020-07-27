@@ -9,9 +9,14 @@ One day this library could be more generically useful, but currently it is devel
    - Only some fixed baud rates are supported, but they are added on an as-needed basis 
    - It is also possible to set the default FTDI latency with udev rules
 2. Lock-free single-producer single-consumer queue
-3. CMake utilities for exposing git information to the build at compile time.
-4. Opinionated compile options and flags can (optionally) be carried over to any target linking against the library
-   - Extra warnings, strict standard compliance, and modern C and C++ standards
+3. CMake utilities
+   - Exposing git information at compile time via generated header files
+   - Compile flags that I like can (optionally) be carried over by linking with the library
+     - Extra warnings, strict standard compliance, and modern C and C++ standards
+   - Basic CMake options that I find useful
+     - Prevent in-source builds
+     - Set a default build type (for single-configuration generators)
+       
 4. Flexible error handling code.  Designed to immediately terminate program while preserving debugging information.
 5. A PID controller implementation
 6. Generic interface for doing math with multi-turn encoders

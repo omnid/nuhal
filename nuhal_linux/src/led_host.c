@@ -1,5 +1,5 @@
-#include "common/led.h"
-#include "common/error.h"
+#include "nuhal/led.h"
+#include "nuhal/error.h"
 #include <stdio.h>
 
 static enum led_color color = LED_COLOR_BLACK;

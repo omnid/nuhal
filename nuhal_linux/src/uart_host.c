@@ -1,7 +1,7 @@
 #define _DEFAULT_SOURCE // enable posix so we can use clock_gettime
 /// @brief implementation of common/uart.h interface on linux systems
-#include"common/uart.h"
-#include"common/error.h"
+#include"nuhal/uart.h"
+#include"nuhal/error.h"
 
 #include <poll.h>
 #include <fcntl.h>

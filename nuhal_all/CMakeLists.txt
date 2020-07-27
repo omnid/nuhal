@@ -17,7 +17,7 @@ add_library(nuhal_all
 
 target_include_directories(nuhal_all PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
 add_executable(nuhal_test

@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 199309L // enable posix so we can use clock_gettime
-#include "common/time.h"
-#include "common/error.h"
+#include "nuhal/time.h"
+#include "nuhal/error.h"
 #include <time.h>
 
 uint32_t time_period_ms(void)

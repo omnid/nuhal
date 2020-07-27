@@ -1,4 +1,4 @@
-#include "common/error.h"
+#include "nuhal/error.h"
 #include <stdio.h>
 #include <stdlib.h>
 
