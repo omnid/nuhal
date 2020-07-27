@@ -2,7 +2,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0)
 
-# Compile subdirectory for the platform-independent code
 add_subdirectory(../nuhal_all nuhal_all)
 
 add_library(nuhal_linux
