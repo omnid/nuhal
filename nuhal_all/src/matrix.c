@@ -1,5 +1,5 @@
-#include "common/matrix.h"
-#include "common/error.h"
+#include "nuhal/matrix.h"
+#include "nuhal/error.h"
 
 void matrix_3x3_init(struct matrix_3x3 * out,
                      float a11, float a12, float a13,

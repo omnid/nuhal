@@ -27,6 +27,7 @@ add_library(nuhal_all
   src/time.c
   src/uart.c
   src/utilities.c
+  src/matrix.c
   )
 target_link_libraries(nuhal_all PRIVATE nuhal_flags)
 
