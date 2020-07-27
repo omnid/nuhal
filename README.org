@@ -31,7 +31,7 @@ One day this library could be more generically useful, but currently it is devel
    git clone https://github.com/m-elwin/nuhal
    cd nuhal
    #+END_SRC
-2. Build, install, and test the code for linux:
+2. Build, install, and test the code for a given platform (in this case linux):
    #+BEGIN_SRC bash
    cmake -B nuhal_linux/build nuhal_linux
    cmake --build nuhal_linux/build
@@ -47,3 +47,14 @@ One day this library could be more generically useful, but currently it is devel
 - If you would like to not add the default compile flags that ~nuhal~ uses,  use ~nuhal_noflags~ instead
 - If you would like to link against a platform-specific version, use ~nuhal_<platform>~. Flags are not included
 - If you would like to use just the flags, add ~nuhal_flags~ to ~target_link_libraries~
+
+** Adding a Platform
+1. Create a new subdirectory called ~nuhal_platform~
+2. Use ~nuhal/nuhal_linux/CMakeLists.txt~ as a guide for the CMakeLists.txt file
+3. If you need to support cross-compiling, use ~nuhal/nuhal_tiva/PreLoad.txt~ as a guide
+   for setting a default cross compiler
+4. Update ~/nuhal/nuhal_all/nuhal-config.cmake.in~ to make it aware of your new library.
+   When a user does a ~find_package(nuhal)~ it is this file that is called and it is
+   its responsibility to select the appropriate default ~nuhal~ library based on
+   the platform and toolchain
+   
