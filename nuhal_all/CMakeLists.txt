@@ -23,11 +23,11 @@ add_library(nuhal_all
   src/error.c
   src/led.c
   src/pid.c
+  src/matrix.c
   src/queue.c
   src/time.c
   src/uart.c
   src/utilities.c
-  src/matrix.c
   )
 target_link_libraries(nuhal_all PRIVATE nuhal_flags)
 
@@ -40,6 +40,7 @@ add_executable(nuhal_test
   test/bytestream_test.cpp
   test/encoder_test.cpp
   test/error_stub.cpp
+  test/matrix_test.cpp
   test/pid_test.cpp
   test/queue_test.cpp
   test/time_stub.cpp
