@@ -3,6 +3,20 @@ cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0)
 enable_testing()
 
+# Add useful compiler options here, for each system.  This is anything beyond the necessary ones defined in the platform files
+add_library(nuhal_flags INTERFACE)
+target_compile_options(nuhal_flags INTERFACE
+  $<$<C_COMPILER_ID:GNU>:  -pedantic -pipe -Wall -Wextra>    
+  $<$<C_COMPILER_ID:CLANG>:-pedantic -pipe -Wall -Wextra>  
+  $<$<C_COMPILER_ID:TI>:-pden -pdr -pdv --c99 --diag_suppress=270>
+  $<$<PLATFORM_ID:${CMAKE_HOST_SYSTEM_NAME}>:-march=native>
+  )
+
+target_compile_features(nuhal_flags INTERFACE
+  cxx_std_17
+  c_std_99
+  )
+
 add_library(nuhal_all
   src/bytestream.c
   src/encoder.c
@@ -14,6 +28,7 @@ add_library(nuhal_all
   src/uart.c
   src/utilities.c
   )
+target_link_libraries(nuhal_all PRIVATE nuhal_flags)
 
 target_include_directories(nuhal_all PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
@@ -29,7 +44,7 @@ add_executable(nuhal_test
   test/time_stub.cpp
   test/utilities_test.cpp
   )
-target_link_libraries(nuhal_test PUBLIC nuhal_all) 
+target_link_libraries(nuhal_test PRIVATE nuhal_all nuhal_flags) 
 add_test(NAME nuhal_all COMMAND nuhal_test)
 
 
