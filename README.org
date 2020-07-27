@@ -20,7 +20,6 @@ One day this library could be more generically useful, but currently it is devel
 9. Functions for handling time.
 10. Red/Green/Blue LED control that convert to print statements on a host pc
 11. Redistribute catch.hpp unit testing framework for use in other projects
-
 * Installation
 1. Clone the repository
    #+BEGIN_SRC bash
@@ -33,7 +32,9 @@ One day this library could be more generically useful, but currently it is devel
    cmake --build nuhal_linux/build
    cmake --build nuhal_linux/build --target test
    #+END_SRC
-3. To run the unit tests: ~cmake --build build --target test~
+3. Repeat the above steps for each platform you wish to compile for
+   - Each platform is named ~nuhal_<platform>~
+   - ~nuhal_all~ is the core of the library and compiles on all platforms
 
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal~ to the ~target_link_libraries~
