@@ -1,6 +1,6 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
-project(nuhal_all VERSION 1.0)
+project(nuhal VERSION 1.0)
 enable_testing()
 
 add_library(nuhal_all
