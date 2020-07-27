@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "nuhal/catch.hpp"
 #include "nuhal/matrix.h"
 
 TEST_CASE("matrix_multiply", "[matrix]")

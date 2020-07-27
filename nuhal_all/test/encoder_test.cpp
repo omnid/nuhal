@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "nuhal/catch.hpp"
 #include "nuhal/encoder.h"
 #include "nuhal/utilities.h"
 

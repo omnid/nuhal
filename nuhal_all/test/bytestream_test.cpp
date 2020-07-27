@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "nuhal/catch.hpp"
 #include "nuhal/bytestream.h"
 #include "nuhal/utilities.h"
 #include <limits>

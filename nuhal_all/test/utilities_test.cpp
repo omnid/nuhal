@@ -1,5 +1,5 @@
 #include "nuhal/utilities.h"
-#include "catch.hpp"
+#include "nuhal/catch.hpp"
 
 TEST_CASE("utilities_strlen", "[utilities]")
 {

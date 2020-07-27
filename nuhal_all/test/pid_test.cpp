@@ -1,6 +1,6 @@
 /// \file
 /// \brief test the PID controller implmeentation
-#include "catch.hpp"
+#include "nuhal/catch.hpp"
 #include "nuhal/pid.h"
 #include "nuhal/bytestream.h"
 #include "nuhal/utilities.h"

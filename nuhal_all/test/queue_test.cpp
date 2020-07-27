@@ -1,7 +1,7 @@
 #include "nuhal/queue.h"
 #include "nuhal/utilities.h"
 #include "nuhal/time.h"
-#include "catch.hpp"
+#include "nuhal/catch.hpp"
 #include <thread>
 
 // some basic tests of the queue
