@@ -26,6 +26,7 @@ One day this library could be more generically useful, but currently it is devel
 10. Red/Green/Blue LED control that convert to print statements on a host pc
 11. Redistribute catch.hpp unit testing framework for use in other projects
 * Installation
+0. Install [[https://github.com/m-elwin/tiva-cmake][tiva-cmake]]
 1. Clone the repository
    #+BEGIN_SRC bash
    git clone https://github.com/m-elwin/nuhal
@@ -40,7 +41,8 @@ One day this library could be more generically useful, but currently it is devel
 3. Repeat the above steps for each platform you wish to compile for
    - Each platform is named ~nuhal_<platform>~
    - ~nuhal_all~ is the core of the library and compiles on all platforms
-
+   - ~nuhal_linux~ contains the linux-specific code
+   - ~nuhal_tiva~ contains TI Tiva microcontroller code
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
