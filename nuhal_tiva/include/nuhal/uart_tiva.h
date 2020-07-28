@@ -1,8 +1,8 @@
-#ifndef COMMON_IMPL_UART_TIVA_H_INCLUDE_GUARD
-#define COMMON_IMPL_UART_TIVA_H_INCLUDE_GUARD
+#ifndef NUHAL_IMPL_UART_TIVA_H_INCLUDE_GUARD
+#define NUHAL_IMPL_UART_TIVA_H_INCLUDE_GUARD
 /// @brief tiva-specific api for uarts
 
-#include "common/uart.h"
+#include "nuhal/uart.h"
 #include "driverlib/uart.h"
 
 /// @brief pass through the traffic between port1 and port2.

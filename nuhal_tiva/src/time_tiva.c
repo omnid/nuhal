@@ -1,5 +1,5 @@
-#include "common/time.h"
-#include "tiva/tiva.h"
+#include "nuhal/time.h"
+#include "nuhal/tiva.h"
 #include "driverlib/systick.h"
 
 uint32_t time_current_ms(void)

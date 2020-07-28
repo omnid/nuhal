@@ -1,11 +1,11 @@
-#include "tiva/pin_tiva.h"
-#include "common/error.h"
+#include "nuhal/pin_tiva.h"
+#include "nuhal/error.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "inc/hw_gpio.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
-#include "tiva/tiva.h"
+#include "nuhal/tiva.h"
 
 #define TIVA_NUM_PORTS 6 // number of tiva ports
 #define TIVA_PINS_PER_PORT 8 // number of pins on each port

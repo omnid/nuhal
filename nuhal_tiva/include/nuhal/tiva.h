@@ -1,6 +1,6 @@
 #ifndef TIVA_H_INCLUDE_GUARD
 #define TIVA_H_INCLUDE_GUARD
-/// @brief tiva-specific utility functions that are useful to common_impl
+/// @brief tiva-specific utility functions that are useful to nuhal_impl
 
 #include<stdint.h>
 #include<stdbool.h>

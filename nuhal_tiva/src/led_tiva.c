@@ -1,6 +1,6 @@
-#include "common/led.h"
-#include "common/utilities.h"
-#include "tiva/pin_tiva.h"
+#include "nuhal/led.h"
+#include "nuhal/utilities.h"
+#include "nuhal/pin_tiva.h"
 
 /// pin definitions for the led
 const struct pin_configuration led_pin_table[] =

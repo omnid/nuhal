@@ -1,6 +1,8 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL), linux-specific version
 cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_EXTENSIONS OFF)
 
 add_subdirectory(../nuhal_all nuhal_all)
 

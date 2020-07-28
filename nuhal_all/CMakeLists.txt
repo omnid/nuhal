@@ -1,7 +1,8 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0)
-enable_testing()
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_EXTENSIONS OFF)
 
 # Add useful compiler options here, for each system.  This is anything beyond the necessary ones defined in the platform files
 add_library(nuhal_flags INTERFACE)
@@ -36,19 +37,21 @@ target_include_directories(nuhal_all PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
-add_executable(nuhal_test
-  test/bytestream_test.cpp
-  test/encoder_test.cpp
-  test/error_stub.cpp
-  test/matrix_test.cpp
-  test/pid_test.cpp
-  test/queue_test.cpp
-  test/time_stub.cpp
-  test/utilities_test.cpp
-  )
-target_link_libraries(nuhal_test PRIVATE nuhal_all nuhal_flags) 
-add_test(NAME nuhal_all COMMAND nuhal_test)
-
+if(NOT CMAKE_CROSSCOMPILING)
+  enable_testing()
+  add_executable(nuhal_test
+    test/bytestream_test.cpp
+    test/encoder_test.cpp
+    test/error_stub.cpp
+    test/matrix_test.cpp
+    test/pid_test.cpp
+    test/queue_test.cpp
+    test/time_stub.cpp
+    test/utilities_test.cpp
+    )
+  target_link_libraries(nuhal_test PRIVATE nuhal_all nuhal_flags) 
+  add_test(NAME nuhal_all COMMAND nuhal_test)
+endif()
 
 
 
