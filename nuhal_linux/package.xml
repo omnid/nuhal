@@ -1,0 +1,16 @@
+<package format="2">
+  <name>nuhal_linux</name>
+  <version>0.1.0</version>
+  <description>
+    Northwestern Utilities and Hardware Abstraction Layer: Linux-specific code.
+    The components of the nuhal C library that implement Linux-specific functionality.
+  </description>
+  <maintainer email="elwin@northwestern.edu">Matthew Elwin</maintainer>
+  <license>MIT</license>
+  <url type="repository">https://www.github.com/m-elwin/nuhal</url>
+  <url>https://www.github.com/m-elwin/nuhal/nuhal_linux</url>
+  <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>

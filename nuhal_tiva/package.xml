@@ -1,0 +1,17 @@
+<package format="2">
+  <name>nuhal_tiva</name>
+  <version>0.1.0</version>
+  <description>
+    Northwestern Utilities and Hardware Abstraction Layer: Tiva microcontroller.  
+    The components of the nuhal C library that implement tiva-microcontroller specific code.
+  </description>
+  <maintainer email="elwin@northwestern.edu">Matthew Elwin</maintainer>
+  <license>MIT</license>
+  <url type="repository">https://www.github.com/m-elwin/nuhal</url>
+  <url>https://www.github.com/m-elwin/nuhal/nuhal_tiva</url>
+  <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
+  <depend>tiva-cmake</depend>
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
