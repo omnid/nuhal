@@ -32,17 +32,19 @@ One day this library could be more generically useful, but currently it is devel
    git clone https://github.com/m-elwin/nuhal
    cd nuhal
    #+END_SRC
-2. Build, install, and test the code for a given platform (in this case linux):
+2. Build and test the core code
    #+BEGIN_SRC bash
-   cmake -B nuhal_linux/build nuhal_linux
-   cmake --build nuhal_linux/build
-   cmake --build nuhal_linux/build --target test
+   cmake -B nuhal_all/build nuhal_all
+   cmake --build nuhal_all/build
+   cmake --build nuhal_all/build --target test
    #+END_SRC
+3. Install the core code either system-wide  or to a specified location
+   1. System wide (requires root) ~cmake --build nuhal_all/build --target install~
+   2. Locally (to ~<dir>~)  ~cmake --build nuhal_all/build --target install -DCMAKE_INSTALL_PREFIX=<dir>~
 3. Repeat the above steps for each platform you wish to compile for
-   - Each platform is named ~nuhal_<platform>~
-   - ~nuhal_all~ is the core of the library and compiles on all platforms
+   - If you installed locally to ~<dir>~, you must add ~-DCMAKE_PREFIX_PATH=<dir>~ to the above commands
    - ~nuhal_linux~ contains the linux-specific code
-   - ~nuhal_tiva~ contains TI Tiva microcontroller code
+   - ~nuhal_tiva~ contains TI Tiva microcontroller code. It depends on [[https://github.com/m-elwin/tiva-cmake][tiva-cmake]] being installed
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
