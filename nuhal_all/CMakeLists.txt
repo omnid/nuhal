@@ -51,6 +51,9 @@ target_include_directories(nuhal_all INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
+nuhal_install(nuhal_all TRUE)
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)
+
 enable_testing()
 add_executable(nuhal_test
   test/bytestream_test.cpp
@@ -66,7 +69,6 @@ add_executable(nuhal_test
   )
 target_link_libraries(nuhal_test PRIVATE nuhal_all nuhal_flags) 
 add_test(NAME nuhal_all COMMAND nuhal_test)
-
 
 
   
