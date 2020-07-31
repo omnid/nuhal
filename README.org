@@ -56,7 +56,7 @@ One day this library could be more generically useful, but currently it is devel
 7. When generating the build-system (~cmake -B ...~) for ~nuhal_all~ you can set an install prefix by passing ~-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR~, causing
    the project to be installed to ~$INSTALL_DIR~. You should then specify ~-DCMAKE_PREFIX_PATH=$INSTALL_DIR~ when generating the build-system for the platform specific libraries.
 * Usage
-- Use ~find_package(nuhal)~ then add ~nuhal~ to the ~target_link_libraries~
+- Use ~find_package(nuhal)~ then add ~nuhal::nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
   - Includes some useful CMake Functions (see comments in [[nuhal_all/nuhal.cmake]] for details.
     - ~nuhal_defaults(type)~ Sets a default build type and calls
@@ -65,9 +65,9 @@ One day this library could be more generically useful, but currently it is devel
       - ~nuhal_no_lang_extensions()~ Disables C and C++ language extensions, forcing strict conformance to the standard.
     - ~nuhal_install(name findable)~ install a target with the given name, and set findable to TRUE if you want others to find it with find_package and need to write some
                                      additional cmake files (see [[nuhal_all/nuhal.cmake)]].
-- If you would like to not add the default compile flags that ~nuhal~ uses,  use ~nuhal_noflags~ instead
-- If you would like to link against a platform-specific version, use ~nuhal_<platform>~. Flags are not included
-- If you would like to use just the flags, add ~nuhal_flags~ to ~target_link_libraries~
+- If you would like to not add the default compile flags that ~nuhal::nuhal~ uses,  use ~nuhal::nuhal_noflags~ instead
+- If you would like to link against a platform-specific version, use ~nuhal::nuhal_<platform>~. Flags are not included
+- If you would like to use just the flags, add ~nuhal::nuhal_flags~ to ~target_link_libraries~
 
 ** Adding a Platform
 1. Create a new subdirectory called ~nuhal_platform~
