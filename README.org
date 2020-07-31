@@ -8,6 +8,7 @@ One day this library could be more generically useful, but currently it is devel
 1. UART serial library with code to lower the default latency of FTDI USB to serial converters and to use RS-485 serial devices on linux.
    - Only some fixed baud rates are supported, but they are added on an as-needed basis 
    - It is also possible to set the default FTDI latency with udev rules
+2. Protocol and serialization/de-serialization code for use over the uart
 2. Lock-free single-producer single-consumer queue
 3. CMake utilities
    - Exposing git information at compile time via generated header files
