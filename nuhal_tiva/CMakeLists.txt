@@ -23,4 +23,5 @@ target_include_directories(nuhal_tiva PUBLIC
 
 
 target_link_libraries(nuhal_tiva PUBLIC nuhal::nuhal_all TivaCMake::driverlib)
-nuhal_install(nuhal_tiva TRUE)
+nuhal_install(nuhal_tiva driverlib)
+

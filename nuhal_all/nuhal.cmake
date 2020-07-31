@@ -40,13 +40,15 @@ include(GNUInstallDirs)
 
 # Install a target with the given name, according to nuhal conventions
 # name - The name of the target.
+# ...  - Additional targets to be exported (if you have dependencies you link against they need to be exported)
 # If the include/name directory exists it will be installed
 # If name-config.cmake.in exists, it will be configured and installed
 #   - For libraries this file usually, should at a minimum, includes ${name}-target and
 #     uses find_dependency to import any dependencies that are needed for the target
 #   - If the target has any INTERFACE_SOURCES then it is treated as architecture independent for versioning purposes
+#   - If the target links against any INTERFACE_LIBRARIES those libraries are exported
 function(nuhal_install name)
-  install(TARGETS ${name} 
+  install(TARGETS ${name}  ${ARGN}
     EXPORT ${name}-target
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION  ${CMAKE_INSTALL_LIBDIR}
@@ -54,7 +56,7 @@ function(nuhal_install name)
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
-  install(EXPORT ${name}-target
+  install(EXPORT ${name}-target 
     NAMESPACE nuhal::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name}
     )
