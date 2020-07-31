@@ -44,6 +44,7 @@ include(GNUInstallDirs)
 #             you must then provide a file called ${name}-config.cmake.in that can be configured
 #             with configure_package_config_file(). It should include ${name}-target.cmake
 #             and use find_dependency() to bring in all of the dependencies
+#           if the target has INTEFACE_SOURCES it will be considered architecture independent
 function(nuhal_install name findable)
   install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   install(TARGETS ${name}
@@ -57,12 +58,22 @@ function(nuhal_install name findable)
     install(EXPORT ${name}-target
       NAMESPACE nuhal::
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
+
+    get_target_property(interface ${name} INTERFACE_SOURCES)
     
     include(CMakePackageConfigHelpers)
-    write_basic_package_version_file(
-      ${name}-config-version.cmake
-      COMPATIBILITY SameMajorVersion
-      )
+    if(interface)
+      write_basic_package_version_file(
+        ${name}-config-version.cmake
+        COMPATIBILITY SameMajorVersion
+        ARCH_INDEPENDENT
+        )
+    else()
+      write_basic_package_version_file(
+        ${name}-config-version.cmake
+        COMPATIBILITY SameMajorVersion
+        )
+    endif()
 
     # Used in case we need to export directories from NuhalConfig.cmake
     configure_package_config_file(${name}-config.cmake.in ${name}-config.cmake
