@@ -51,9 +51,13 @@ target_include_directories(nuhal_all INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
-nuhal_install(nuhal_all TRUE)
+nuhal_install(nuhal_all)
+# Header files are in nuhal not nuhal_all  which is a special case because of the cross-platform nature
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/nuhal DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/nuhal.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)
+
 enable_testing()
 add_executable(nuhal_test
   test/bytestream_test.cpp

@@ -11,6 +11,7 @@
   <url>https://www.github.com/m-elwin/nuhal/nuhal_tiva</url>
   <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
   <depend>tiva-cmake</depend>
+  <depend>nuhal_all</depend>
   <export>
     <build_type>cmake</build_type>
   </export>

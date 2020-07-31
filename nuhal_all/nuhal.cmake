@@ -40,12 +40,12 @@ include(GNUInstallDirs)
 
 # Install a target with the given name, according to nuhal conventions
 # name - The name of the target.
-# findable - if true, export information so that other projects can call find_package(name) and use the targets
-#             you must then provide a file called ${name}-config.cmake.in that can be configured
-#             with configure_package_config_file(). It should include ${name}-target.cmake
-#             and use find_dependency() to bring in all of the dependencies
-#           if the target has INTEFACE_SOURCES it will be considered architecture independent
-function(nuhal_install name findable)
+# If the include/name directory exists it will be installed
+# If name-config.cmake.in exists, it will be configured and installed
+#   - For libraries this file usually, should at a minimum, includes ${name}-target and
+#     uses find_dependency to import any dependencies that are needed for the target
+#   - If the target has any INTERFACE_SOURCES then it is treated as architecture independent for versioning purposes
+function(nuhal_install name)
   install(TARGETS ${name} 
     EXPORT ${name}-target
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -54,28 +54,31 @@ function(nuhal_install name findable)
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
-  if(findable)
-    install(EXPORT ${name}-target
-      NAMESPACE nuhal::
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name}
+  install(EXPORT ${name}-target
+    NAMESPACE nuhal::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name}
+    )
+
+  include(CMakePackageConfigHelpers)
+
+  # if there are source code files associated we assume architecture independence since
+  # those files need to be re-compiled for every project that includes them
+  get_target_property(interface ${name} INTERFACE_SOURCES)
+  
+  if(interface) 
+    write_basic_package_version_file(
+      ${name}-config-version.cmake
+      COMPATIBILITY SameMajorVersion
+      ARCH_INDEPENDENT
       )
+  else()
+    write_basic_package_version_file(
+      ${name}-config-version.cmake
+      COMPATIBILITY SameMajorVersion
+      )
+  endif()
 
-    get_target_property(interface ${name} INTERFACE_SOURCES)
-    
-    include(CMakePackageConfigHelpers)
-    if(interface)
-      write_basic_package_version_file(
-        ${name}-config-version.cmake
-        COMPATIBILITY SameMajorVersion
-        ARCH_INDEPENDENT
-        )
-    else()
-      write_basic_package_version_file(
-        ${name}-config-version.cmake
-        COMPATIBILITY SameMajorVersion
-        )
-    endif()
-
+  if(EXISTS ${name}-config.cmake.in)
     # Used in case we need to export directories from NuhalConfig.cmake
     configure_package_config_file(${name}-config.cmake.in ${name}-config.cmake
       INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name} PATH_VARS)
@@ -84,6 +87,10 @@ function(nuhal_install name findable)
       ${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
+  endif()
+
+  if(EXISTS include/${name})
+    install(DIRECTORY include/${name} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   endif()
 endfunction()
 
