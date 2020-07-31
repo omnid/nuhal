@@ -24,25 +24,25 @@ target_compile_features(nuhal_flags INTERFACE
 # installed or just being used from the build directory
 add_library(nuhal_all INTERFACE)
 target_sources(nuhal_all INTERFACE
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/bytestream.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/bytestream.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/bytestream.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/encoder.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/encoder.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/encoder.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/error.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/error.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/error.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/led.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/led.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/led.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/pid.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/pid.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/pid.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/matrix.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/matrix.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/matrix.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/queue.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/queue.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/queue.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/time.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/time.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/time.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/uart.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/uart.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/uart.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/nuhal_all/utilities.c>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/utilities.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/utilities.c>
   )
 
@@ -53,7 +53,7 @@ target_include_directories(nuhal_all INTERFACE
 
 nuhal_install(nuhal_all TRUE)
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)
-
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/nuhal.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)
 enable_testing()
 add_executable(nuhal_test
   test/bytestream_test.cpp

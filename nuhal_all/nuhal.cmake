@@ -74,3 +74,13 @@ function(nuhal_install name findable)
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
   endif()
 endfunction()
+
+# Whenever make all (the default target) is built, update git_hash.h
+#add_custom_target(git_hash ALL
+#  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/make_git_hash_h.sh ${CMAKE_CURRENT_BINARY_DIR}/include/common/git_hash.h
+#  COMMENT "Updating git_hash.h"
+#  BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/include/common/git_hash.h
+#  )
+
+# depent on git_hash so that git_hash.h will be modified before common is built
+#add_dependencies(common git_hash)

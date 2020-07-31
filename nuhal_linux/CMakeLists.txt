@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0)
 find_package(nuhal_all)
-nuhal_defaults()
+nuhal_defaults(Release)
 
 add_library(nuhal_linux
   src/error_host.c
@@ -11,4 +11,4 @@ add_library(nuhal_linux
   src/uart_host.c
   )
 
-target_link_libraries(nuhal_linux PUBLIC nuhal_all)
+target_link_libraries(nuhal_linux PUBLIC nuhal::nuhal_all)
