@@ -53,6 +53,7 @@ add_executable(nuhal_test
   test/bytestream_test.cpp
   test/encoder_test.cpp
   test/error_stub.cpp
+  test/led_stub.cpp
   test/matrix_test.cpp
   test/pid_test.cpp
   test/queue_test.cpp
