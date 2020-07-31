@@ -22,20 +22,11 @@
 /// Format of the data
 ///
 /// data[0] - the command byte
-///    Command bits 7:6 - protocol module
-///    Command bits 5:0 - command number
-/// There are different protocol modules each with an id
-/// The rest of the data is specific to the module and command
-/// It is permissible to have multiple modules with the same id
-/// As long as both command types will not be interpreted in the same context
-/// For example: the bootloader commands and module id can be re-used with
-/// every program, since the bootloader is not running concurrently with
-/// normal programs
-///
-/// Data types that are communicated should implement
-/// type_inject and type_extract methods so that they can be
-/// serialized/deserialized into the data
-///
+/// data[1]...data[N] the data
+///   data can serialized/deserialized using  bytestream.
+///   For basic types, use the provided bytestream_inject/bytestream_extract functions
+///   custom types can implement their own inject/extract functions that use the built-in bytestream inject/extrac
+///   functions as a base and a guide
 
 #include<stdint.h>
 #include<stdbool.h>
@@ -84,13 +75,6 @@ enum protocol_broadcast_type
 /// default timeout to wait for a response when executing a request or broadcast
 /// units of ms
 #define PROTOCOL_TIMEOUT_DEFAULT  200u
-
-/// @brief get the module id from a packet
-/// @param pkt - the packet
-/// @return the module identifier from the packet
-uint8_t protocol_packet_module(const struct protocol_packet * pkt);
-
-
 
 /// @brief open a uart port for use with the protocol
 /// @param uart_port_name - the name of the underlying uart port
