@@ -78,7 +78,7 @@ function(nuhal_install name)
       )
   endif()
 
-  if(EXISTS ${name}-config.cmake.in)
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}-config.cmake.in)
     # Used in case we need to export directories from NuhalConfig.cmake
     configure_package_config_file(${name}-config.cmake.in ${name}-config.cmake
       INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name} PATH_VARS)
@@ -89,7 +89,7 @@ function(nuhal_install name)
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
   endif()
 
-  if(EXISTS include/${name})
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/include/${name})
     install(DIRECTORY include/${name} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   endif()
 endfunction()
