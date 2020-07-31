@@ -1,6 +1,9 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0.0)
+include(nuhal.cmake)
+nuhal_disable_in_source_builds()
+nuhal_set_default_build_type(Release)
 
 # Add useful compiler options here, for each system.  This is anything beyond the necessary ones defined in the platform files
 add_library(nuhal_flags INTERFACE)

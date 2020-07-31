@@ -27,7 +27,7 @@ One day this library could be more generically useful, but currently it is devel
 11. Redistribute catch.hpp unit testing framework for use in other projects
 * Installation
 ** With ROS
-0. Either install [[https://github.com/m-elwin/tiva-cmake][tiva-cmake]] or clone it into your workspace
+0. Install [[https://github.com/m-elwin/tiva-cmake][tiva-cmake]] or clone it into your workspace
 1. Clone this repository in your workspace
 2. Use an isolated build tool (anything other than ~catkin_make~ such as ~catkin_make_isolated~)
 ** Without ROS
@@ -37,27 +37,30 @@ One day this library could be more generically useful, but currently it is devel
    git clone https://github.com/m-elwin/nuhal
    cd nuhal
    #+END_SRC
-2. Build the repository
+2. Build and install ~nuhal_all~, code that is common to all platforms.
    #+BEGIN_SRC bash
-   cmake -B build .
-   cmake --build build/
+   cmake -B nuhal_all/build nuhal_all 
+   cmake --build nuhal_all/build
+   cmake --build nuhal_all/build install
    #+END_SRC
-3. Run the unit tests
+5. Build and install the desired platform-specific libraries (~nuhal_<platform>~) of your choice.
    #+BEGIN_SRC bash
-   cmake --build build/ --target test
+   cmake -B nuhal_linux/build nuhal_linux 
+   cmake --build nuhal_linux/build
+   cmake --build nuhal_linux/build --target install
    #+END_SRC
-4. Install either system-wide (requires root) or to a specified location
-   - System-wide
+6. To run the unit tests
    #+BEGIN_SRC bash
-   sudo cmake --build build/ --target install
-   #+END_SRC bash
-   - To a specified location ~$LOCATION~
-   #+BEGIN_SRC bash
-   cmake --build build/ --target install -DCMAKE_PREFIX_PATH=$LOCATION
+   cmake --build nuhal_all/build/ --target test
    #+END_SRC
+7. When generating the build-system (~cmake -B ...~) for ~nuhal_all~ you can set an install prefix by passing ~-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR~, causing
+   the project to be installed to ~$INSTALL_DIR~. You should then specify ~-DCMAKE_PREFIX_PATH=$INSTALL_DIR~ when generating the build-system for the platform specific libraries.
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
+  - Includes some useful CMake Functions
+    - ~nuhal_set_default_build_type(type)~ Sets the default build type to ~type~ for single-configuration generators
+    - ~nuhal_disable_in_source_builds()~ Requires that the cmake build is in a separate directory from the source tree (to avoid polluting the source with a bunch of cmake-generated files)
 - If you would like to not add the default compile flags that ~nuhal~ uses,  use ~nuhal_noflags~ instead
 - If you would like to link against a platform-specific version, use ~nuhal_<platform>~. Flags are not included
 - If you would like to use just the flags, add ~nuhal_flags~ to ~target_link_libraries~
