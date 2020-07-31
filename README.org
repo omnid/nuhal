@@ -63,7 +63,7 @@ One day this library could be more generically useful, but currently it is devel
       - ~nuhal_set_default_build_type(type)~ Sets the default build type to ~type~ for single-configuration generators
       - ~nuhal_disable_in_source_builds()~ Requires that the cmake build is in a separate directory from the source tree (to avoid polluting the source with a bunch of cmake-generated files)
       - ~nuhal_no_lang_extensions()~ Disables C and C++ language extensions, forcing strict conformance to the standard.
-    - ~nuhal_install(name)~ install a target with the given name (see [[nuhal_all/nuhal.cmake]] for details and requirements)
+    - ~nuhal_install(name ...)~ install a target with the given name. List dependencies after the target name. See [[nuhal_all/nuhal.cmake]] for details and requirements.
 - If you would like to not add the default compile flags that ~nuhal::nuhal~ uses,  use ~nuhal::nuhal_noflags~ instead
 - If you would like to link against a platform-specific version, use ~nuhal::nuhal_<platform>~. Flags are not included
 - If you would like to use just the flags, add ~nuhal::nuhal_flags~ to ~target_link_libraries~
