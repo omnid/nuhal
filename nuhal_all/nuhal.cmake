@@ -1,3 +1,11 @@
+# Default cmake settings and options.
+# type - the default release type
+function(nuhal_defaults type)
+  nuhal_disable_in_source_builds()
+  nuhal_set_default_build_type(type)
+  nuhal_no_lang_extensions()
+endfunction()
+
 # set a default build type if not specified and store it in the cache
 # type - the build type to set
 function(nuhal_set_default_build_type type)
@@ -21,3 +29,8 @@ function(nuhal_disable_in_source_builds)
   endif()
 endfunction()
 
+# disable c/c++ language extensions
+function(nuhal_no_lang_extensions)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+  set(CMAKE_C_EXTENSIONS OFF)
+endfunction()
