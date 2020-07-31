@@ -34,3 +34,39 @@ function(nuhal_no_lang_extensions)
   set(CMAKE_CXX_EXTENSIONS OFF)
   set(CMAKE_C_EXTENSIONS OFF)
 endfunction()
+
+# Install a cmake target-specific library to the proper directories
+include(GNUInstallDirs)
+
+# Install a library with the given name, according to nuhal conventions
+# name - The name of the library. Must be a target added with add_library
+# You must provide a file called ${name}-config.cmake.in that can be configured
+# with configure_package_config_file(). It should include ${name}-target.cmake
+# and use find_dependency() to bring in all of the dependencies
+function(nuhal_install_library name)
+  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(TARGETS ${name}
+    EXPORT ${name}-target
+    LIBRARY DESTINATION  ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION  ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+  install(EXPORT ${name}-target
+    NAMESPACE nuhal::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
+  
+  include(CMakePackageConfigHelpers)
+  write_basic_package_version_file(
+    ${name}-config-version.cmake
+    COMPATIBILITY SameMajorVersion
+    )
+
+  # Used in case we need to export directories from NuhalConfig.cmake
+  configure_package_config_file(${name}-config.cmake.in ${name}-config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name} PATH_VARS)
+
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
+endfunction()
