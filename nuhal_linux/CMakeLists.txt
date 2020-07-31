@@ -12,3 +12,5 @@ add_library(nuhal_linux
   )
 
 target_link_libraries(nuhal_linux PUBLIC nuhal::nuhal_all)
+
+nuhal_install(nuhal_linux TRUE)

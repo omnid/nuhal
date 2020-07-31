@@ -46,18 +46,19 @@ include(GNUInstallDirs)
 #             and use find_dependency() to bring in all of the dependencies
 #           if the target has INTEFACE_SOURCES it will be considered architecture independent
 function(nuhal_install name findable)
-  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-  install(TARGETS ${name}
+  install(TARGETS ${name} 
     EXPORT ${name}-target
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION  ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION  ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
   if(findable)
     install(EXPORT ${name}-target
       NAMESPACE nuhal::
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name}
+      )
 
     get_target_property(interface ${name} INTERFACE_SOURCES)
     

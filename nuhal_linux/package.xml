@@ -10,6 +10,7 @@
   <url type="repository">https://www.github.com/m-elwin/nuhal</url>
   <url>https://www.github.com/m-elwin/nuhal/nuhal_linux</url>
   <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
+  <depend>nuhal_all</depend>
   <export>
     <build_type>cmake</build_type>
   </export>
