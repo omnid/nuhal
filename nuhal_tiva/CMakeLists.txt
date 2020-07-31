@@ -24,4 +24,6 @@ target_include_directories(nuhal_tiva PUBLIC
 
 target_link_libraries(nuhal_tiva PUBLIC nuhal::nuhal_all TivaCMake::driverlib)
 nuhal_install(nuhal_tiva driverlib)
+# Header files are in nuhal not nuhal_tiva so they don't get installed by nuhal_install
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/nuhal DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
 

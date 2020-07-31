@@ -13,4 +13,6 @@ add_library(nuhal_linux
 
 target_link_libraries(nuhal_linux PUBLIC nuhal::nuhal_all)
 
-nuhal_install(nuhal_linux TRUE)
+nuhal_install(nuhal_linux)
+# Header files are in nuhal not nuhal_tiva so they don't get installed by nuhal_install
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/nuhal DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
