@@ -42,7 +42,7 @@ One day this library could be more generically useful, but currently it is devel
    #+BEGIN_SRC bash
    cmake -B nuhal_all/build nuhal_all 
    cmake --build nuhal_all/build
-   cmake --build nuhal_all/build install
+   cmake --build nuhal_all/build --target install
    #+END_SRC
 5. Build and install the desired platform-specific libraries (~nuhal_<platform>~) of your choice.
    #+BEGIN_SRC bash
@@ -54,8 +54,9 @@ One day this library could be more generically useful, but currently it is devel
    #+BEGIN_SRC bash
    cmake --build nuhal_all/build/ --target test
    #+END_SRC
-7. When generating the build-system (~cmake -B ...~) for ~nuhal_all~ you can set an install prefix by passing ~-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR~, causing
-   the project to be installed to ~$INSTALL_DIR~. You should then specify ~-DCMAKE_PREFIX_PATH=$INSTALL_DIR~ when generating the build-system for the platform specific libraries.
+7. When generating the build-system (~cmake -B ...~) for ~nuhal_all~ you can set an install prefix by passing ~-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR~, 
+   where ~$INSTALL_DIR~ is the absolute path to the installation directory. The project to be installed to ~$INSTALL_DIR~. 
+   You should then specify ~-DCMAKE_PREFIX_PATH=$INSTALL_DIR~ when generating the build-system for the platform specific libraries.
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal::nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
