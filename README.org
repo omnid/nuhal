@@ -38,25 +38,19 @@ One day this library could be more generically useful, but currently it is devel
    git clone https://github.com/m-elwin/nuhal
    cd nuhal
    #+END_SRC
-2. Build and install ~nuhal_all~, code that is common to all platforms.
+2. Build, test, and install, like a standard CMake Project
    #+BEGIN_SRC bash
-   cmake -B nuhal_all/build nuhal_all 
-   cmake --build nuhal_all/build
-   cmake --build nuhal_all/build --target install
+   cmake -B build .
+   cmake --build build
+   cmake --build build --target test
+   cmake --build build --target install
    #+END_SRC
-5. Build and install the desired platform-specific libraries (~nuhal_<platform>~) of your choice.
-   #+BEGIN_SRC bash
-   cmake -B nuhal_linux/build nuhal_linux 
-   cmake --build nuhal_linux/build
-   cmake --build nuhal_linux/build --target install
-   #+END_SRC
-6. To run the unit tests
-   #+BEGIN_SRC bash
-   cmake --build nuhal_all/build/ --target test
-   #+END_SRC
-7. When generating the build-system (~cmake -B ...~) for ~nuhal_all~ you can set an install prefix by passing ~-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR~, 
-   where ~$INSTALL_DIR~ is the absolute path to the installation directory. The project to be installed to ~$INSTALL_DIR~. 
-   You should then specify ~-DCMAKE_PREFIX_PATH=$INSTALL_DIR~ when generating the build-system for the platform specific libraries.
+3. Technically, ~nuhal_all~, ~nuhal_linux~, and ~nuhal_tiva~ are complete projects that can be built separately.
+   - Build ~nuhal_all~ first becuase ~nuhal_linux~ and ~nuhal_tiva~ depend on it.
+   - Use ~CMAKE_INSTALL_PREFIX~ to specify a directory to install each package so you don't need root
+   - Use ~CMAKE_PREFIX_PATH~ to point the libraries to the proper location
+   - The top-level ~CMakeLists.txt~ automates these separate build processes.  Each package must be built separately
+     because a single ~CMake~ project can only use a one toolchain.
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal::nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status
