@@ -2,7 +2,7 @@
 # type - the default release type
 function(nuhal_defaults type)
   nuhal_disable_in_source_builds()
-  nuhal_set_default_build_type(type)
+  nuhal_set_default_build_type(${type})
   nuhal_no_lang_extensions()
 endfunction()
 
