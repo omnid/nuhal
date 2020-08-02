@@ -47,8 +47,8 @@ include(GNUInstallDirs)
 #     uses find_dependency to import any dependencies that are needed for the target
 #   - If the target has any INTERFACE_SOURCES then it is treated as architecture independent for versioning purposes
 #   - If the target links against any INTERFACE_LIBRARIES those libraries are exported
-function(nuhal_install_arch name)
-  if(CMAKE_CROSS_COMPILING)
+function(nuhal_install name)
+  if(CMAKE_CROSSCOMPILING)
     set(libdir ${CMAKE_INSTALL_LIBDIR}/${CMAKE_LIBRARY_ARCHITECTURE})
   else()
     set(libdir ${CMAKE_INSTALL_LIBDIR})
