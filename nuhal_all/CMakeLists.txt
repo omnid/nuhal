@@ -2,8 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal_all VERSION 0.1.0)
 include(nuhal.cmake)
-nuhal_disable_in_source_builds()
-nuhal_set_default_build_type(Release)
+nuhal_defaults(RelWithDebInfo)
 
 # Add useful compiler options here, for each system.  This is anything beyond the necessary ones defined in the platform files
 add_library(nuhal_flags INTERFACE)
@@ -19,41 +18,27 @@ target_compile_features(nuhal_flags INTERFACE
   c_std_99
   )
 
+target_include_directories(nuhal_flags INTERFACE
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+  )
 # This library is a pure compile-time library. It just brings in sources that must be compiled
 # by the platform-specific libraries. We need different locations depending on if the source code is
 # installed or just being used from the build directory
 add_library(nuhal_all INTERFACE)
-target_sources(nuhal_all INTERFACE
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/bytestream.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/bytestream.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/encoder.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/encoder.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/error.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/error.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/led.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/led.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/pid.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/pid.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/matrix.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/matrix.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/protocol.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/protocol.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/queue.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/queue.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/time.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/time.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/uart.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/uart.c>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/utilities.c>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/utilities.c>
-  )
 
-target_include_directories(nuhal_all INTERFACE
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-  )
+# Add source files to this list.  
+set(nuhal_all_src bytestream.c;encoder.c;error.c;led.c;pid.c;matrix.c;protocol.c;queue.c;time.c;uart.c;utilities.c)
 
-nuhal_install(nuhal_all)
+# Each source is added to a different path in the build and install configurations
+foreach(src ${nuhal_all_src})
+  target_sources(nuhal_all INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/${src}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/${src}>)
+endforeach()
+
+
+nuhal_install(nuhal_all nuhal_flags)
 # Header files are in nuhal not nuhal_all  which is a special case because of the cross-platform nature
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/nuhal DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
 

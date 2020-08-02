@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(nuhal_tiva VERSION 0.1.0)
 
 find_package(nuhal_all)
-nuhal_defaults(Release)
+nuhal_defaults(RelWithDebInfo)
 
 find_package(TivaCMake)
 
@@ -22,6 +22,6 @@ target_include_directories(nuhal PUBLIC
   )
 
 
-target_link_libraries(nuhal PUBLIC nuhal::nuhal_all TivaCMake::driverlib)
+target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags TivaCMake::driverlib TivaCMake::startup)
 nuhal_install(nuhal driverlib)
 
