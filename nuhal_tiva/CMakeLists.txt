@@ -7,7 +7,7 @@ nuhal_defaults(Release)
 
 find_package(TivaCMake)
 
-add_library(nuhal_tiva
+add_library(nuhal
   src/error_tiva.c
   src/led_tiva.c
   src/pin_tiva.c
@@ -16,14 +16,12 @@ add_library(nuhal_tiva
   src/uart_tiva.c
   )
 
-target_include_directories(nuhal_tiva PUBLIC
+target_include_directories(nuhal PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
 
-target_link_libraries(nuhal_tiva PUBLIC nuhal::nuhal_all TivaCMake::driverlib)
-nuhal_install(nuhal_tiva driverlib)
-# Header files are in nuhal not nuhal_tiva so they don't get installed by nuhal_install
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/nuhal DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+target_link_libraries(nuhal PUBLIC nuhal::nuhal_all TivaCMake::driverlib)
+nuhal_install(nuhal driverlib)
 
