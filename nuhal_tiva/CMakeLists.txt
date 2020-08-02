@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(nuhal_tiva VERSION 0.1.0)
 
 find_package(nuhal_all)
-nuhal_defaults(Release)
+nuhal_defaults(RelWithDebInfo)
 
 find_package(TivaCMake)
 
