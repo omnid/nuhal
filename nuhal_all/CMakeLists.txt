@@ -1,6 +1,6 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
-project(nuhal VERSION 1.0.0)
+project(nuhal_all VERSION 0.1.0)
 include(nuhal.cmake)
 nuhal_disable_in_source_builds()
 nuhal_set_default_build_type(Release)
