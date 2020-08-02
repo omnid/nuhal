@@ -21,7 +21,14 @@ target_include_directories(nuhal PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
-
-target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags TivaCMake::driverlib TivaCMake::startup)
+# TivaCMake::startup is an interface library so that the executable it links against
+# will include all fo the startup code and it is not just incorporated into the archive
+# If you make a library that links PUBLIC on nuhal, you will also need to explicitly link
+# against TivaCMake::startup as an interface library if you want resulting executables
+# to properly include the startup code
+target_link_libraries(nuhal
+  PRIVATE nuhal::nuhal_all
+  PUBLIC nuhal::nuhal_flags TivaCMake::driverlib
+  INTERFACE TivaCMake::startup)  
 nuhal_install(nuhal driverlib)
 
