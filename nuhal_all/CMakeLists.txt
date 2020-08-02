@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal_all VERSION 0.1.0)
 include(nuhal.cmake)
-nuhal_defaults(RelWithDebInfo)
+nuhal_defaults(Release)
 
 # Add useful compiler options here, for each system.  This is anything beyond the necessary ones defined in the platform files
 add_library(nuhal_flags INTERFACE)

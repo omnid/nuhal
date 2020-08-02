@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(nuhal_tiva VERSION 0.1.0)
 
 find_package(nuhal_all)
-nuhal_defaults(RelWithDebInfo)
+nuhal_defaults(Release)
 
 find_package(TivaCMake)
 
@@ -21,14 +21,8 @@ target_include_directories(nuhal PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
-# TivaCMake::startup is an interface library so that the executable it links against
-# will include all fo the startup code and it is not just incorporated into the archive
-# If you make a library that links PUBLIC on nuhal, you will also need to explicitly link
-# against TivaCMake::startup as an interface library if you want resulting executables
-# to properly include the startup code
 target_link_libraries(nuhal
   PRIVATE nuhal::nuhal_all
-  PUBLIC nuhal::nuhal_flags TivaCMake::driverlib
-  INTERFACE TivaCMake::startup)  
+  PUBLIC nuhal::nuhal_flags TivaCMake::driverlib)
 nuhal_install(nuhal driverlib)
 
