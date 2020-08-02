@@ -47,18 +47,23 @@ include(GNUInstallDirs)
 #     uses find_dependency to import any dependencies that are needed for the target
 #   - If the target has any INTERFACE_SOURCES then it is treated as architecture independent for versioning purposes
 #   - If the target links against any INTERFACE_LIBRARIES those libraries are exported
-function(nuhal_install name)
+function(nuhal_install_arch name)
+  if(CMAKE_CROSS_COMPILING)
+    set(libdir ${CMAKE_INSTALL_LIBDIR}/${CMAKE_LIBRARY_ARCHITECTURE})
+  else()
+    set(libdir ${CMAKE_INSTALL_LIBDIR})
+  endif()
   install(TARGETS ${name}  ${ARGN}
     EXPORT ${name}-target
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION  ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION  ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION  ${libdir}
+    ARCHIVE DESTINATION  ${libdir}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
   install(EXPORT ${name}-target 
     NAMESPACE nuhal::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name}
+    DESTINATION ${libdir}/${name}
     )
 
   include(CMakePackageConfigHelpers)
@@ -83,12 +88,12 @@ function(nuhal_install name)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}-config.cmake.in)
     # Used in case we need to export directories from NuhalConfig.cmake
     configure_package_config_file(${name}-config.cmake.in ${name}-config.cmake
-      INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name} PATH_VARS)
+      INSTALL_DESTINATION ${libdir}/${name} PATH_VARS)
 
     install(FILES
       ${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/${name})
+      DESTINATION ${libdir}/${name})
   endif()
 
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/include/${name})
