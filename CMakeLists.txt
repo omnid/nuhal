@@ -3,10 +3,9 @@
 # without using a ROS build tool like catkin. This CMakeLists.txt file is not used when compiling in ROS, instead
 # each individual sub-folder is compiled as a separate project
 cmake_minimum_required(VERSION 3.14)
-project(nuhal VERSION 0.1.0)
+project(nuhal VERSION 0.1.0 LANGUAGES NONE)
 include(ExternalProject)
 
-message(STATUS "MYPREPATH ${CMAKE_PREFIX_PATH}")
 # Compile each project as a sub-project
 ExternalProject_Add(
     nuhal_all
@@ -47,6 +46,5 @@ ExternalProject_Add(
     DEPENDS nuhal_all
     )
 
-include(GNUInstallDirs)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/install/${CMAKE_INSTALL_LIBDIR} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(DIRECTORY ${CMAKE_BINARY_DIR}/install/${CMAKE_INSTALL_INCLUDEDIR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${CMAKE_BINARY_DIR}/install/ DESTINATION ${CMAKE_INSTALL_PREFIX})
+
