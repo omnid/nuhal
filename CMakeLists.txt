@@ -5,6 +5,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 0.1.0)
 include(ExternalProject)
+
+message(STATUS "MYPREPATH ${CMAKE_PREFIX_PATH}")
 # Compile each project as a sub-project
 ExternalProject_Add(
     nuhal_all
@@ -16,27 +18,34 @@ ExternalProject_Add(
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
     )
 
+list(APPEND prefix ${CMAKE_BINARY_DIR}/install ${CMAKE_PREFIX_PATH})
+# Use in conjunction with LIST_SEPARATOR to
+# "escape" ; when passing to ExternalProject_Add
+string(REPLACE ";" "|" prefix "${prefix}")
+
 ExternalProject_Add(
     nuhal_linux
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_linux
+    LIST_SEPARATOR |
     CMAKE_ARGS
     -G${CMAKE_GENERATOR}
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
-    -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/install;${CMAKE_PREFIX_PATH}
+    -DCMAKE_PREFIX_PATH=${prefix}
     DEPENDS nuhal_all
     )
 
-ExternalProject_Add(
-    nuhal_tiva
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_tiva
-    CMAKE_ARGS
-    -G${CMAKE_GENERATOR}
-    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
-    -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/install;${CMAKE_PREFIX_PATH}
-    DEPENDS nuhal_all
-    )
+#ExternalProject_Add(
+#    nuhal_tiva
+#    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_tiva
+#    CMAKE_ARGS
+#    -G${CMAKE_GENERATOR}
+#    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+#    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
+#    -DCMAKE_PREFIX_PATH="${CMAKE_BINARY_DIR}/install;${CMAKE_PREFIX_PATH}"
+#    -DCMAKE_FIND_DEBUG_MODE=1
+#    DEPENDS nuhal_all
+#    )
 
 include(GNUInstallDirs)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/install/${CMAKE_INSTALL_LIBDIR} DESTINATION ${CMAKE_INSTALL_LIBDIR})

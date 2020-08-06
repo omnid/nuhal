@@ -36,10 +36,10 @@ endforeach()
 
 cmakeme_install(TARGET nuhal_all
                 NAMESPACE nuhal
-                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/nuhal
+                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/
                 ARCH_INDEPENDENT
                 DEPENDS nuhal_flags
-                CONFIG nuhal_all-config.cmake.in
+                CONFIG nuhal_all-config.cmake.in AS nuhal_all
                 )
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)

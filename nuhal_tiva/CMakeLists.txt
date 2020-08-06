@@ -2,9 +2,10 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal_tiva VERSION 0.1.0)
 
+message(STATUS "PREPATH ${CMAKE_PREFIX_PATH}")
 find_package(nuhal_all)
-nuhal_defaults(RelWithDebInfo)
-
+find_package(cmakeme)
+cmakeme_defaults(RelWithDebInfo)
 find_package(TivaCMake)
 
 add_library(nuhal
@@ -17,12 +18,17 @@ add_library(nuhal
   )
 
 target_include_directories(nuhal PUBLIC
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   )
 
 target_link_libraries(nuhal
   PRIVATE nuhal::nuhal_all
   PUBLIC nuhal::nuhal_flags TivaCMake::driverlib)
-nuhal_install(nuhal driverlib)
 
+cmakeme_install(TARGET nuhal
+                NAMESPACE nuhal
+                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/nuhal
+                ARCH_INDEPENDENT
+                DEPENDS nuhal_flags
+                CONFIG nuhal-config.cmake.in
+                )

@@ -2,7 +2,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal_linux VERSION 0.1.0)
 find_package(nuhal_all)
-nuhal_defaults(RelWithDebInfo)
+find_package(cmakeme)
+cmakeme_defaults(RelWithDebInfo)
 
 add_library(nuhal
   src/error_host.c
@@ -12,4 +13,8 @@ add_library(nuhal
   )
 
 target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
-nuhal_install(nuhal)
+cmakeme_install(TARGET nuhal
+                NAMESPACE nuhal
+                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/
+                CONFIG nuhal-config.cmake.in
+                )
