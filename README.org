@@ -27,30 +27,14 @@ One day this library could be more generically useful, but currently it is devel
 10. Red/Green/Blue LED control that convert to print statements on a host pc
 11. Redistribute catch.hpp unit testing framework for use in other projects
 * Installation
-** With ROS
-0. Install [[https://github.com/m-elwin/tiva-cmake][tiva-cmake]] or clone it into your workspace
-1. Clone this repository in your workspace
-2. Use an isolated build tool (anything other than ~catkin_make~ such as ~catkin_make_isolated~)
-** Without ROS
-0. Install [[https://github.com/m-elwin/tiva-cmake][tiva-cmake]] if you wish to use ~nuhal_tiva~
-1. Clone the repository
-   #+BEGIN_SRC bash
-   git clone https://github.com/m-elwin/nuhal
-   cd nuhal
-   #+END_SRC
-2. Build, test, and install, like a standard CMake Project
-   #+BEGIN_SRC bash
-   cmake -B build .
-   cmake --build build
-   cmake --build build --target test
-   cmake --build build --target install
-   #+END_SRC
-3. Technically, ~nuhal_all~, ~nuhal_linux~, and ~nuhal_tiva~ are complete projects that can be built separately.
-   - Build ~nuhal_all~ first becuase ~nuhal_linux~ and ~nuhal_tiva~ depend on it.
-   - Use ~CMAKE_INSTALL_PREFIX~ to specify a directory to install each package so you don't need root
-   - Use ~CMAKE_PREFIX_PATH~ to point the libraries to the proper location
-   - The top-level ~CMakeLists.txt~ automates these separate build processes.  Each package must be built separately
-     because a single ~CMake~ project can only use a one toolchain.
+  Use [[https://github.com/dirk-thomas/vcstool][vcstool]] with one of the provided repo files ([[ssh]], [[http]]) to clone
+  this repository and the others into a ROS workspace. Then use an
+  isolated build tool like  ~catkin_tools~ or ~catkin_make_isolated~ to compile
+  the workspace.
+
+  See [[https://github.com/omnid/omnid_docs/blob/master/Installation.md][Installation]] for more options and details, including how to install this
+  project without ROS.
+
 * Usage
 - Use ~find_package(nuhal)~ then add ~nuhal::nuhal~ to the ~target_link_libraries~
   - This will auto-detect your platform based on the toolchain, host, and cross-compiling status

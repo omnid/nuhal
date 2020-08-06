@@ -1,0 +1,13 @@
+repositories:
+  cmakeme:
+    type: git
+    url: https://github.com/omnid/cmakeme.git
+    version: master
+  nuhal:
+    type: git
+    url: https://github.com/omnid/nuhal.git
+    version: master
+  tiva-cmake:
+    type: git
+    url: https://github.com/omnid/tiva-cmake
+    version: master
