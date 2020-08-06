@@ -35,17 +35,17 @@ ExternalProject_Add(
     DEPENDS nuhal_all
     )
 
-#ExternalProject_Add(
-#    nuhal_tiva
-#    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_tiva
-#    CMAKE_ARGS
-#    -G${CMAKE_GENERATOR}
-#    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-#    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
-#    -DCMAKE_PREFIX_PATH="${CMAKE_BINARY_DIR}/install;${CMAKE_PREFIX_PATH}"
-#    -DCMAKE_FIND_DEBUG_MODE=1
-#    DEPENDS nuhal_all
-#    )
+ExternalProject_Add(
+    nuhal_tiva
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_tiva
+    LIST_SEPARATOR |
+    CMAKE_ARGS
+    -G${CMAKE_GENERATOR}
+    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
+    -DCMAKE_PREFIX_PATH=${prefix}
+    DEPENDS nuhal_all
+    )
 
 include(GNUInstallDirs)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/install/${CMAKE_INSTALL_LIBDIR} DESTINATION ${CMAKE_INSTALL_LIBDIR})

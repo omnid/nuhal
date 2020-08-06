@@ -2,7 +2,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(nuhal_tiva VERSION 0.1.0)
 
-message(STATUS "PREPATH ${CMAKE_PREFIX_PATH}")
 find_package(nuhal_all)
 find_package(cmakeme)
 cmakeme_defaults(RelWithDebInfo)
@@ -29,6 +28,6 @@ cmakeme_install(TARGET nuhal
                 NAMESPACE nuhal
                 INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/nuhal
                 ARCH_INDEPENDENT
-                DEPENDS nuhal_flags
+                DEPENDS driverlib
                 CONFIG nuhal-config.cmake.in
                 )
