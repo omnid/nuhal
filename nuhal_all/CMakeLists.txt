@@ -46,8 +46,6 @@ cmakeme_install(TARGETS nuhal_all nuhal_flags
                 PACKAGE_NAME nuhal_all
                 )
 
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)
-
 enable_testing()
 add_executable(nuhal_test
   test/bytestream_test.cpp
