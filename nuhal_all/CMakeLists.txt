@@ -19,6 +19,7 @@ target_compile_features(nuhal_flags INTERFACE
   )
 
 target_include_directories(nuhal_flags INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+
 # This library is a pure compile-time library. It just brings in sources that must be compiled
 # by the platform-specific libraries. We need different locations depending on if the source code is
 # installed or just being used from the build directory
@@ -34,12 +35,10 @@ foreach(src ${nuhal_all_src})
 endforeach()
 
 
-cmakeme_install(TARGET nuhal_all
+cmakeme_install(TARGETS nuhal_all nuhal_flags
                 NAMESPACE nuhal
-                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/
                 ARCH_INDEPENDENT
-                DEPENDS nuhal_flags
-                CONFIG nuhal_all-config.cmake.in AS nuhal_all
+                PACKAGE_NAME nuhal_all
                 )
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all)

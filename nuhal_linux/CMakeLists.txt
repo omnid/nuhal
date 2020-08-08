@@ -13,8 +13,7 @@ add_library(nuhal
   )
 
 target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
-cmakeme_install(TARGET nuhal
-                NAMESPACE nuhal
-                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/
-                CONFIG nuhal-config.cmake.in
-                )
+cmakeme_install(
+  TARGETS nuhal
+  NAMESPACE nuhal
+  PACKAGE_NAME nuhal)

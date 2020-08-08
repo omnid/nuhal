@@ -24,10 +24,7 @@ target_link_libraries(nuhal
   PRIVATE nuhal::nuhal_all
   PUBLIC nuhal::nuhal_flags TivaCMake::driverlib)
 
-cmakeme_install(TARGET nuhal
+cmakeme_install(TARGETS nuhal driverlib
                 NAMESPACE nuhal
-                INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/include/nuhal
-                ARCH_INDEPENDENT
-                DEPENDS driverlib
-                CONFIG nuhal-config.cmake.in
+                PACKAGE_NAME nuhal
                 )
