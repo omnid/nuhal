@@ -18,22 +18,27 @@ target_compile_features(nuhal_flags INTERFACE
   c_std_99
   )
 
-target_include_directories(nuhal_flags INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+target_include_directories(nuhal_flags INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 # This library is a pure compile-time library. It just brings in sources that must be compiled
 # by the platform-specific libraries. We need different locations depending on if the source code is
 # installed or just being used from the build directory
 add_library(nuhal_all INTERFACE)
 
-# Add source files to this list.  
-set(nuhal_all_src bytestream.c;encoder.c;error.c;led.c;pid.c;matrix.c;protocol.c;queue.c;time.c;uart.c;utilities.c)
-# Each source is added to a different path in the build and install configurations
-foreach(src ${nuhal_all_src})
-  target_sources(nuhal_all INTERFACE
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/nuhal_all/src/${src}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/${src}>)
-endforeach()
-
+# The paths's to these source files will be automatically updated during the installation so that they
+# can be found when importing nuhall_all in another project
+target_sources(nuhal_all INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/bytestream.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/encoder.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/error.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/led.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/pid.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/matrix.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/queue.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/time.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/uart.c>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utilities.c>)
 
 cmakeme_install(TARGETS nuhal_all nuhal_flags
                 NAMESPACE nuhal
