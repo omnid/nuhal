@@ -10,6 +10,7 @@ include(ExternalProject)
 ExternalProject_Add(
     nuhal_all
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_all
+    BUILD_ALWAYS True
     CMAKE_ARGS
     -G${CMAKE_GENERATOR}
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -25,6 +26,7 @@ string(REPLACE ";" "|" prefix "${prefix}")
 ExternalProject_Add(
     nuhal_linux
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_linux
+    BUILD_ALWAYS True
     LIST_SEPARATOR |
     CMAKE_ARGS
     -G${CMAKE_GENERATOR}
@@ -37,6 +39,7 @@ ExternalProject_Add(
 ExternalProject_Add(
     nuhal_tiva
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/nuhal_tiva
+    BUILD_ALWAYS True
     LIST_SEPARATOR |
     CMAKE_ARGS
     -G${CMAKE_GENERATOR}
