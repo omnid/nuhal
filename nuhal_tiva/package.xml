@@ -7,9 +7,10 @@
   </description>
   <maintainer email="elwin@northwestern.edu">Matthew Elwin</maintainer>
   <license>MIT</license>
-  <url type="repository">https://www.github.com/m-elwin/nuhal</url>
-  <url>https://www.github.com/m-elwin/nuhal/nuhal_tiva</url>
+  <url type="repository">https://www.github.com/omnid/nuhal</url>
+  <url>https://www.github.com/omnid/nuhal/nuhal_tiva</url>
   <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
+  <build_depend>cmakeme</build_depend>
   <depend>tiva-cmake</depend>
   <depend>nuhal_all</depend>
   <export>

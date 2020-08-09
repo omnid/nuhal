@@ -7,10 +7,11 @@
   </description>
   <maintainer email="elwin@northwestern.edu">Matthew Elwin</maintainer>
   <license>MIT</license>
-  <url type="repository">https://www.github.com/m-elwin/nuhal</url>
-  <url>https://www.github.com/m-elwin/nuhal/nuhal_linux</url>
+  <url type="repository">https://www.github.com/omnid/nuhal</url>
+  <url>https://www.github.com/omnid/nuhal/nuhal_linux</url>
   <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
   <depend>nuhal_all</depend>
+  <build_depend>cmakeme</build_depend>
   <export>
     <build_type>cmake</build_type>
   </export>
