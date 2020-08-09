@@ -13,4 +13,4 @@ add_library(nuhal
   )
 
 target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
-cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
+cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
