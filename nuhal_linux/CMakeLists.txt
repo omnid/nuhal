@@ -11,6 +11,5 @@ add_library(nuhal
   src/time_host.c
   src/uart_host.c
   )
-
 target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
