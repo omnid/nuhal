@@ -13,13 +13,13 @@ TEST_CASE("pid_serialize_gains", "[pid]")
     bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
 
     struct pid_gains gains{1.1f, 2.2f, 3.3f, 4.4f, 5.5f}; 
-    pid_inject_gains(&bs, &gains);
+    pid_gains_inject(&bs, &gains);
     
     // reinitialize so we can read the values
     bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
 
     struct pid_gains results{};
-    pid_extract_gains(&bs, &results);
+    pid_gains_extract(&bs, &results);
     CHECK(results.kp == gains.kp);
     CHECK(results.kd == gains.kd);
     CHECK(results.ki == gains.ki);
@@ -34,17 +34,55 @@ TEST_CASE("pid_serialize_state", "[pid]")
     bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
 
     struct pid_state state{2.1f, 3.2f, 4.3f};
-    pid_inject_state(&bs, &state);
+    pid_state_inject(&bs, &state);
     
     // reinitialize so we can read the values
     bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
 
     struct pid_state results{};
-    pid_extract_state(&bs, &results);
+    pid_state_extract(&bs, &results);
     CHECK(results.p_error == state.p_error);
     CHECK(results.i_error == state.i_error);
     CHECK(results.d_error == state.d_error);
 }
+
+TEST_CASE("pid_serialize_signals", "[pid]")
+{
+    uint8_t buffer[sizeof(pid_signals)] = "";
+    bytestream bs;
+    bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
+    struct pid_signals sig{1.5f, 4.9f, 7.2f};
+    pid_signals_inject(&bs, &sig);
+
+    // reinitialize so we can read the values
+    bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
+    struct pid_signals results{};
+    pid_signals_extract(&bs, &results);
+    CHECK(results.reference == sig.reference);
+    CHECK(results.measurement == sig.measurement);
+    CHECK(results.effort == sig.effort);
+}
+
+TEST_CASE("pid_serialize_debug_info", "[pid]")
+{
+    uint8_t buffer[sizeof(pid_debug_info)] = "";
+    bytestream bs;
+    bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
+    struct pid_debug_info info{{115.0f, 212.0, 1333.0f}, {11.1f, 22.2f, 33.3f}};
+    pid_debug_info_inject(&bs, &info);
+
+    // reinitialize so we can read the values
+    bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
+    struct pid_debug_info results{};
+    pid_debug_info_extract(&bs, &results);
+    CHECK(results.signals.reference == info.signals.reference);
+    CHECK(results.signals.measurement == info.signals.measurement);
+    CHECK(results.signals.effort == info.signals.effort);
+    CHECK(results.state.p_error == info.state.p_error);
+    CHECK(results.state.i_error == info.state.i_error);
+    CHECK(results.state.d_error == info.state.d_error);
+}
+
 
 TEST_CASE("pid_basics", "[pid]")
 {

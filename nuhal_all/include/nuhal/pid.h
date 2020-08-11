@@ -22,6 +22,20 @@ struct pid_state
     float d_error; /// derivative error
 };
 
+/// @brief signals for the pid controller
+struct pid_signals
+{
+    float reference;   // the reference signal
+    float measurement; // the measurement signal
+    float effort;      // the control effort signal
+};
+
+/// @brief information used to debug pid controllers
+struct pid_debug_info
+{
+    struct pid_state state;
+    struct pid_signals signals;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,26 +58,50 @@ struct bytestream;
 /// @param bs - the bytestream into which the gains should be inserted
 /// @param gains - the gains to write to the bytestream
 /// @pre there must be enough space in the bytestream for the gains
-void pid_inject_gains(struct bytestream * bs, const struct pid_gains * gains);
+void pid_gains_inject(struct bytestream * bs, const struct pid_gains * gains);
 
 /// @brief deserialize pid gains
 /// @param bs - the bytestream fromw hich to load the gains
 /// @param gains [out] - data from the bytestream is used to write the gains
 /// @pre the bytestream must contain the data corresponding to gains
-void pid_extract_gains(struct bytestream * bs, struct pid_gains * gains);
+void pid_gains_extract(struct bytestream * bs, struct pid_gains * gains);
 
 /// @brief serialize pid state
 /// @param bs - bytestream into which the state should be inserted
 /// @param state - the state to insert into the bytestream
 /// @pre - there must be enough space in the bytestream for the gains
-void pid_inject_state(struct bytestream * bs, const struct pid_state * state);
+void pid_state_inject(struct bytestream * bs, const struct pid_state * state);
 
 /// @brief deserialize pid state
 /// @param bs - the bytestream fromw hich to load the state
 /// @param state [out] - data from the bytestream is used to write the state
 /// @pre the bytestream must contain the data corresponding to state
-void pid_extract_state(struct bytestream * bs, struct pid_state * state);
+void pid_state_extract(struct bytestream * bs, struct pid_state * state);
 
+/// @brief serialize pid signals
+/// @param bs - bytestream into which the state should be inserted
+/// @param signals - the state to insert into the bytestream
+/// @pre - there must be enough space in the bytestream for the gains
+void pid_signals_inject(struct bytestream * bs, const struct pid_signals * signals);
+
+/// @brief deserialize pid signals 
+/// @param bs - the bytestream fromw hich to load the signals
+/// @param signals [out] - data from the bytestream is used to write the signal
+/// @pre the bytestream must contain the data corresponding to signals
+void pid_signals_extract(struct bytestream * bs, struct pid_signals * signals);
+
+
+/// @brief serialize pid debug_info
+/// @param bs - bytestream into which the state should be inserted
+/// @param debug_info - the state to insert into the bytestream
+/// @pre - there must be enough space in the bytestream for the gains
+void pid_debug_info_inject(struct bytestream * bs, const struct pid_debug_info * debug_info);
+
+/// @brief deserialize pid debug_info 
+/// @param bs - the bytestream fromw hich to load the debug_info
+/// @param debug_info [out] - data from the bytestream is used to write the signal
+/// @pre the bytestream must contain the data corresponding to debug_info
+void pid_debug_info_extract(struct bytestream * bs, struct pid_debug_info * state);
 #ifdef __cplusplus
 }
 #endif
