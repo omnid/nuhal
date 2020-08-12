@@ -1,7 +1,10 @@
-#include "nutilities/queue.h"
-#include "nutilities/utilities.h"
-#include "nutilities/time.h"
-#include "catch.hpp"
+/// \file
+/// \brief test the queue under a concurrent environment with producer and consumer threads
+#define CATCH_CONFIG_MAIN
+#include "nuhal/queue.h"
+#include "nuhal/utilities.h"
+#include "nuhal/time.h"
+#include "nuhal/catch.hpp"
 #include <thread>
 
 

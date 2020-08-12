@@ -35,6 +35,8 @@ ExternalProject_Add(
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
     -DCMAKE_PREFIX_PATH=${prefix}
+    STEP_TARGETS test
+    TEST_EXCLUDE_FROM_MAIN True
     DEPENDS nuhal_all
     )
 
@@ -53,6 +55,7 @@ ExternalProject_Add(
 
 enable_testing()
 add_test(NAME nuhal_all_test COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target nuhal_all-test)
+add_test(NAME nuhal_linux_test COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target nuhal_linux-test)
 
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/install/ DESTINATION ${CMAKE_INSTALL_PREFIX})

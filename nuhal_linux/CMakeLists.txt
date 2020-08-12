@@ -13,3 +13,9 @@ add_library(nuhal
   )
 target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
+
+enable_testing()
+find_package(Threads)
+add_executable(nuhal_linux_test test/queue_concurrent_test.cpp)
+target_link_libraries(nuhal_linux_test nuhal Threads::Threads)
+add_test(NAME nuhal_linux COMMAND nuhal_linux_test)
