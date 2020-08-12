@@ -25,3 +25,7 @@ target_link_libraries(nuhal
   PUBLIC nuhal::nuhal_flags TivaCMake::driverlib)
 
 cmakeme_install(TARGETS nuhal driverlib NAMESPACE nuhal DEPENDS nuhal_all TivaCMake) 
+
+# Enable testing so that test is a well-defined target
+enable_testing()
+add_test(NAME null_test COMMAND echo "TODO: No unit tests exist for tiva_cmake")
