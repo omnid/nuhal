@@ -132,6 +132,8 @@ void pid_debug_info_inject(struct bytestream * bs, const struct pid_debug_info *
     }
     pid_state_inject(bs, &debug_info->state);
     pid_signals_inject(bs, &debug_info->signals);
+    bytestream_inject_u8(bs, debug_info->sequence);
+    bytestream_inject_u8(bs, debug_info->missed);
 }
 
 /// @brief deserialize pid debug_info 
@@ -146,4 +148,6 @@ void pid_debug_info_extract(struct bytestream * bs, struct pid_debug_info * debu
     }
     pid_state_extract(bs, &debug_info->state);
     pid_signals_extract(bs, &debug_info->signals);
+    debug_info->sequence = bytestream_extract_u8(bs);
+    debug_info->missed = bytestream_extract_u8(bs);
 }

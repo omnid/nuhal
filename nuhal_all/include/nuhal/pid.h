@@ -33,8 +33,10 @@ struct pid_signals
 /// @brief information used to debug pid controllers
 struct pid_debug_info
 {
-    struct pid_state state;
-    struct pid_signals signals;
+    struct pid_state state;       // state of the pid controller
+    struct pid_signals signals;   // values of the signals
+    uint8_t sequence; // sequence number, increments by one each cycle
+    uint8_t missed;   // number of cycles missed since the previous pid command
 };
 
 #ifdef __cplusplus

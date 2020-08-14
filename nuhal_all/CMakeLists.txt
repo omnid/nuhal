@@ -5,16 +5,14 @@ find_package(cmakeme)
 cmakeme_defaults(RelWithDebInfo)
 
 # Add useful compiler options here, for each system.  This is anything beyond the necessary ones defined in the platform files
-# target_compile_features don't seem to be working currently for C so I am adding the flags explicitly here
+# target_compile_features don't seem to be working currently for C so I am adding the flags explicitly here.
+# Overall I am not using target_compile_features because it also causes problems when CXX is not an enabled language
 add_library(nuhal_flags INTERFACE)
 target_compile_options(nuhal_flags INTERFACE
-  $<$<C_COMPILER_ID:GNU>:  -pedantic -pipe -Wall -Wextra $<$<COMPILE_LANGUAGE:C>:-std=c99>>    
-  $<$<C_COMPILER_ID:CLANG>:-pedantic -pipe -Wall -Wextra $<$<COMPILE_LANGUAGE:C>:-std=c99>>  
+  $<$<C_COMPILER_ID:GNU,CLANG>:  -pedantic -pipe -Wall -Wextra $<$<COMPILE_LANGUAGE:C>:-std=c99>>    
+  $<$<CXX_COMPILER_ID:GNU,CLANG>:  -pedantic -pipe -Wall -Wextra $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>>    
   $<$<C_COMPILER_ID:TI>:-pden -pdr -pdv --c99 --diag_suppress=270>
-
   )
-
-target_compile_features(nuhal_flags INTERFACE cxx_std_17)
 
 target_include_directories(nuhal_flags INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
