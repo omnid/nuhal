@@ -11,6 +11,7 @@
   <url>https://www.github.com/omnid/nuhal/nuhal_all</url>
   <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
   <build_depend>cmakeme</build_depend>
+  <doc_depend>doxygen</doc_depend>
   <export>
     <build_type>cmake</build_type>
   </export>

@@ -59,5 +59,6 @@ add_executable(nuhal_test
 target_link_libraries(nuhal_test PRIVATE nuhal_all nuhal_flags) 
 add_test(NAME nuhal_all COMMAND nuhal_test)
 
-
+# Doxygen documentation
+cmakeme_doxygen()
   
