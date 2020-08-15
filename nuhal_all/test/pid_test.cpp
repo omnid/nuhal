@@ -68,7 +68,7 @@ TEST_CASE("pid_serialize_debug_info", "[pid]")
     uint8_t buffer[sizeof(pid_debug_info)] = "";
     bytestream bs;
     bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
-    struct pid_debug_info info{{115.0f, 212.0, 1333.0f}, {11.1f, 22.2f, 33.3f}};
+    struct pid_debug_info info{{115.0f, 212.0, 1333.0f}, {11.1f, 22.2f, 33.3f}, 0, 0};
     pid_debug_info_inject(&bs, &info);
 
     // reinitialize so we can read the values
