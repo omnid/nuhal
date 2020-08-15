@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-
+/// @file
 /// @brief convert between streams of bytes and other types
 /// This file provides the basic framework and built-in types
 /// the user should add their own extraction and injection 

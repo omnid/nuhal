@@ -1,13 +1,13 @@
 #ifndef COMMON_QUEUE_H_INCLUDE_GUARD
 #define COMMON_QUEUE_H_INCLUDE_GUARD
-/// @brief a basic circular buffer, suitable
-/// for a single produce and single consumer
+/// @file
+/// @brief A basic circular buffer, suitable
+///        for a single produce and single consumer
 #include<stdint.h>
 #include<stdbool.h>
 
-/// @brief the queue data structure
-struct queue;
 
+/// @brief the queue data structure
 struct queue
 {
     /// bitmask for the size of the queue is all the bits

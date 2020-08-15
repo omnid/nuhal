@@ -1,5 +1,6 @@
 #ifndef COMMON_PID_H_INCLUDE_GUARD
 #define COMMON_PID_H_INCLUDE_GUARD
+/// @file
 /// @brief Implementation of a PID controller, suitable for use on embedded
 /// systems
 #include<stdint.h>

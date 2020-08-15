@@ -1,6 +1,7 @@
 #ifndef COMMON_ENCODER_INCLUDE_GUARD
 #define COMMON_ENCODER_INCLUDE_GUARD
 #include<stdint.h>
+/// @file
 /// @brief provide a common interface for working with encoders
 /// Device-specific drivers provide the raw encoder counts, the
 /// rest of the conversion is performed here.

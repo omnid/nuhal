@@ -1,5 +1,6 @@
 #ifndef NUHAL_MATRIX_INCLUDE_GUARD
 #define NUHAL_MATRIX_INCLUDE_GUARD
+/// @file
 /// @brief some basic matrix operations for use on the embedded systems
 /// functions will be added as needed
 #include<stdbool.h>

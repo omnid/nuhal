@@ -1,5 +1,6 @@
 #ifndef COMMON_TIME_H_INCLUDE_GUARD
 #define COMMON_TIME_H_INCLUDE_GUARD
+/// @file
 /// @brief basic cross platform timing functions
 /// Note that these are not suitable for ultra-precise work
 #include<stdint.h>
