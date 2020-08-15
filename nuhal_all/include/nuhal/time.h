@@ -37,38 +37,48 @@ void time_delay_ms(uint32_t ms);
 /// @pre the us to delay must be less than time_delay_us
 void time_delay_us(uint32_t us);
 
-/// @brief used for tracking elapsed time. Aids in
-/// implemented loops with a timeout
+/// @brief Track the elapsed time.
+///
+/// Helps implemented loops that should timeout
 struct time_elapsed
 {
-    uint32_t curr_time; /// the current time 
-    uint32_t prev_time; /// the previous time
-    uint32_t elapsed_time; /// the elapsed time
+    /// the current time
+    uint32_t curr_time; 
+
+    /// the previous time
+    uint32_t prev_time; 
+
+    /// the elapsed time
+    uint32_t elapsed_time; 
 };
 
-/// @brief time_elapsed_t wrapper for ms
-/// prevents confusing ms and us versions
+/// @brief Wrapper for time_elapsed to indicate that ms are being used.
+///
+/// Prevents confusing delays with ms and us units
 struct time_elapsed_ms
 {
+    /// The elapsed time in ms.
     struct time_elapsed ms;
 }; 
 
 
-/// @brief time_elapsed_t wrapper for us
-/// prevents confusing ms and us versions
+/// @brief Wrapper for time_elapsed to indicate that us are being used.
+///
+/// Prevents confusing ms and us versions
 struct time_elapsed_us
 {
+    /// The elapsed time in us.
     struct time_elapsed us;
 };
 
 /// @brief initialize an elapsed time counter. Call this to initialize
 /// a time stamp to be used with time_elapsed_ms
-/// @param stamp - a starting time stamp to  initialize
+/// @return The initialized timestamp
 struct time_elapsed_ms time_elapsed_ms_init(void);
 
 /// @brief initialize an elapsed time counter.  Creates a time
 /// stamp to be used with time_elapsed_us
-/// @param stamp - a starting time stamp to initialize
+/// @return the initialized timestamp
 struct time_elapsed_us time_elapsed_us_init(void);
 
 /// @brief get total time elapsed from initialization of the time stamp, in ms

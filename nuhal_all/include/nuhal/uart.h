@@ -43,13 +43,13 @@ enum uart_term
     /// no termination character
     UART_TERM_NONE,
 
-    /// line-feed '\n' character ends the read
+    /// line-feed '\\n' character ends the read
     UART_TERM_LF,
 
-    /// carriage return '\r' character ends the read
+    /// carriage return '\\r' character ends the read
     UART_TERM_CR,
 
-    /// either a '\r' or a '\n' ends the read
+    /// either a '\\r' or a '\\n' ends the read
     UART_TERM_CR_OR_LF,
 
     /// Null character terminates the read
@@ -102,7 +102,12 @@ int uart_read_nonblock(const struct uart_port * port, void  * data, size_t len);
 int uart_read_block(const struct uart_port * port, void * data, size_t len,
                     uint32_t timeout, enum uart_term term);
 
-/// @brief blocking read of uart with extra options, @see uart_read_block.
+/// @brief Blocking read of uart with extra options, @see uart_read_block.
+/// @param port The uart port from which to read
+/// @param data Buffer to store the data that is read
+/// @param len Size, in bytes, of the data buffer
+/// @param timeout Time in ms to wait before timing out
+/// @param term Termination condition: if a specific character is read the read ends
 /// @param timeout_error - if true generate a timeout error on timeout
 /// @return the number of bytes read a timeout error has occurred if
 /// the number of bytes read is < len

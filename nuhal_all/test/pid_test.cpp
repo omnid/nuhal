@@ -5,7 +5,7 @@
 #include "nuhal/bytestream.h"
 #include "nuhal/utilities.h"
 
-
+/// Test pid gain serialization
 TEST_CASE("pid_serialize_gains", "[pid]")
 {
     uint8_t buffer[sizeof(pid_gains)] = "";
@@ -27,6 +27,7 @@ TEST_CASE("pid_serialize_gains", "[pid]")
     CHECK(results.u_min == gains.u_min);
 }
 
+/// Test pid state serialization
 TEST_CASE("pid_serialize_state", "[pid]")
 {
     uint8_t buffer[sizeof(pid_state)] = "";
@@ -46,6 +47,7 @@ TEST_CASE("pid_serialize_state", "[pid]")
     CHECK(results.d_error == state.d_error);
 }
 
+/// Test pid_signal serialization
 TEST_CASE("pid_serialize_signals", "[pid]")
 {
     uint8_t buffer[sizeof(pid_signals)] = "";
@@ -63,6 +65,7 @@ TEST_CASE("pid_serialize_signals", "[pid]")
     CHECK(results.effort == sig.effort);
 }
 
+/// Test pid_debug_info serialization
 TEST_CASE("pid_serialize_debug_info", "[pid]")
 {
     uint8_t buffer[sizeof(pid_debug_info)] = "";
@@ -83,7 +86,7 @@ TEST_CASE("pid_serialize_debug_info", "[pid]")
     CHECK(results.state.d_error == info.state.d_error);
 }
 
-
+/// Test some basic input/output relationships for the pid controller
 TEST_CASE("pid_basics", "[pid]")
 {
     const struct pid_gains gains{4.0, 3.0, 2.0, 20.0, -20.0};

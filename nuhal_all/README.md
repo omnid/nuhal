@@ -3,4 +3,8 @@ Contains the portion of the Northwestern Utilities and Hardware Abstraction Libr
 works on all platforms.  This library mainly provides source files that should be compiled
 with a platform-specific implementation such as `nuhal_tiva` or `nuhal_linux`.
 
-See the Doxygen documentation (<build_dir>/docs/index.html) for details about the API.
+
+# API Documentation
+1. Doxygen generates API documentation when the project is built.
+2. You can access it in `&lt build &gt/docs/index.html
+3. When building with `catkin`, the documentation is in `build/nuhal_all/docs/index.html`

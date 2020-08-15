@@ -76,7 +76,8 @@ Usage
         -   `nuhal_install(name ...)` install a target with the given
             name. List dependencies after the target name. See
             *nuhal_all/nuhal.cmake* for details and requirements.
-
+- Additional Documentation can be found in each platform's `README.md`. Doxygen documentation is generated with each build
+  and placed in `&lt build &gt/doc/index.html`.
 Adding a Platform
 -----------------
 

@@ -1,26 +1,31 @@
 #ifndef COMMON_ALL_BYTESTREAM_H
 #define COMMON_ALL_BYTESTREAM_H
+/// @file
+/// @brief Convert between streams of bytes and other types.
+///
+/// This file provides the basic framework for serialization and
+/// methods to serialize built-in types. User should add their
+/// own extraction and injection functions for custom types.
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-/// @file
-/// @brief convert between streams of bytes and other types
-/// This file provides the basic framework and built-in types
-/// the user should add their own extraction and injection 
-/// functions for custom types.
 
-/// @brief used to deserialize data from a byte stream
-/// this struct tracks the position in the stream
+/// @brief Data for bytestream serialization functions.
+///
+/// Monitors the underlying data buffer and tracks the
+/// current position
 struct bytestream
 {
-    // the actual data
+    /// The actual data
     uint8_t * data; 
-    // the length in bytes of the data buffer
+
+    /// The length in bytes of the data buffer
     size_t capacity;
 
-    // the current size of the data that has been processed
-    // this is the position in data where the next byte
-    // should be read to/written from
+    /// \brief The current size of the data that has been processed.
+    /// This is the position in data where the next byte
+    /// should be read to/written from
     size_t size;
 };
 
@@ -29,7 +34,7 @@ struct bytestream
 extern "C" {
 #endif
 
-/// @brief initialize a byte stream, or reset it to its original position
+/// @brief Initialize a byte stream, or reset it to its original position
 /// @param out - the bytestream to initialize
 /// @param data - the buffer holding the bytes
 /// @param len - the length of the buffer
@@ -81,14 +86,14 @@ void bytestream_inject_i32(struct bytestream * bs, int32_t i32);
 /// @return the next data, as a float from the bytestream
 float bytestream_extract_f(struct bytestream * bs);
 
-/// @brief place a float into the bytestream
+/// @brief Place a float into the bytestream
 /// @param bs - the bytestream, which will be advanced by two bytes
 /// @param f - the data to place in the stream, in little endian.
 void bytestream_inject_f(struct bytestream * bs, float f);
 
-/// @brief place a c style string into the bytestream
-/// @param bs - the bytestream, which will be advanced by two bytes
-/// @param s - null terminated string to put into the stream. the null character
+/// @brief Place a c style string into the bytestream
+/// @param bs  The bytestream, which will be advanced by two bytes
+/// @param str Null terminated string to put into the stream. the null character
 /// is included
 void bytestream_inject_string(struct bytestream * bs, const char * str);
 

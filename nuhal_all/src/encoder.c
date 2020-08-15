@@ -117,9 +117,6 @@ void encoder_joints_inject(struct bytestream * bs,
     bytestream_inject_f(bs, enc->after_radians);
 }
 
-/// @brief deserialize encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
 void encoder_joints_extract(struct bytestream * bs,
                            struct encoder_joints * out)
 {
@@ -133,9 +130,6 @@ void encoder_joints_extract(struct bytestream * bs,
     out->after_radians = bytestream_extract_f(bs);
 }
 
-/// @brief serialize the gimbal encoder values into a bytestream
-/// @param bs - the bytestream
-/// @param enc - the encoder data to store in the stream
 void encoder_gimbal_inject(struct bytestream * bs,
                           const struct encoder_gimbal * enc)
 {
@@ -152,9 +146,6 @@ void encoder_gimbal_inject(struct bytestream * bs,
     bytestream_inject_f(bs, enc->z_radians);
 }
 
-/// @brief deserialize gimbal encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
 void encoder_gimbal_extract(struct bytestream * bs,
                            struct encoder_gimbal * out)
 {

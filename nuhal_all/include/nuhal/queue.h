@@ -3,6 +3,7 @@
 /// @file
 /// @brief A basic circular buffer, suitable
 ///        for a single produce and single consumer
+
 #include<stdint.h>
 #include<stdbool.h>
 
@@ -10,29 +11,38 @@
 /// @brief the queue data structure
 struct queue
 {
-    /// bitmask for the size of the queue is all the bits
-    /// in an index that can be a 1 while still being within
-    /// the capacity of the queue. the queue capacity
+    /// \brief Bitmask used as the size of the queue.
+    ///
+    /// All the bits in an index that can be a 1 while still being within
+    /// the capacity of the queue. The queue capacity
     /// is the maximum number of items in the queue and
-    /// must be a power of two
+    /// must be a power of two.
     uint32_t mask;
-    uint32_t item_size;      /// the size (in bytes) of each item
-    volatile uint8_t * data;    /// buffer for the queue data
-    volatile uint32_t write_index; /// queue write location 
-    volatile uint32_t read_index;  /// queue read location
+
+    /// The size (in bytes) of each item in the queue
+    uint32_t item_size;      
+
+    /// buffer for the queue data
+    volatile uint8_t * data;
+
+    /// queue write location 
+    volatile uint32_t write_index;
+
+    /// queue read location
+    volatile uint32_t read_index;  
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
-/// @brief create a new queue
-/// @param capacity - the maximum number of items in the queue
-/// NOTE: one slot will always be unused to simplify detecting of full vs empty
-/// @param item_size - the size in bytes of each item
-/// @param data - buffer where the data should be stored. must
-/// have capacity*item_size bytes available
-/// @return the initialized queue
+/// @brief Create a new queue
+/// @param capacity The maximum number of items in the queue
+///        One slot will always be unused to simplify detecting of full vs empty
+/// @param item_size  The size in bytes of each item
+/// @param[in] data  Buffer where the data should be stored. Must
+///              have capacity*item_size bytes available
+/// @return The initialized queue
 struct queue queue_init(uint32_t capacity,
                 uint32_t item_size,
                 volatile void * data);

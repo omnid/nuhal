@@ -1,8 +1,8 @@
 #ifndef COMMON_ENCODER_INCLUDE_GUARD
 #define COMMON_ENCODER_INCLUDE_GUARD
-#include<stdint.h>
 /// @file
-/// @brief provide a common interface for working with encoders
+/// @brief Provide a common interface for working with encoders.
+///
 /// Device-specific drivers provide the raw encoder counts, the
 /// rest of the conversion is performed here.
 /// There are three types of angles we can get from an encoder
@@ -16,40 +16,45 @@
 /// finally radians from (-pi, pi]
 /// General workflow is for a low-level function to provide encoder_raw_ticks
 /// The user then normalizes the raw ticks and can convert them to radians
+#include<stdint.h>
 
 struct bytestream;
 
-/// encoder orientation - if counting up results in smaller or larger angles
+/// Encoder orientation: Specify if counting up results in smaller or larger angles.
 enum encoder_orientation
 {
-    ENCODER_ORIENTATION_UP_UP, // increasing ticks -> increasing angle
-    ENCODER_ORIENTATION_UP_DOWN // increasing ticks -> decreasing angle
+    /// Increasing ticks -> increasing angle
+    ENCODER_ORIENTATION_UP_UP,
+
+    /// Increasing ticks -> decreasing angle
+    ENCODER_ORIENTATION_UP_DOWN 
 };
 
-/// @brief properties of an encoder
+/// @brief Properties of an encoder
 struct encoder
 {
-    /// the number of counts per revolution
+    /// The number of counts per revolution
     uint32_t ticks_per_rev;
 
-    // the number of ticks corresponding to the zero angle
+    /// The number of ticks corresponding to the zero angle
     uint32_t zero_angle_ticks;
 
-    /// the orientation of the encoder if increasing ticks ->
+    /// The orientation of the encoder if increasing ticks ->
     /// increasing angle or vice versa
     enum encoder_orientation orientation;
 };
 
-/// @brief raw data from an encoder.
+/// @brief Raw data from an encoder.
 /// These are the ticks of the encoder prior to going
 /// through any scaling or re-zeroing
 struct encoder_raw
 {
-    // multi has a resolution of 1 tick per revolution
-    // so it is the full turn count
+    /// \brief The full-turn count for multi-turn encoders.
+    ///
+    /// Multi has a resolution of 1 tick per revolution.
     uint32_t multi;
 
-    // single is ticks_per revolution
+    /// Single-turn  tick per revolution
     uint32_t single;
 };
 
@@ -57,13 +62,13 @@ struct encoder_raw
 /// @brief encoders for the joint
 struct encoder_joints
 {
-    // calibrated ticks for the before-spring encoder
+    /// calibrated ticks for the before-spring encoder
     int32_t before_ticks;
 
-    // radians of the before-spring encoder
+    /// radians of the before-spring encoder
     float before_radians;
 
-    // calibrated ticks for the after-spring encoder
+    /// calibrated ticks for the after-spring encoder
     int32_t after_ticks;
 
     /// radians of the after-spring encoder
@@ -73,14 +78,23 @@ struct encoder_joints
 /// @brief encoders for the gimbal
 struct encoder_gimbal
 {
-    /// calibrated ticks for each axis
+    /// Calibrated ticks for the x axis
     int32_t x_ticks;
+
+    /// Calibrated ticks for the y axis
     int32_t y_ticks;
+
+
+    /// Calibrated ticks for the z axis
     int32_t z_ticks;
 
-    // radians for each axis
+    /// radians for the x axis
     float x_radians;
+
+    /// radians for the y axis
     float y_radians;
+
+    /// radians for the z axis
     float z_radians;
 };
 
@@ -94,7 +108,6 @@ extern "C" {
 /// @param raw - the raw count of enc
 /// @return normalized encoder ticks:
 ///
-/// @detail
 /// The normalization means that
 /// 1. -ceil(enc->ticks_per_rev/2) <= ticksN <= floor(enc->ticks_per_rev/2)
 /// 1. ticksN == 0 -> ticks == enc-> zero_angle_ticks
@@ -130,21 +143,21 @@ void encoder_joints_inject(struct bytestream * bs,
                           const struct encoder_joints * enc);
 
 /// @brief deserialize joint encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
+/// @param[in,out] bs  The bytestream
+/// @param[out] out    The encoder data read from the stream
 void encoder_joints_extract(struct bytestream * bs,
                            struct encoder_joints * out);
 
 
-/// @brief serialize the gimbal encoder values into a bytestream
-/// @param bs - the bytestream
-/// @param enc - the encoder data to store in the stream
+/// @brief Serialize the gimbal encoder values into a bytestream
+/// @param[in,out] bs  The bytestream to write the data to
+/// @param[in]     enc The encoder data to store in the stream
 void encoder_gimbal_inject(struct bytestream * bs,
                           const struct encoder_gimbal * enc);
 
-/// @brief deserialize gimbal encoder data from the bytestream
-/// @param bs - the bytestream
-/// @param out [out] - the encoder data read from the stream
+/// @brief Deserialize gimbal encoder data from the bytestream
+/// @param[in,out] bs    The bytestream
+/// @param[out]    out   The encoder data read from the stream
 void encoder_gimbal_extract(struct bytestream * bs,
                            struct encoder_gimbal * out);
 #ifdef __cplusplus

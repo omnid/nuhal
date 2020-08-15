@@ -12,7 +12,7 @@
 ///          (as in an ack/nack) this might be zero.
 ///          NOTE: in practice bootloader sends 0x00 0xCC as an ack, not 0xCC
 /// byte 1 - Checksum:
-///      if N != 0, 0xFF & \sum_{i=2}^{N}byte[i],
+///      if N != 0, 0xFF & \f$\sum_{i=2}^{N}byte[i]\f$,
 ///      if N == 0, 0xCC
 /// byte 2..N: the raw data
 ///
@@ -38,18 +38,22 @@
 
 /// @brief the communications packet that is sent between processors
 /// The packet must be initialized prior to use, either by
-/// 1. call protocol_packet_init
-/// 2. use the stream member to inject data into the stream
+/// 1. Call protocol_packet_init
+/// 2. Use the stream member to inject data into the stream
 /// OR
-/// 1. call any protocol function that outputs a packet
-/// 2. use the stream member to extract data from the stream
+/// 1. Call any protocol function that outputs a packet
+/// 2. Use the stream member to extract data from the stream
 struct protocol_packet
 {
-    // used for serializing/deserializing the packet
+    /// \brief Used for serializing/deserializing the packet.
+    ///
+    /// The initialization functions set up the stream so that it
+    /// manages the _data member.
     struct bytestream stream;
 
-    // the actual data stored in the packet: do not access directly
-    // instead packets should be build/parsed using the bytestream
+    /// \brief Actual data stored in the packet: do not access directly.
+    ///
+    /// Instead packets should be built/parsed using the bytestream
     uint8_t _data[PROTOCOL_PACKET_MAX_LENGTH];
 };
 
@@ -117,7 +121,10 @@ void protocol_read_block(const struct uart_port * port,
                          uint32_t timeout);
 
 /// @brief @see protocol_read_block,
-/// @param timeout_error - if true a timeout casues an error()
+/// @param[in] port The uart port
+/// @param[out] out The packet that is to be read.
+/// @param timeout The time, in ms, to wait before timing out. 0 is an infinite timeout
+/// @param timeout_error  If true a timeout casues an error()
 ///             if false, the function returns false if it times out
 /// @return true unless a timeout occurs and timeout_error == false
 bool protocol_read_block_error(const struct uart_port * port,
@@ -148,7 +155,10 @@ void protocol_request(const struct uart_port * port,
                       struct protocol_packet * in,
                       struct protocol_packet * out);
 
-/// @brief @see protocol_request
+/// @brief Send a protocol packet and wait for a response
+/// @param port The port over which to send the packet
+/// @param[in] in The packet to send
+/// @param[out] out The packet with the received data
 /// @param timeout_ms timeout in ms - base time to wait
 /// @param timeout_error - if true, an error occurs on timeout
 /// if false, this function returns false on timeout
@@ -169,11 +179,11 @@ bool protocol_request_timeout(const struct uart_port * port,
 /// each packet must be the same length
 /// @param response - response buffer from all the ports
 /// if NULL then wait for the response but discard the data
-/// @param bytpe -PROTOCOL_BROADCAST - pkt[0] is sent to all ports
+/// @param btype -PROTOCOL_BROADCAST - pkt[0] is sent to all ports
 ///               PROTOCOL_ANYCAST - pkt[i] is sent to ports[i],
-/// @param timeout_ms - timeout in ms.
+/// @param timeout - timeout in ms.
 ///
-/// @detail This function interleaves the sending and receiving of all the data
+/// This function interleaves the sending and receiving of all the data
 /// Rather than sending each packet in sequence and receiving three packets in
 /// sequence.
 void protocol_broadcast_timeout(const struct uart_port * const ports[],

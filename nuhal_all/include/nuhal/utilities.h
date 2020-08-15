@@ -5,8 +5,9 @@
 #include<stdint.h>
 #include <stddef.h>
 
-// helpers for FILE_LINE macro
+/// Internal: helpers for FILE_LINE macro
 #define FILE_LINE_STRINGIFY(file,line) file":"#line
+/// Internal: helper for FILE_LINE macro
 #define FILE_LINE_EXPAND(file,line) FILE_LINE_STRINGIFY(file,line)
 
 /// @brief String literal in the form of the current_file:current_line
@@ -32,6 +33,7 @@
 /// @brief convert radians to degrees
 #define RADIANS_TO_DEGREES(rad) ((rad) * 180.0f/PI)
 
+/// @brief convert degrees to radians
 #define DEGREES_TO_RADIANS(deg) ((deg) * PI/180.0f)
 
 /// @brief convert radians/sec to revolutions/sec

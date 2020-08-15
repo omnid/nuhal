@@ -5,39 +5,69 @@
 /// systems
 #include<stdint.h>
 
-/// @brief gains for a pid controller
+/// @brief Gains for a pid controller
 struct pid_gains
 {
-    float kp;    /// proportional gain
-    float ki;    /// integral gain
-    float kd;    /// derivative gain
-    float u_max; /// maximum control effort
-    float u_min; /// minimum control effort
+    /// Proportional gain
+    float kp;    
+
+    /// Integral gain
+    float ki;    
+
+    /// Derivative gain
+    float kd;    
+
+    /// \brief Maximum control effort.
+    ///
+    /// Output is saturated so this limit is never exceeded.
+    float u_max;
+
+    /// \brief Minimum control effort.
+    ///
+    /// Output is saturated so this limit is never exceeded
+    float u_min; 
 };
 
-/// @brief the current state of the pid controller
+/// @brief The current state of the pid controller
 struct pid_state
 {
-    float p_error; /// proportional error
-    float i_error; /// integral error
-    float d_error; /// derivative error
+    /// Proportional error
+    float p_error; 
+
+    /// Integral error
+    float i_error; 
+
+    /// Derivative error
+    float d_error; 
 };
 
 /// @brief signals for the pid controller
 struct pid_signals
 {
-    float reference;   // the reference signal
-    float measurement; // the measurement signal
-    float effort;      // the control effort signal
+    /// The reference signal
+    float reference;
+
+    /// The measurement signal
+    float measurement; 
+
+    /// The control effort signal
+    float effort;      
 };
 
 /// @brief information used to debug pid controllers
 struct pid_debug_info
 {
-    struct pid_state state;       // state of the pid controller
-    struct pid_signals signals;   // values of the signals
-    uint8_t sequence; // sequence number, increments by one each cycle
-    uint8_t missed;   // number of cycles missed since the previous pid command
+    /// state of the pid controller
+    struct pid_state state;
+
+    /// values of the signals
+    struct pid_signals signals;   
+
+    /// sequence number, increments by one each cycle
+    uint8_t sequence; 
+
+    /// number of cycles missed since the previous pid command
+    uint8_t missed;   
 };
 
 #ifdef __cplusplus
@@ -102,9 +132,9 @@ void pid_debug_info_inject(struct bytestream * bs, const struct pid_debug_info *
 
 /// @brief deserialize pid debug_info 
 /// @param bs - the bytestream fromw hich to load the debug_info
-/// @param debug_info [out] - data from the bytestream is used to write the signal
+/// @param info [out] - data from the bytestream is used to write the signal
 /// @pre the bytestream must contain the data corresponding to debug_info
-void pid_debug_info_extract(struct bytestream * bs, struct pid_debug_info * state);
+void pid_debug_info_extract(struct bytestream * bs, struct pid_debug_info * info);
 #ifdef __cplusplus
 }
 #endif

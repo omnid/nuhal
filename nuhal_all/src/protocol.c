@@ -7,7 +7,7 @@
 /// @file
 /// @brief Implements the protocol
 ///
-/// @desc Protocol description:
+/// Protocol description:
 /// The protocol uses the same  format as the tiva bootloader protocol
 /// described in TI application report SPMA074A "Implementation of Programmer
 /// for Serial Bootloaders on TM4C12x Microcontroller
@@ -156,12 +156,6 @@ static void protocol_validate_response(const struct protocol_packet * request,
     }
 }
 
-
-uint8_t protocol_packet_module(const struct protocol_packet * pkt)
-{
-    // exract the 2 most significant bits
-    return protocol_packet_command(pkt) & 0xC0;
-}
 
 /// @brief open a uart port for use with the protocol
 /// @param uart_port_name - the name of the underlying uart port
