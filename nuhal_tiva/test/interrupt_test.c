@@ -1,6 +1,9 @@
 #include "nuhal/tiva.h"
 #include "nuhal/led.h"
 #include <stddef.h>
+/// This tests interrupts by adding a custom fault handler
+/// The fault is then triggered. If the handler is called
+/// The LED should be blue
 
 // custom fault handler
 void FaultISR(void)
