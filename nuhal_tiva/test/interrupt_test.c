@@ -6,7 +6,7 @@
 /// The LED should be blue
 
 // custom fault handler
-void FaultISR(void)
+void HardFaultISR(void)
 {
     led_set(LED_COLOR_BLUE);
     for(;;)
