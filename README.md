@@ -78,6 +78,7 @@ Usage
             *nuhal_all/nuhal.cmake* for details and requirements.
 - Additional Documentation can be found in each platform's `README.md`. Doxygen documentation is generated with each build
   and placed in `&lt build &gt/doc/index.html`.
+
 Adding a Platform
 -----------------
 
@@ -92,3 +93,9 @@ Adding a Platform
     this file that is called and it is its responsibility to select the
     appropriate default `nuhal` library based on the platform and
     toolchain
+
+Testing
+=======
+1. There are automated unit tests that are platform-independent and can be run with `make test`
+2. There are integration tests that can be loaded on the microcontroller in `nuhal_tiva/test`. Comments
+   at the start of each file describe the expected test behavior
