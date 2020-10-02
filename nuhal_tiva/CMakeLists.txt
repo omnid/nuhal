@@ -4,7 +4,7 @@ project(nuhal_tiva VERSION 0.1.0)
 
 find_package(nuhal_all)
 find_package(cmakeme)
-cmakeme_defaults(RelWithDebInfo)
+cmakeme_defaults(Debug)
 find_package(TivaCMake)
 
 add_library(nuhal
@@ -40,3 +40,30 @@ target_link_libraries(delay_us_test nuhal)
 
 add_executable(interrupt_test test/interrupt_test.c)
 target_link_libraries(interrupt_test nuhal)
+
+add_executable(int_priority_test test/int_priority_test.c)
+target_link_libraries(int_priority_test nuhal)
+
+add_executable(led_test test/led_test.c)
+target_link_libraries(led_test nuhal)
+
+add_executable(memcpy_speed test/memcpy_speed.c)
+target_link_libraries(memcpy_speed  nuhal)
+
+add_executable(pin_input_test test/pin_input_test.c)
+target_link_libraries(pin_input_test nuhal)
+
+add_executable(printf_error_test test/printf_error_test.c)
+target_link_libraries(printf_error_test nuhal)
+
+add_executable(uart_hw_flow_test test/uart_hw_flow_test.c)
+target_link_libraries(uart_hw_flow_test  nuhal)
+
+add_executable(uart_test test/uart_test.c)
+target_link_libraries(uart_test  nuhal)
+
+add_executable(uart_tx test/uart_tx.c)
+target_link_libraries(uart_tx  nuhal)
+
+add_executable(uart_reflect test/uart_reflect.c)
+target_link_libraries(uart_reflect  nuhal)
