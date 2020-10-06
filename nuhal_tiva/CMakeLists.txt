@@ -4,7 +4,7 @@ project(nuhal_tiva VERSION 0.1.0)
 
 find_package(nuhal_all)
 find_package(cmakeme)
-cmakeme_defaults(Debug)
+cmakeme_defaults(RelWithDebInfo)
 find_package(TivaCMake)
 
 add_library(nuhal
