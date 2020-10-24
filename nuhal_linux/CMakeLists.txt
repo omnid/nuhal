@@ -5,6 +5,9 @@ find_package(nuhal_all)
 find_package(cmakeme)
 cmakeme_defaults(RelWithDebInfo)
 
+# ROS buidls libraries as shared by default, so we use a shared library to make this compatible
+option(BUILD_SHARED_LIBS "Build ${PROJECT} as a shared library" ON)
+
 add_library(nuhal
   src/error_host.c
   src/led_host.c
