@@ -5,24 +5,15 @@ find_package(nuhal_all)
 find_package(cmakeme)
 cmakeme_defaults(RelWithDebInfo)
 
-add_library(nuhal_obj OBJECT
+add_library(nuhal
   src/error_host.c
   src/led_host.c
   src/time_host.c
   src/uart_host.c
   )
-target_link_libraries(nuhal_obj PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
-target_include_directories(nuhal_obj PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
-
-# create BUILD_SHARED_LIBRARY dependent and shared versions
-add_library(nuhal $<TARGET_OBJECTS:nuhal_obj>)
-target_link_libraries(nuhal INTERFACE nuhal_obj)
-
-add_library(nuhal_shared $<TARGET_OBJECTS:nuhal_obj>)
-target_link_libraries(nuhal_shared INTERFACE nuhal_obj)
-
-
-cmakeme_install(TARGETS nuhal nuhal_shared nuhal_obj NAMESPACE nuhal DEPENDS nuhal_all )
+target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
+target_include_directories(nuhal PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
 
 enable_testing()
 find_package(Threads)
