@@ -31,7 +31,11 @@ enable_testing()
 add_test(NAME null_test COMMAND echo "TODO: No unit tests exist for tiva_cmake")
 
 
+
 # Enable some integration tests. These are not automated because they require a microcontroller to be plugged in
+add_executable(blank test/blank.c)
+
+
 add_executable(delay_ms_test test/delay_ms_test.c)
 target_link_libraries(delay_ms_test nuhal)
 
