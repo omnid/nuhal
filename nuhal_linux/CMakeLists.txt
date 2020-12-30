@@ -14,12 +14,13 @@ add_library(nuhal
   src/time_host.c
   src/uart_host.c
   )
-target_link_libraries(nuhal PRIVATE nuhal::nuhal_all PUBLIC nuhal::nuhal_flags)
+
+target_link_libraries(nuhal PRIVATE nuhal::nuhal_all cmakeme_flags PUBLIC nuhal::nuhal_all_int)
 target_include_directories(nuhal PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
 
 enable_testing()
 find_package(Threads)
 add_executable(nuhal_linux_test test/queue_concurrent_test.cpp)
-target_link_libraries(nuhal_linux_test nuhal Threads::Threads)
+target_link_libraries(nuhal_linux_test nuhal Threads::Threads cmakeme_flags)
 add_test(NAME nuhal_linux COMMAND nuhal_linux_test)

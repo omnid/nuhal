@@ -8,4 +8,5 @@ with a platform-specific implementation such as `nuhal_tiva` or `nuhal_linux`.
 1. Doxygen generates API documentation when the project is built.
 2. You can access it in `build/docs/index.html`
 3. When building with ` catkin`, the documentation is in
-  ` build/nuhal_all/docs/index.html`
+  ` build/nuhal_all/html/index.html`
+

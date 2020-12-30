@@ -21,10 +21,10 @@ target_include_directories(nuhal PUBLIC
   )
 
 target_link_libraries(nuhal
-  PRIVATE nuhal::nuhal_all
-  PUBLIC nuhal::nuhal_flags TivaCMake::driverlib)
+  PRIVATE nuhal::nuhal_all cmakeme_flags 
+  PUBLIC nuhal::nuhal_all_int TivaCMake::driverlib)
 
-cmakeme_install(TARGETS nuhal driverlib NAMESPACE nuhal DEPENDS nuhal_all TivaCMake) 
+cmakeme_install(TARGETS nuhal driverlib cmakeme_flags NAMESPACE nuhal DEPENDS nuhal_all TivaCMake) 
 
 # Enable testing so that test is a well-defined target
 enable_testing()
@@ -37,37 +37,37 @@ add_executable(blank test/blank.c)
 
 
 add_executable(delay_ms_test test/delay_ms_test.c)
-target_link_libraries(delay_ms_test nuhal)
+target_link_libraries(delay_ms_test nuhal cmakeme_flags)
 
 add_executable(delay_us_test test/delay_us_test.c)
-target_link_libraries(delay_us_test nuhal)
+target_link_libraries(delay_us_test nuhal cmakeme_flags)
 
 add_executable(interrupt_test test/interrupt_test.c)
-target_link_libraries(interrupt_test nuhal)
+target_link_libraries(interrupt_test nuhal cmakeme_flags)
 
 add_executable(int_priority_test test/int_priority_test.c)
-target_link_libraries(int_priority_test nuhal)
+target_link_libraries(int_priority_test nuhal cmakeme_flags)
 
 add_executable(led_test test/led_test.c)
-target_link_libraries(led_test nuhal)
+target_link_libraries(led_test nuhal cmakeme_flags)
 
 add_executable(memcpy_speed test/memcpy_speed.c)
-target_link_libraries(memcpy_speed  nuhal)
+target_link_libraries(memcpy_speed  nuhal cmakeme_flags)
 
 add_executable(pin_input_test test/pin_input_test.c)
-target_link_libraries(pin_input_test nuhal)
+target_link_libraries(pin_input_test nuhal cmakeme_flags)
 
 add_executable(printf_error_test test/printf_error_test.c)
-target_link_libraries(printf_error_test nuhal)
+target_link_libraries(printf_error_test nuhal cmakeme_flags)
 
 add_executable(uart_hw_flow_test test/uart_hw_flow_test.c)
-target_link_libraries(uart_hw_flow_test  nuhal)
+target_link_libraries(uart_hw_flow_test  nuhal cmakeme_flags)
 
 add_executable(uart_test test/uart_test.c)
-target_link_libraries(uart_test  nuhal)
+target_link_libraries(uart_test  nuhal cmakeme_flags)
 
 add_executable(uart_tx test/uart_tx.c)
-target_link_libraries(uart_tx  nuhal)
+target_link_libraries(uart_tx  nuhal cmakeme_flags)
 
 add_executable(uart_reflect test/uart_reflect.c)
-target_link_libraries(uart_reflect  nuhal)
+target_link_libraries(uart_reflect  nuhal cmakeme_flags)
