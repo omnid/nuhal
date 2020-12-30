@@ -4,17 +4,18 @@ project(nuhal_all VERSION 0.1.0)
 find_package(cmakeme)
 cmakeme_defaults(RelWithDebInfo)
 
-add_library(nuhal_all_int INTERFACE)
-target_include_directories(nuhal_all_int INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+# Public part of the cross platform nuhal library.  This contains include directories and flags
+# That platform-specific targets should pass on to their dependents
+add_library(nuhal_public INTERFACE)
+target_include_directories(nuhal_public INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-# This library is a pure compile-time library. It just brings in sources that must be compiled
-# by the platform-specific libraries. We need different locations depending on if the source code is
-# installed or just being used from the build directory
-add_library(nuhal_all INTERFACE)
+# Private part of the cross platform nuhal library. This contains the source files that 
+# platform-specific targets should compile but should not be passed to dependents
+add_library(nuhal_private INTERFACE)
 
 # The paths's to these source files will be automatically updated during the installation so that they
 # can be found when importing nuhall_all in another project
-target_sources(nuhal_all INTERFACE
+target_sources(nuhal_private INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/bytestream.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/encoder.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/error.c>
@@ -27,8 +28,7 @@ target_sources(nuhal_all INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/uart.c>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utilities.c>)
 
-
-cmakeme_install(TARGETS nuhal_all nuhal_all_int
+cmakeme_install(TARGETS nuhal_public nuhal_private
                 NAMESPACE nuhal
                 ARCH_INDEPENDENT
                 PACKAGE_NAME nuhal_all
@@ -47,7 +47,7 @@ add_executable(nuhal_test
   test/uart_stub.cpp
   test/utilities_test.cpp
   )
-target_link_libraries(nuhal_test PRIVATE nuhal_all nuhal_all_int cmakeme_flags) 
+target_link_libraries(nuhal_test nuhal_public nuhal_private cmakeme_flags) 
 add_test(NAME nuhal_all COMMAND nuhal_test)
 
 # Doxygen documentation

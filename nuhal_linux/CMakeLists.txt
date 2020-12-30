@@ -8,6 +8,7 @@ cmakeme_defaults(RelWithDebInfo)
 # ROS buidls libraries as shared by default, so we use a shared library to make this compatible
 option(BUILD_SHARED_LIBS "Build ${PROJECT} as a shared library" ON)
 
+# Add platform-specific files to the nuhal library
 add_library(nuhal
   src/error_host.c
   src/led_host.c
@@ -15,7 +16,7 @@ add_library(nuhal
   src/uart_host.c
   )
 
-target_link_libraries(nuhal PRIVATE nuhal::nuhal_all cmakeme_flags PUBLIC nuhal::nuhal_all_int)
+target_link_libraries(nuhal PRIVATE nuhal::nuhal_private cmakeme_flags PUBLIC nuhal::nuhal_public)
 target_include_directories(nuhal PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
 

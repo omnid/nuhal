@@ -21,8 +21,8 @@ target_include_directories(nuhal PUBLIC
   )
 
 target_link_libraries(nuhal
-  PRIVATE nuhal::nuhal_all cmakeme_flags 
-  PUBLIC nuhal::nuhal_all_int TivaCMake::driverlib)
+  PRIVATE nuhal::nuhal_private cmakeme_flags 
+  PUBLIC nuhal::nuhal_public TivaCMake::driverlib)
 
 cmakeme_install(TARGETS nuhal driverlib cmakeme_flags NAMESPACE nuhal DEPENDS nuhal_all TivaCMake) 
 
