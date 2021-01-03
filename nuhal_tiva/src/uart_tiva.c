@@ -14,12 +14,14 @@
 #include <stdio.h>
 #include <string.h>
 
+/// \cond Do not document: implementation detail
 struct uart_port
 {
     uint32_t base;      // the base uart register
     uint32_t sysctl;    // the peripheral as per the sysctl module
     uint32_t int_base; // the interrupt value for the interrupt controller
 };
+/// \endcond
 
 // list of the ports that can be opened
 static const struct uart_port ports[] = {

@@ -22,11 +22,12 @@
 // timeout to wait for pending writes to finish before closing the port
 static const int CLOSE_TIMEOUT = 200;
 
+/// \cond DO not document with doxygen: implementation detail
 // store old termios data with the port that is opened.
 // All open ports are stored in a linked list to track them
 struct uart_port
 {
-    int fd;
+    int fd;   // file descriptor
     bool is_open;
     bool is_usb;
     struct termios old_tio;
@@ -38,6 +39,7 @@ struct uart_port
     // to this structure that can be used internally to modify it
     struct uart_port * self;
 };
+/// \endcond
 
 static struct uart_port * port_list_head = NULL;
 

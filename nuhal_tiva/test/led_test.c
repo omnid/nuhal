@@ -5,6 +5,7 @@
 #include "nuhal/time.h"
 #include "nuhal/led.h"
 
+/// \brief Flash the leds infinitely
 int main(void)
 {
     tiva_setup();

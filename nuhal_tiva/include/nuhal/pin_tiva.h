@@ -28,9 +28,11 @@ enum pin_type
 /// @brief the configuration of the pin
 struct pin_configuration
 {
-    /// The pin map constant from driverlib/pin_map.h or a PIN(port, number)
+    /// @brief The pin map constant from driverlib/pin_map.h or a PIN(port, number)
     uint32_t pin;
-    enum pin_type type; /// The type of the pin's function
+    
+    /// @brief The type of the pin's function
+    enum pin_type type; 
 };
 
 
