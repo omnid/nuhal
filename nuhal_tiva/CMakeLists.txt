@@ -71,3 +71,7 @@ target_link_libraries(uart_tx  nuhal cmakeme_flags)
 
 add_executable(uart_reflect test/uart_reflect.c)
 target_link_libraries(uart_reflect  nuhal cmakeme_flags)
+
+# Doxygen documentation
+set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal) Tiva-Version")
+cmakeme_doxygen(${CMAKE_SOURCE_DIR})

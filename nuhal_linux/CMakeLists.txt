@@ -25,3 +25,7 @@ find_package(Threads)
 add_executable(nuhal_linux_test test/queue_concurrent_test.cpp)
 target_link_libraries(nuhal_linux_test nuhal Threads::Threads cmakeme_flags)
 add_test(NAME nuhal_linux COMMAND nuhal_linux_test)
+
+# Doxygen documentation
+set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal) - Linux Specific Version")
+cmakeme_doxygen(${CMAKE_SOURCE_DIR})
