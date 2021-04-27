@@ -396,7 +396,7 @@ void protocol_broadcast_timeout(const struct uart_port * const ports[],
     struct protocol_packet in_packets[MAX_BROADCAST_PORTS];
     struct protocol_packet * in_packet = response ? response : in_packets;
     // initialize the packet streams
-    for(unsigned int i = 0; i != MAX_BROADCAST_PORTS; ++i)
+    for(unsigned int i = 0; i != num_ports; ++i)
     {
         protocol_packet_stream_init(&in_packet[i]);
     }
