@@ -16,7 +16,7 @@ add_library(nuhal
   src/uart_host.c
   )
 
-target_link_libraries(nuhal PRIVATE nuhal::nuhal_private cmakeme_flags PUBLIC nuhal::nuhal_public)
+target_link_libraries(nuhal PRIVATE nuhal::nuhal_private cmakeme_flags PUBLIC m nuhal::nuhal_public)
 target_include_directories(nuhal PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
 

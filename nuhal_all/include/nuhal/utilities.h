@@ -52,6 +52,13 @@ extern "C" {
 /// or maxlen if the maximum length was reached
 size_t utilities_strlen(const char str[], size_t maxlen);
 
+/// @brief normalize an angle in radians to the range -pi to pi
+/// @param rad - an angle in radians
+/// @return the angle reached by wrapping the input angle around
+///         a circle (starting at zero), expressed in radians
+///         between -pi and pi
+float normalize_angle(float rad);
+
 #ifdef __cplusplus
 }
 #endif
