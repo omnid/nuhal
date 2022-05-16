@@ -17,23 +17,17 @@ float pid_compute(const struct pid_gains * gains,
 
     st->d_error = error - st->p_error;
     st->p_error = error;
+    st->i_error = i_error;
 
-    // Prospective control effort before windup compensation
-    const float u = gains->kp * st->p_error
-        + gains->ki * i_error
-        + gains->kd * st->d_error;
-
-    // integral anti-windup:
-    // only increase the integral error under certain conditions
-    // if input is not saturated.
-    // if input is saturated HIGH but integral error is getting smaller
-    // if input is saturated LOW but integral error is getting bigger
-    // see https://jagger.berkeley.edu/~pack/me132/Section15.pdf
-    if((gains->u_min < u && u < gains->u_max)
-       || (error < 0 && u > gains->u_max)
-       || (error > 0 && u < gains->u_min))
+    // Saturate integral accumuator (integral anti-windup)
+    #warning TODO: Make the integral range a parameter
+    if(st->i_error > gains->u_max * 0.2f)
     {
-        st->i_error = i_error;
+        st->i_error = gains->u_max * 0.2f;
+    }
+    else if (st->i_error < gains->u_min * 0.2f)
+    {
+        st->i_error = gains->u_min * 0.2f;
     }
 
     // Compute the control signal
