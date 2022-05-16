@@ -36,7 +36,13 @@ float pid_compute(const struct pid_gains * gains,
         st->i_error = i_error;
     }
 
-    return u;
+    // Deviation from citation above: we recompute the signal after checking the windup, so that
+    // there is no "spike" on the frame where windup compensation kicks in 
+    const float u_actual = gains->kp * st->p_error
+        + gains->ki * i_error
+        + gains->kd * st->d_error;
+
+    return u_actual;
 }
 
 void pid_gains_inject(struct bytestream * bs, const struct pid_gains * gains)
