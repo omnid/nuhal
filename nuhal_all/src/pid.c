@@ -18,7 +18,7 @@ float pid_compute(const struct pid_gains * gains,
     st->d_error = error - st->p_error;
     st->p_error = error;
 
-    // control effort
+    // Prospective control effort before windup compensation
     const float u = gains->kp * st->p_error
         + gains->ki * i_error
         + gains->kd * st->d_error;
@@ -36,13 +36,24 @@ float pid_compute(const struct pid_gains * gains,
         st->i_error = i_error;
     }
 
-    // Deviation from citation above: we recompute the signal after checking the windup, so that
-    // there is no "spike" on the frame where windup compensation kicks in 
+    // Compute the control signal
     const float u_actual = gains->kp * st->p_error
-        + gains->ki * i_error
+        + gains->ki * st->i_error
         + gains->kd * st->d_error;
 
-    return u_actual;
+    // Bound the output of the controller
+    if(u_actual > gains->u_max)
+    {
+        return gains->u_max;
+    }
+    else if(u_actual < gains->u_min)
+    {
+        return gains->u_min;
+    }
+    else
+    {
+        return u_actual;
+    }
 }
 
 void pid_gains_inject(struct bytestream * bs, const struct pid_gains * gains)
