@@ -17,6 +17,43 @@ float pid_compute(const struct pid_gains * gains,
 
     st->d_error = error - st->p_error;
     st->p_error = error;
+
+    // control effort
+    const float u = gains->kp * st->p_error
+        + gains->ki * i_error
+        + gains->kd * st->d_error;
+
+    // integral anti-windup:
+    // only increase the integral error under certain conditions
+    // if input is not saturated.
+    // if input is saturated HIGH but integral error is getting smaller
+    // if input is saturated LOW but integral error is getting bigger
+    // see https://jagger.berkeley.edu/~pack/me132/Section15.pdf
+    if((gains->u_min < u && u < gains->u_max)
+       || (error < 0 && u > gains->u_max)
+       || (error > 0 && u < gains->u_min))
+    {
+        st->i_error = i_error;
+    }
+
+    return u;
+}
+
+#warning special case for joints should replace pid_compute, but that requires wheel retune
+float pid_compute_1(const struct pid_gains * gains,
+                  struct pid_state * st,
+                  float reference,
+                  float measurement) {
+    if(!st || !gains)
+    {
+        error(FILE_LINE, "NULL ptr");
+    }
+
+    const float error = reference - measurement;
+    const float i_error = st->i_error + error;
+
+    st->d_error = error - st->p_error;
+    st->p_error = error;
     st->i_error = i_error;
 
     // Saturate integral accumuator (integral anti-windup)
@@ -35,6 +72,7 @@ float pid_compute(const struct pid_gains * gains,
         + gains->ki * st->i_error
         + gains->kd * st->d_error;
 
+    /*
     // Bound the output of the controller
     if(u_actual > gains->u_max)
     {
@@ -48,6 +86,8 @@ float pid_compute(const struct pid_gains * gains,
     {
         return u_actual;
     }
+    */
+   return u_actual;
 }
 
 void pid_gains_inject(struct bytestream * bs, const struct pid_gains * gains)

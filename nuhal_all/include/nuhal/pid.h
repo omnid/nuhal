@@ -84,6 +84,12 @@ float pid_compute(const struct pid_gains * gains,
                   struct pid_state * st,
                   float reference,
                   float measurement);
+                  
+#warning special case for joints should replace pid_compute, but that requires wheel retune
+float pid_compute_1(const struct pid_gains * gains,
+                  struct pid_state * st,
+                  float reference,
+                  float measurement);
 
 struct bytestream;
 
