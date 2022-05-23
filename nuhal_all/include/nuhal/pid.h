@@ -5,6 +5,29 @@
 /// systems
 #include<stdint.h>
 
+/// @brief types of output saturation
+enum saturate_type
+{
+    /// bound output to limits specified in gains struct
+    SATURATE_OUTPUT,
+
+    /// do not bound output
+    SATURATE_NONE
+};
+
+/// @brief types of antiwindup
+enum antiwindup_type
+{
+    /// no windup mitigation
+    ANTIWINDUP_NONE,
+
+    /// back calculation
+    ANTIWINDUP_BACK_CALCULATE,  
+
+    /// saturated integral
+    ANTIWINDUP_SATURATE
+};
+
 /// @brief Gains for a pid controller
 struct pid_gains
 {
@@ -26,6 +49,16 @@ struct pid_gains
     ///
     /// Output is saturated so this limit is never exceeded
     float u_min; 
+
+    /// \brief Maximum control effort.
+    ///
+    /// Integral accumulator is saturated so this limit is never exceeded.
+    float i_max;
+
+    /// \brief Minimum control effort.
+    ///
+    /// Integral accumulator is saturated so this limit is never exceeded
+    float i_min; 
 };
 
 /// @brief The current state of the pid controller
@@ -79,17 +112,16 @@ extern "C" {
 /// @param st [in/out] - the current state of the pid controller
 /// @param reference - the reference signal
 /// @param measurement - the measurement signal
+/// @param saturate - if true, the return value will be bounded to the
+///                   limits set in the gains parameter
+/// @param antiwindup - the type of antiwindup to use
 /// @return the control effort
 float pid_compute(const struct pid_gains * gains,
                   struct pid_state * st,
-                  float reference,
-                  float measurement);
-                  
-#warning special case for joints should replace pid_compute, but that requires wheel retune
-float pid_compute_1(const struct pid_gains * gains,
-                  struct pid_state * st,
-                  float reference,
-                  float measurement);
+                  const float reference,
+                  const float measurement,
+                  enum saturate_type saturate,
+                  enum antiwindup_type antiwindup);
 
 struct bytestream;
 

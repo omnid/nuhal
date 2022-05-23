@@ -12,7 +12,7 @@ TEST_CASE("pid_serialize_gains", "[pid]")
     bytestream bs;
     bytestream_init(&bs, buffer, ARRAY_LEN(buffer));
 
-    struct pid_gains gains{1.1f, 2.2f, 3.3f, 4.4f, 5.5f}; 
+    struct pid_gains gains{1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f, 7.7f}; 
     pid_gains_inject(&bs, &gains);
     
     // reinitialize so we can read the values
@@ -25,6 +25,8 @@ TEST_CASE("pid_serialize_gains", "[pid]")
     CHECK(results.ki == gains.ki);
     CHECK(results.u_max == gains.u_max);
     CHECK(results.u_min == gains.u_min);
+    CHECK(results.i_max == gains.i_max);
+    CHECK(results.i_min == gains.i_min);
 }
 
 /// Test pid state serialization
@@ -87,19 +89,21 @@ TEST_CASE("pid_serialize_debug_info", "[pid]")
 }
 
 /// Test some basic input/output relationships for the pid controller
+/// TODO: Test antiwindup techniques
+/// TODO: Test saturation
 TEST_CASE("pid_basics", "[pid]")
 {
-    const struct pid_gains gains{4.0, 3.0, 2.0, 20.0, -20.0};
+    const struct pid_gains gains{4.0, 3.0, 2.0, 20.0, -20.0, 0.0, 0.0};
 
     struct pid_state state{0.0, 0.0, 0.0};
 
-    const auto u1 = pid_compute(&gains, &state, 1.0, -0.5);
+    const auto u1 = pid_compute(&gains, &state, 1.0, -0.5, SATURATE_NONE, ANTIWINDUP_NONE);
     CHECK(u1 == Approx(13.5));
     CHECK(state.p_error == Approx(1.5));
     CHECK(state.i_error == Approx(1.5));
     CHECK(state.d_error == Approx(1.5));
 
-    const auto u2 = pid_compute(&gains, &state, 1.0, 1.2);
+    const auto u2 = pid_compute(&gains, &state, 1.0, 1.2, SATURATE_NONE, ANTIWINDUP_NONE);
     CHECK(u2 == Approx(-0.3));
     CHECK(state.p_error == Approx(-0.2));
     CHECK(state.i_error == Approx(1.3));

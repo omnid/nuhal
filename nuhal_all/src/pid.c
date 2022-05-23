@@ -5,89 +5,77 @@
 
 float pid_compute(const struct pid_gains * gains,
                   struct pid_state * st,
-                  float reference,
-                  float measurement) {
+                  const float reference,
+                  const float measurement,
+                  const enum saturate_type saturate,
+                  const enum antiwindup_type antiwindup) {
     if(!st || !gains)
     {
         error(FILE_LINE, "NULL ptr");
     }
 
     const float error = reference - measurement;
-    const float i_error = st->i_error + error;
-
+    const float i_error_prospective = st->i_error + error;
     st->d_error = error - st->p_error;
     st->p_error = error;
 
-    // control effort
-    const float u = gains->kp * st->p_error
-        + gains->ki * i_error
-        + gains->kd * st->d_error;
-
-    // integral anti-windup:
-    // only increase the integral error under certain conditions
-    // if input is not saturated.
-    // if input is saturated HIGH but integral error is getting smaller
-    // if input is saturated LOW but integral error is getting bigger
-    // see https://jagger.berkeley.edu/~pack/me132/Section15.pdf
-    if((gains->u_min < u && u < gains->u_max)
-       || (error < 0 && u > gains->u_max)
-       || (error > 0 && u < gains->u_min))
+    if(antiwindup == ANTIWINDUP_BACK_CALCULATE)
     {
-        st->i_error = i_error;
+        // Compute the prospective control signal
+            const float u_prospective = gains->kp * st->p_error
+                + gains->ki * i_error_prospective
+                + gains->kd * st->d_error;
+
+            // Backcalculated anti-windup
+            // only accumulate to the integral error under certain conditions
+            // if input is not saturated.
+            // if input is saturated HIGH but integral error is getting smaller
+            // if input is saturated LOW but integral error is getting bigger
+            // see https://jagger.berkeley.edu/~pack/me132/Section15.pdf
+            if((gains->u_min < u_prospective && u_prospective < gains->u_max)
+            || (error < 0 && u_prospective > gains->u_max)
+            || (error > 0 && u_prospective < gains->u_min))
+            {
+                st->i_error = i_error_prospective;
+            }
+    }
+    else if(antiwindup == ANTIWINDUP_SATURATE)
+    {   
+        // Saturation anti-windup
+        st->i_error = i_error_prospective;
+        if(st->i_error > gains->i_max)
+        {
+            st->i_error = gains->i_max;
+        }
+        else if (st->i_error < gains->i_min)
+        {
+            st->i_error = gains->i_min;
+        }
+    }
+    else
+    {
+        st->i_error = i_error_prospective;
     }
 
-    return u;
-}
-
-#warning special case for joints should replace pid_compute, but that requires wheel retune
-float pid_compute_1(const struct pid_gains * gains,
-                  struct pid_state * st,
-                  float reference,
-                  float measurement) {
-    if(!st || !gains)
-    {
-        error(FILE_LINE, "NULL ptr");
-    }
-
-    const float error = reference - measurement;
-    const float i_error = st->i_error + error;
-
-    st->d_error = error - st->p_error;
-    st->p_error = error;
-    st->i_error = i_error;
-
-    // Saturate integral accumuator (integral anti-windup)
-    #warning TODO: Make the integral range a parameter
-    if(st->i_error > gains->u_max * 0.2f)
-    {
-        st->i_error = gains->u_max * 0.2f;
-    }
-    else if (st->i_error < gains->u_min * 0.2f)
-    {
-        st->i_error = gains->u_min * 0.2f;
-    }
-
-    // Compute the control signal
+    // Compute the true control signal (unbounded)
     const float u_actual = gains->kp * st->p_error
         + gains->ki * st->i_error
         + gains->kd * st->d_error;
 
-    /*
-    // Bound the output of the controller
-    if(u_actual > gains->u_max)
+    // Optionally bound the output of the controller
+    if(saturate == SATURATE_OUTPUT)
     {
-        return gains->u_max;
+        if(u_actual > gains->u_max)
+        {
+            return gains->u_max;
+        }
+        else if(u_actual < gains->u_min)
+        {
+            return gains->u_min;
+        }
     }
-    else if(u_actual < gains->u_min)
-    {
-        return gains->u_min;
-    }
-    else
-    {
-        return u_actual;
-    }
-    */
-   return u_actual;
+    
+    return u_actual;
 }
 
 void pid_gains_inject(struct bytestream * bs, const struct pid_gains * gains)
@@ -101,6 +89,8 @@ void pid_gains_inject(struct bytestream * bs, const struct pid_gains * gains)
     bytestream_inject_f(bs, gains->kd);
     bytestream_inject_f(bs, gains->u_max);
     bytestream_inject_f(bs, gains->u_min);
+    bytestream_inject_f(bs, gains->i_max);
+    bytestream_inject_f(bs, gains->i_min);
 }
 
 void pid_gains_extract(struct bytestream * bs, struct pid_gains * gains)
@@ -114,6 +104,8 @@ void pid_gains_extract(struct bytestream * bs, struct pid_gains * gains)
     gains->kd = bytestream_extract_f(bs);
     gains->u_max = bytestream_extract_f(bs);
     gains->u_min = bytestream_extract_f(bs);
+    gains->i_max = bytestream_extract_f(bs);
+    gains->i_min = bytestream_extract_f(bs);
 }
 
 void pid_state_inject(struct bytestream * bs, const struct pid_state * state)
