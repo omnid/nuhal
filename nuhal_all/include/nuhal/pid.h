@@ -120,8 +120,8 @@ float pid_compute(const struct pid_gains * gains,
                   struct pid_state * st,
                   const float reference,
                   const float measurement,
-                  enum saturate_type saturate,
-                  enum antiwindup_type antiwindup);
+                  const enum saturate_type saturate,
+                  const enum antiwindup_type antiwindup);
 
 struct bytestream;
 
