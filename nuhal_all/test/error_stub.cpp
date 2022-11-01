@@ -2,6 +2,7 @@
 /// @brief Override error handlers and make them throw C++ exceptions.
 ///   This makes the C++ testing easier when something happens
 #include<stdexcept>
+#include<string>
 #include"nuhal/error.h"
 
 
