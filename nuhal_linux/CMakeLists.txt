@@ -20,7 +20,7 @@ target_link_libraries(nuhal PRIVATE nuhal::nuhal_private cmakeme_flags PUBLIC m 
 target_include_directories(nuhal PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
 
-enable_testing()
+include(CTest)
 find_package(Threads)
 add_executable(nuhal_linux_test test/queue_concurrent_test.cpp)
 target_link_libraries(nuhal_linux_test nuhal Threads::Threads cmakeme_flags)

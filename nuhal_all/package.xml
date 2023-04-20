@@ -9,7 +9,7 @@
   <license>MIT</license>
   <url type="repository">https://www.github.com/omnid/nuhal</url>
   <url>https://www.github.com/omnid/nuhal/nuhal_all</url>
-  <author email="elwin@u.northwestern.edu">Matthew Elwin></author>
+  <author email="elwin@u.northwestern.edu">Matthew Elwin</author>
   <build_depend>cmakeme</build_depend>
   <doc_depend>doxygen</doc_depend>
   <doc_depend>texlive-full</doc_depend>

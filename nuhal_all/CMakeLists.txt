@@ -34,7 +34,7 @@ cmakeme_install(TARGETS nuhal_public nuhal_private
                 PACKAGE_NAME nuhal_all
                 )
 
-enable_testing()
+include(CTest)
 add_executable(nuhal_test
   test/bytestream_test.cpp
   test/encoder_test.cpp
