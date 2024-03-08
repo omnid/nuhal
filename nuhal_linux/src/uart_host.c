@@ -436,20 +436,28 @@ bool uart_wait_for_data(const struct uart_port * port, uint32_t timeout)
     {
         error(FILE_LINE,"invalid param");
     }
-    int res = poll(fds, ARRAY_LEN(fds), timeout == 0 ? -1 : (int)timeout);
-
-    if(res == 0)
+    int poll_error = EINTR; // this is poll interrupted, we will try again if it is interrupted
+    while(poll_error == EINTR)
     {
-        return false;
+        int res = poll(fds, ARRAY_LEN(fds), timeout == 0 ? -1 : (int)timeout);
+        if (res > 0)
+        {
+            return true;
+        }
+        else if (res == 0)
+        {
+            return false;
+        }
+        else
+        {
+            poll_error = errno;
+            if(errno != EINTR)
+            {
+                error_with_errno(FILE_LINE);
+            }
+        }
     }
-    else if(res == 1)
-    {
-        return true;
-    }
-    else
-    {
-        error_with_errno(FILE_LINE);
-    }
+    error(FILE_LINE, "Unexpected end of loop, not retrying enough.");
 }
 
 bool uart_data_available(const struct uart_port * port)
