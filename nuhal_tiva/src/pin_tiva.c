@@ -5,6 +5,7 @@
 #include "inc/hw_gpio.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
+#include "driverlib/adc.h"
 #include "nuhal/tiva.h"
 
 #define TIVA_NUM_PORTS 6 // number of tiva ports
@@ -66,6 +67,41 @@ static inline uint32_t pin_mask(uint32_t pin)
     return port_pins[number];
 }
 
+/// @brief map the pin to its corresponding AIN channel
+/// @param base - the address of the port base register for the port containing pin
+/// @param mask - a mask with all bits equal to zero except a 1 in the position
+/// of the pin number
+/// @return corresponding AIN channel, 255 if there does not exist an AIN channel
+static uint8_t get_ain_channel(uint32_t base, uint32_t mask) {
+    switch(base) {
+        case GPIO_PORTE_BASE:
+            switch(mask) {
+                case GPIO_PIN_3: return 0;
+                case GPIO_PIN_2: return 1;
+                case GPIO_PIN_1: return 2;
+                case GPIO_PIN_0: return 3;
+                case GPIO_PIN_5: return 8;
+                case GPIO_PIN_4: return 9;
+                default: return 255;
+            }
+        case GPIO_PORTD_BASE:
+            switch(mask) {
+                case GPIO_PIN_3: return 4;
+                case GPIO_PIN_2: return 5;
+                case GPIO_PIN_1: return 6;
+                case GPIO_PIN_0: return 7;
+                default: return 255;
+            }
+        case GPIO_PORTB_BASE:
+            switch(mask) {
+                case GPIO_PIN_4: return 10;
+                case GPIO_PIN_5: return 11;
+                default: return 255;
+            }
+        default: return 255;
+    }
+}
+
 /// @brief setup the pin to have a desired function
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h
 /// or PIN(port, number).
@@ -111,7 +147,6 @@ static void pin_configure(uint32_t pin, enum pin_type type)
 
     // enable the peripheral and perform the pin configuration
     tiva_peripheral_enable(sysctl_ports[port]);
-
 
     // PINS PC0, PC1, PC2, and PC3 are the JTAG pins.  They are locked.
     // This function will not automatically unlock them and instead trigger
@@ -166,7 +201,23 @@ static void pin_configure(uint32_t pin, enum pin_type type)
     case PIN_PWM:
         GPIOPinConfigure(pin);
         GPIOPinTypePWM(base, mask);
-        break;  
+        break;
+    case PIN_ANALOG:
+        GPIOPinTypeADC(base, mask);
+        tiva_peripheral_enable(SYSCTL_PERIPH_ADC0);
+
+        // Configure Sample Sequencer 3 to use AIN0
+        const uint8_t ain = get_ain_channel(base, mask); // map pin to corresponding AIN channel
+        if (ain == 255) {
+            error(FILE_LINE, "Invalid ADC pin");
+        }
+
+        ADCSequenceDisable(ADC0_BASE, 3);  // Disable SS3 for config
+        ADCSequenceConfigure(ADC0_BASE, 3, ADC_TRIGGER_PROCESSOR, 0); // Set software trigger and priority
+        ADCSequenceStepConfigure(ADC0_BASE, 3, 0, (ain & 0xF) | ADC_CTL_IE | ADC_CTL_END); // Set SS3 to take only one sample from AIN channel
+        ADCSequenceEnable(ADC0_BASE, 3); // Enable SS3 back on
+        ADCIntClear(ADC0_BASE, 3); // Clear any interrupt flags
+        break;
     default:
         error(FILE_LINE, "Invalid peripheral type");
         break;
@@ -200,7 +251,14 @@ bool pin_read(uint32_t pin)
     const uint32_t base = pin_base(pin);
     const uint32_t mask = pin_mask(pin);
     return HWREG(base + (GPIO_O_DATA + (mask << 2)));
+}
 
+void analog_pin_read(uint32_t * out)
+{
+    ADCProcessorTrigger(ADC0_BASE, 3);                // Trigger SS3 conversion
+    while(!ADCIntStatus(ADC0_BASE, 3, false));        // Wait for conversion completion
+    ADCSequenceDataGet(ADC0_BASE, 3, out);            // Read the ADC result into 'out'
+    ADCIntClear(ADC0_BASE, 3);                        // Clear interrupt flag
 }
 
 void pin_invert(uint32_t pin)

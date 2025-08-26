@@ -16,7 +16,8 @@ enum pin_type
     PIN_CAN,            /// can bus
     PIN_SSI,            /// ssi
     PIN_QEI,            /// qei
-    PIN_PWM             /// pwm
+    PIN_PWM,            /// pwm
+    PIN_ANALOG          /// analogZ
 };
 
 /// @param port - the port letter 'A' - 'F'
@@ -59,6 +60,11 @@ void pin_write(uint32_t pin, bool value);
 /// as an input or an output
 /// @return - the pin value
 bool pin_read(uint32_t pin);
+
+/// @brief read the analog value of the pin
+/// @param out [out] - the analog pin value
+/// @post - out's value is between 0 and 4095 inclusive
+void analog_pin_read(uint32_t * out);
 
 /// @brief invert the value of the pin
 /// @param port_pin - PIN(port, pin number)
