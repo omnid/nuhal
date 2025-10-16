@@ -17,6 +17,10 @@ uint32_t tiva_clock_hz(void);
 ///          @see Tivaware SysCtlPeripheralEnable for valid values
 void tiva_peripheral_enable(uint32_t peripheral);
 
+/// @brief disable the given peripheral
+/// @param peripheral - peripheral to disable, identified by its SYSCTL register
+///          @see Tivaware SysCtlPeripheralDisable for valid values
+void tiva_peripheral_disable(uint32_t peripheral);
 
 /// @brief convert a frequency to a timer count 
 /// @param hz - desired frequency in hertz

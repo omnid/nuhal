@@ -71,34 +71,39 @@ static inline uint32_t pin_mask(uint32_t pin)
 /// @param base - the address of the port base register for the port containing pin
 /// @param mask - a mask with all bits equal to zero except a 1 in the position
 /// of the pin number
-/// @return corresponding AIN channel, 255 if there does not exist an AIN channel
-static uint8_t get_ain_channel(uint32_t base, uint32_t mask) {
-    switch(base) {
+/// @return corresponding AIN channel, error if there does not exist an AIN channel
+static uint8_t get_ain_channel(uint32_t base, uint32_t mask) 
+{
+    switch(base)
+    {
         case GPIO_PORTE_BASE:
-            switch(mask) {
+            switch(mask) 
+            {
                 case GPIO_PIN_3: return 0;
                 case GPIO_PIN_2: return 1;
                 case GPIO_PIN_1: return 2;
                 case GPIO_PIN_0: return 3;
                 case GPIO_PIN_5: return 8;
                 case GPIO_PIN_4: return 9;
-                default: return 255;
+                default: error(FILE_LINE, "Invalid ADC pin");
             }
         case GPIO_PORTD_BASE:
-            switch(mask) {
+            switch(mask) 
+            {
                 case GPIO_PIN_3: return 4;
                 case GPIO_PIN_2: return 5;
                 case GPIO_PIN_1: return 6;
                 case GPIO_PIN_0: return 7;
-                default: return 255;
+                default: error(FILE_LINE, "Invalid ADC pin");
             }
         case GPIO_PORTB_BASE:
-            switch(mask) {
+            switch(mask) 
+            {
                 case GPIO_PIN_4: return 10;
                 case GPIO_PIN_5: return 11;
-                default: return 255;
+                default: error(FILE_LINE, "Invalid ADC pin");
             }
-        default: return 255;
+        default: error(FILE_LINE, "Invalid ADC pin");
     }
 }
 
@@ -203,20 +208,8 @@ static void pin_configure(uint32_t pin, enum pin_type type)
         GPIOPinTypePWM(base, mask);
         break;
     case PIN_ANALOG:
+        // GPIOPinTypeADC does not require GPIOPinConfigure
         GPIOPinTypeADC(base, mask);
-        tiva_peripheral_enable(SYSCTL_PERIPH_ADC0);
-
-        // Configure Sample Sequencer 3 to use AIN0
-        const uint8_t ain = get_ain_channel(base, mask); // map pin to corresponding AIN channel
-        if (ain == 255) {
-            error(FILE_LINE, "Invalid ADC pin");
-        }
-
-        ADCSequenceDisable(ADC0_BASE, 3);  // Disable SS3 for config
-        ADCSequenceConfigure(ADC0_BASE, 3, ADC_TRIGGER_PROCESSOR, 0); // Set software trigger and priority
-        ADCSequenceStepConfigure(ADC0_BASE, 3, 0, (ain & 0xF) | ADC_CTL_IE | ADC_CTL_END); // Set SS3 to take only one sample from AIN channel
-        ADCSequenceEnable(ADC0_BASE, 3); // Enable SS3 back on
-        ADCIntClear(ADC0_BASE, 3); // Clear any interrupt flags
         break;
     default:
         error(FILE_LINE, "Invalid peripheral type");
@@ -253,12 +246,74 @@ bool pin_read(uint32_t pin)
     return HWREG(base + (GPIO_O_DATA + (mask << 2)));
 }
 
-void analog_pin_read(uint32_t * out)
+void analog_pin_read(uint32_t* pins, size_t num_pins, bool use_adc_1, uint16_t* out)
 {
-    ADCProcessorTrigger(ADC0_BASE, 3);                // Trigger SS3 conversion
-    while(!ADCIntStatus(ADC0_BASE, 3, false));        // Wait for conversion completion
-    ADCSequenceDataGet(ADC0_BASE, 3, out);            // Read the ADC result into 'out'
-    ADCIntClear(ADC0_BASE, 3);                        // Clear interrupt flag
+    if (num_pins > 8)
+    {
+        error(FILE_LINE, "Too many pins to analog read from");
+    }
+
+    uint32_t bases[8] = {0};
+    uint32_t masks[8] = {0};
+    uint8_t ains[8] = {0};
+    uint32_t adc_raw[8] = {0};
+
+     // options for analog pin:
+    // - option 1: Using ADC0 or ADC1
+    // - option 2: Using SS0 (sample up to 8 times sequentially), SS1 (up to 4), SS2 (up to 4), OR SS3 (only 1)
+    // - option 3: How many pins are we reading from sequentially and from which ain channel?
+    
+    // Option 1: ADC0 or ADC1
+    uint32_t adcsysctl = use_adc_1 ? SYSCTL_PERIPH_ADC1 : SYSCTL_PERIPH_ADC0;
+    uint32_t adcbase   = use_adc_1 ? ADC1_BASE : ADC0_BASE;
+
+    // Option 2: find appropriate sample sequencer for number of pins that will be read from
+    uint8_t ss = 0;
+    if (num_pins > 4)
+    {
+        ss = 0; // SS0 supports up to 8 steps
+    }
+    else if (num_pins > 1)
+    {
+        ss = 1; // SS1 supports up to 4 steps
+    }
+    else
+    {
+        ss = 3; // SS3 supports 1 step
+    }
+
+    tiva_peripheral_enable(adcsysctl);
+
+    //Configure Sample Sequencer to use given AIN channel
+    ADCSequenceDisable(adcbase, ss);  // Disable SS for config
+    ADCSequenceConfigure(adcbase, ss, ADC_TRIGGER_PROCESSOR, 0); // Set software trigger and priority
+    for (size_t step = 0; step < num_pins; step++) // for option 3: configure to read from selected pins
+    {
+        bases[step] = pin_base(pins[step]);
+        masks[step] = pin_mask(pins[step]);
+        ains[step] = get_ain_channel(bases[step], masks[step]); // map pins to corresponding AIN channels
+        
+        uint32_t config = ADC_CTL_CH0 + (ains[step] & 0xF);
+        if (step == num_pins - 1)
+        {
+            config |= ADC_CTL_IE | ADC_CTL_END;
+        }
+
+        ADCSequenceStepConfigure(adcbase, ss, step, config);
+    }
+    ADCSequenceEnable(adcbase, ss); // Enable SS back on
+    ADCIntClear(adcbase, ss); // Clear any interrupt flags
+
+    ADCProcessorTrigger(adcbase, ss);                // Trigger SS conversion
+    while(!ADCIntStatus(adcbase, ss, false));        // Wait for conversion completion
+    ADCSequenceDataGet(adcbase, ss, adc_raw);            // Read the ADC result into 'out'
+    ADCIntClear(adcbase, ss);                        // Clear interrupt flag
+    tiva_peripheral_disable(adcsysctl);
+
+    // Convert results to uint16_t
+    for (size_t i = 0; i < num_pins; ++i) {
+        out[i] = (uint16_t)adc_raw[i];
+    }
 }
 
 void pin_invert(uint32_t pin)

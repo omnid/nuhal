@@ -4,6 +4,7 @@
 /// various peripherals and for manipulating them as GPIO
 #include<stdint.h>
 #include<stdbool.h>
+#include <stddef.h>
 #include "driverlib/pin_map.h"
 
 /// @brief the type of pin to setup
@@ -17,7 +18,7 @@ enum pin_type
     PIN_SSI,            /// ssi
     PIN_QEI,            /// qei
     PIN_PWM,            /// pwm
-    PIN_ANALOG          /// analogZ
+    PIN_ANALOG          /// analog
 };
 
 /// @param port - the port letter 'A' - 'F'
@@ -62,9 +63,12 @@ void pin_write(uint32_t pin, bool value);
 bool pin_read(uint32_t pin);
 
 /// @brief read the analog value of the pin
-/// @param out [out] - the analog pin value
-/// @post - out's value is between 0 and 4095 inclusive
-void analog_pin_read(uint32_t * out);
+/// @param pins - array of PIN(port, pin number) to be read from
+/// @param num_pins - number of pins to be read from
+/// @param use_adc_1 - use adc1 (true) or adc0 (false)
+/// @param out [out] - array of adc values
+/// @post - the values of out will be between 0 and 4095 inclusive
+void analog_pin_read(uint32_t* pins, size_t num_pins, bool use_adc_1, uint16_t* out);
 
 /// @brief invert the value of the pin
 /// @param port_pin - PIN(port, pin number)

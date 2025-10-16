@@ -102,6 +102,14 @@ void tiva_peripheral_enable(uint32_t ui32Peripheral)
     }
 }
 
+void tiva_peripheral_disable(uint32_t ui32Peripheral)
+{
+    if(SysCtlPeripheralReady(ui32Peripheral))
+    {
+        SysCtlPeripheralDisable(ui32Peripheral);
+    }
+}
+
 uint32_t tiva_clock_hz(void)
 {
     return clock_freq;
