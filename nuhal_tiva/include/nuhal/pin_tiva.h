@@ -62,13 +62,22 @@ void pin_write(uint32_t pin, bool value);
 /// @return - the pin value
 bool pin_read(uint32_t pin);
 
-/// @brief read the analog value of the pin
+/// @brief power on adc and configure for reading
+/// @pre num_pins = sizeof(pins)/sizeof(pins[0])
 /// @param pins - array of PIN(port, pin number) to be read from
-/// @param num_pins - number of pins to be read from
-/// @param use_adc_1 - use adc1 (true) or adc0 (false)
+/// @param num_pins - number of pins to read from
+/// @param adc0 - true if using adc0 module. False if using adc1
+/// @param sampleSequencer - which sample sequencer to use
+void adc_setup(const uint32_t* pins, size_t num_pins, bool adc0, uint8_t sampleSequencer);
+
+/// @brief shutdown adc to save power when user no longer intends to use it
+/// @post - current adc module will be shut down. Use adc_setup to reenable
+void adc_shutdown();
+
+/// @brief read the analog value of the pin
 /// @param out [out] - array of adc values
 /// @post - the values of out will be between 0 and 4095 inclusive
-void analog_pin_read(uint32_t* pins, size_t num_pins, bool use_adc_1, uint16_t* out);
+void analog_pin_read(uint32_t* out);
 
 /// @brief invert the value of the pin
 /// @param port_pin - PIN(port, pin number)

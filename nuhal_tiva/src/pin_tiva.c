@@ -11,6 +11,10 @@
 #define TIVA_NUM_PORTS 6 // number of tiva ports
 #define TIVA_PINS_PER_PORT 8 // number of pins on each port
 
+static uint32_t adcbase;
+static uint32_t adcsysctl;
+static uint8_t ss;
+static bool adc_on;
 
 /// @brief Get the port number (with 'A' = 0) from the pin
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h,
@@ -246,41 +250,31 @@ bool pin_read(uint32_t pin)
     return HWREG(base + (GPIO_O_DATA + (mask << 2)));
 }
 
-void analog_pin_read(uint32_t* pins, size_t num_pins, bool use_adc_1, uint16_t* out)
+void adc_setup(const uint32_t* pins, size_t num_pins, bool adc0, uint8_t sampleSequencer)
 {
-    if (num_pins > 8)
+    adcbase = adc0 ? ADC0_BASE : ADC1_BASE;
+    adcsysctl = adc0? SYSCTL_PERIPH_ADC0 : SYSCTL_PERIPH_ADC1;
+    if (sampleSequencer > 3)
+    {
+        error(FILE_LINE, "Invalid Sample Sequencer Number");
+    }
+    else if ((sampleSequencer == 0 && num_pins > 8 )|| ((sampleSequencer == 1 || sampleSequencer == 2) && num_pins > 4 )|| (sampleSequencer == 3 && num_pins > 1))
     {
         error(FILE_LINE, "Too many pins to analog read from");
+    }
+    else
+    {
+        ss = sampleSequencer;
     }
 
     uint32_t bases[8] = {0};
     uint32_t masks[8] = {0};
     uint8_t ains[8] = {0};
-    uint32_t adc_raw[8] = {0};
 
-     // options for analog pin:
-    // - option 1: Using ADC0 or ADC1
-    // - option 2: Using SS0 (sample up to 8 times sequentially), SS1 (up to 4), SS2 (up to 4), OR SS3 (only 1)
+    // options for analog pin:
+    // - option 1: Using ADC0 or ADC1 (handle with adcbase input)
+    // - option 2: Using SS0 (sample up to 8 times sequentially), SS1 (up to 4), SS2 (up to 4), OR SS3 (only 1), (handled with ss input)
     // - option 3: How many pins are we reading from sequentially and from which ain channel?
-    
-    // Option 1: ADC0 or ADC1
-    uint32_t adcsysctl = use_adc_1 ? SYSCTL_PERIPH_ADC1 : SYSCTL_PERIPH_ADC0;
-    uint32_t adcbase   = use_adc_1 ? ADC1_BASE : ADC0_BASE;
-
-    // Option 2: find appropriate sample sequencer for number of pins that will be read from
-    uint8_t ss = 0;
-    if (num_pins > 4)
-    {
-        ss = 0; // SS0 supports up to 8 steps
-    }
-    else if (num_pins > 1)
-    {
-        ss = 1; // SS1 supports up to 4 steps
-    }
-    else
-    {
-        ss = 3; // SS3 supports 1 step
-    }
 
     tiva_peripheral_enable(adcsysctl);
 
@@ -304,16 +298,37 @@ void analog_pin_read(uint32_t* pins, size_t num_pins, bool use_adc_1, uint16_t* 
     ADCSequenceEnable(adcbase, ss); // Enable SS back on
     ADCIntClear(adcbase, ss); // Clear any interrupt flags
 
-    ADCProcessorTrigger(adcbase, ss);                // Trigger SS conversion
-    while(!ADCIntStatus(adcbase, ss, false));        // Wait for conversion completion
-    ADCSequenceDataGet(adcbase, ss, adc_raw);            // Read the ADC result into 'out'
-    ADCIntClear(adcbase, ss);                        // Clear interrupt flag
-    tiva_peripheral_disable(adcsysctl);
+    adc_on = true;
+}
 
-    // Convert results to uint16_t
-    for (size_t i = 0; i < num_pins; ++i) {
-        out[i] = (uint16_t)adc_raw[i];
+void adc_shutdown() {
+    if (adc_on)
+    {
+        ADCSequenceDisable(adcbase, ss);
+        tiva_peripheral_disable(adcsysctl);
+        adc_on = false;
     }
+}
+
+void analog_pin_read(uint32_t* out)
+{
+    if (!adc_on)
+    {
+        error(FILE_LINE, "ADC Module has not yet been initialized");
+    }
+    
+    ADCProcessorTrigger(adcbase, ss);                // Trigger SS conversion
+    int count = 1000;
+    while(!ADCIntStatus(adcbase, ss, false) && count > 0)        // Wait for conversion completion
+    {
+        --count;
+    }
+    if(count == 0)
+    {
+        error(FILE_LINE, "failed Sample Sequencer conversion");
+    }
+    ADCSequenceDataGet(adcbase, ss, out);            // Read the ADC result into 'out'
+    ADCIntClear(adcbase, ss);                        // Clear interrupt flag
 }
 
 void pin_invert(uint32_t pin)
