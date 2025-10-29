@@ -11,10 +11,7 @@
 #define TIVA_NUM_PORTS 6 // number of tiva ports
 #define TIVA_PINS_PER_PORT 8 // number of pins on each port
 
-static uint32_t adcbase;
-static uint32_t adcsysctl;
-static uint8_t ss;
-static bool adc_on;
+static struct adc_configuration adc_config;
 
 /// @brief Get the port number (with 'A' = 0) from the pin
 /// @param pin - constant of the form GPIO_Pxx_yyyy from driverlib/pin_map.h,
@@ -252,8 +249,9 @@ bool pin_read(uint32_t pin)
 
 void adc_setup(const uint32_t* pins, size_t num_pins, bool adc0, uint8_t sampleSequencer)
 {
-    adcbase = adc0 ? ADC0_BASE : ADC1_BASE;
-    adcsysctl = adc0? SYSCTL_PERIPH_ADC0 : SYSCTL_PERIPH_ADC1;
+
+    adc_config.adcbase = adc0 ? ADC0_BASE : ADC1_BASE;
+    adc_config.adcsysctl = adc0? SYSCTL_PERIPH_ADC0 : SYSCTL_PERIPH_ADC1;
     if (sampleSequencer > 3)
     {
         error(FILE_LINE, "Invalid Sample Sequencer Number");
@@ -264,7 +262,7 @@ void adc_setup(const uint32_t* pins, size_t num_pins, bool adc0, uint8_t sampleS
     }
     else
     {
-        ss = sampleSequencer;
+        adc_config.ss = sampleSequencer;
     }
 
     uint32_t bases[8] = {0};
@@ -276,11 +274,11 @@ void adc_setup(const uint32_t* pins, size_t num_pins, bool adc0, uint8_t sampleS
     // - option 2: Using SS0 (sample up to 8 times sequentially), SS1 (up to 4), SS2 (up to 4), OR SS3 (only 1), (handled with ss input)
     // - option 3: How many pins are we reading from sequentially and from which ain channel?
 
-    tiva_peripheral_enable(adcsysctl);
+    tiva_peripheral_enable(adc_config.adcsysctl);
 
     //Configure Sample Sequencer to use given AIN channel
-    ADCSequenceDisable(adcbase, ss);  // Disable SS for config
-    ADCSequenceConfigure(adcbase, ss, ADC_TRIGGER_PROCESSOR, 0); // Set software trigger and priority
+    ADCSequenceDisable(adc_config.adcbase, adc_config.ss);  // Disable SS for config
+    ADCSequenceConfigure(adc_config.adcbase, adc_config.ss, ADC_TRIGGER_PROCESSOR, 0); // Set software trigger and priority
     for (size_t step = 0; step < num_pins; step++) // for option 3: configure to read from selected pins
     {
         bases[step] = pin_base(pins[step]);
@@ -293,33 +291,33 @@ void adc_setup(const uint32_t* pins, size_t num_pins, bool adc0, uint8_t sampleS
             config |= ADC_CTL_IE | ADC_CTL_END;
         }
 
-        ADCSequenceStepConfigure(adcbase, ss, step, config);
+        ADCSequenceStepConfigure(adc_config.adcbase, adc_config.ss, step, config);
     }
-    ADCSequenceEnable(adcbase, ss); // Enable SS back on
-    ADCIntClear(adcbase, ss); // Clear any interrupt flags
+    ADCSequenceEnable(adc_config.adcbase, adc_config.ss); // Enable SS back on
+    ADCIntClear(adc_config.adcbase, adc_config.ss); // Clear any interrupt flags
 
-    adc_on = true;
+    adc_config.adc_on = true;
 }
 
 void adc_shutdown() {
-    if (adc_on)
+    if (adc_config.adc_on)
     {
-        ADCSequenceDisable(adcbase, ss);
-        tiva_peripheral_disable(adcsysctl);
-        adc_on = false;
+        ADCSequenceDisable(adc_config.adcbase, adc_config.ss);
+        tiva_peripheral_disable(adc_config.adcsysctl);
+        adc_config.adc_on = false;
     }
 }
 
 void analog_pin_read(uint32_t* out)
 {
-    if (!adc_on)
+    if (!adc_config.adc_on)
     {
         error(FILE_LINE, "ADC Module has not yet been initialized");
     }
-    
-    ADCProcessorTrigger(adcbase, ss);                // Trigger SS conversion
+
+    ADCProcessorTrigger(adc_config.adcbase, adc_config.ss);                // Trigger SS conversion
     int count = 1000;
-    while(!ADCIntStatus(adcbase, ss, false) && count > 0)        // Wait for conversion completion
+    while(!ADCIntStatus(adc_config.adcbase, adc_config.ss, false) && count > 0)        // Wait for conversion completion
     {
         --count;
     }
@@ -327,8 +325,8 @@ void analog_pin_read(uint32_t* out)
     {
         error(FILE_LINE, "failed Sample Sequencer conversion");
     }
-    ADCSequenceDataGet(adcbase, ss, out);            // Read the ADC result into 'out'
-    ADCIntClear(adcbase, ss);                        // Clear interrupt flag
+    ADCSequenceDataGet(adc_config.adcbase, adc_config.ss, out);            // Read the ADC result into 'out'
+    ADCIntClear(adc_config.adcbase, adc_config.ss);                        // Clear interrupt flag
 }
 
 void pin_invert(uint32_t pin)

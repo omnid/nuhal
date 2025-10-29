@@ -37,6 +37,14 @@ struct pin_configuration
     enum pin_type type; 
 };
 
+/// @brief the configuration of the adc module
+struct adc_configuration
+{
+    uint32_t adcbase;
+    uint32_t adcsysctl;
+    uint8_t ss;
+    bool adc_on;
+};
 
 /// @brief setup the pins according to the given pin configuration table
 /// @param table - table of pin_configurations for the pins to setup
