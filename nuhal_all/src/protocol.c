@@ -138,7 +138,7 @@ void protocol_verify_checksum(struct protocol_packet * out, uint8_t data_length)
 static void protocol_validate_response(const struct protocol_packet * request,
                                        const struct protocol_packet * response)
 {
-    if(!request || !response || !response->_data)
+    if(!request || !response)
     {
         error(FILE_LINE, "NULL ptr");
     }
