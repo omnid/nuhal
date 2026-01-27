@@ -33,49 +33,54 @@ int uart_read_block_error(const struct uart_port * port, void * data,
 
         switch(term)
         {
-        case UART_TERM_NONE:
-            ; // no early termination based on a character
-            break;
-        case UART_TERM_CR:
-            if('\r' == ((uint8_t*)data)[read - 1])
+            case UART_TERM_NONE:
+                ; // no early termination based on a character
+                break;
+            case UART_TERM_CR:
+                if('\r' == ((uint8_t*)data)[read - 1])
+                {
+                    return read;
+                }
+                break;
+            case UART_TERM_LF:
+                if('\n' == ((uint8_t*)data)[read-1])
+                {
+                    return read;
+                }
+                break;
+            case UART_TERM_NULL:
+                if('\0' == ((uint8_t*)data)[read-1])
+                {
+                    return read;
+                }
+                break;
+            case UART_TERM_CR_OR_LF:
+                if('\r' == ((uint8_t*)data)[read-1]
+                || '\n' == ((uint8_t*)data)[read-1])
+                {
+                    return read;
+                }
+                break;
+            default:
             {
-                return read;
+                char error_msg[128 + MAX_LENGTH_UART_DEVICE_PATH]; // adjust size as needed
+                snprintf(error_msg, sizeof(error_msg), "Invalid termination condition on UART port %s", uart_get_device_path(port));
+                error(FILE_LINE, error_msg);
+                break;
             }
-            break;
-        case UART_TERM_LF:
-            if('\n' == ((uint8_t*)data)[read-1])
-            {
-                return read;
-            }
-            break;
-        case UART_TERM_NULL:
-            if('\0' == ((uint8_t*)data)[read-1])
-            {
-                return read;
-            }
-            break;
-        case UART_TERM_CR_OR_LF:
-            if('\r' == ((uint8_t*)data)[read-1]
-               || '\n' == ((uint8_t*)data)[read-1])
-            {
-                return read;
-            }
-            break;
-        default:
-            char error_msg[128 + PATH_MAX]; // adjust size as needed
-            snprintf(error_msg, sizeof(error_msg), "Invalid termination condition on UART port %s", port->device_path);
-            error(FILE_LINE, error_msg);
-            break;
         }
     }
+    
     // if we get here we have timed out
     if(timeout_error)
     {
-        char error_msg[128 + PATH_MAX + read]; // adjust size as needed
         char uart_msg[read + 1];
         memcpy(uart_msg, data, read);
         uart_msg[read] = '\0';
-        snprintf(error_msg, sizeof(error_msg), "Timeout on blocking read. Trying to read on UART port %s\nHave read up to: %s\nNumber of bytes left to read: %d", port->device_path, uart_msg, len - read);
+
+        char error_msg[128 + MAX_LENGTH_UART_DEVICE_PATH + read]; // adjust size as needed
+        snprintf(error_msg, sizeof(error_msg), "Timeout on blocking read. Trying to read on UART port %s\nHave read up to: %s\nNumber of bytes left to read: %zu", uart_get_device_path(port), uart_msg, len - read);
+
         error(FILE_LINE, error_msg);
     }
     return read;
@@ -103,13 +108,17 @@ int uart_write_block(const struct uart_port * port, const void * data,
         }
     }
     // if we get here we have timed out
-    char error_msg[128 + PATH_MAX + len]; // adjust size as needed
     char written_uart_msg[written + 1];
-    char to_write_uart_msg[len - written + 1];
     memcpy(written_uart_msg, data, written);
-    memcpy(to_write_uart_msg, data + written, len - written);
-    char_buffer[written] = '\0';
-    snprintf(error_msg, sizeof(error_msg), "Timeout on blocking write. Trying to write from UART port %s\nHave written up to: %s\nStill left to write: %s", port->device_path, written_uart_msg, to_write_uart_msg);
+    written_uart_msg[written] = '\0';
+
+    char to_write_uart_msg[len - written + 1];
+    memcpy(to_write_uart_msg, (uint8_t*)data + written, len - written);
+    to_write_uart_msg[len - written] = '\0';
+
+    char error_msg[128 + MAX_LENGTH_UART_DEVICE_PATH + len]; // adjust size as needed
+    snprintf(error_msg, sizeof(error_msg), "Timeout on blocking write. Trying to write from UART port %s\nHave written up to: %s\nStill left to write: %s", uart_get_device_path(port), written_uart_msg, to_write_uart_msg);
+
     error(FILE_LINE, error_msg);
     return -1;
 }
@@ -122,8 +131,8 @@ int uart_printf(const struct uart_port * port, const char * fmt, ...)
     const int len = vsnprintf(NULL, 0, fmt, args);
     if(len < 0)
     {
-        char error_msg[128 + PATH_MAX]; // adjust size as needed
-        snprintf(error_msg, sizeof(error_msg), "printf encoding error. Trying to print from UART port %s", port->device_path);
+        char error_msg[128 + MAX_LENGTH_UART_DEVICE_PATH]; // adjust size as needed
+        snprintf(error_msg, sizeof(error_msg), "printf encoding error. Trying to print from UART port %s", uart_get_device_path(port));
         error(FILE_LINE, error_msg);
     }
 
@@ -163,8 +172,8 @@ int uart_scanf(const struct uart_port * port, const char * fmt, ...)
                                     UART_TERM_CR_OR_LF);
     if(buffer[len - 1] != '\r' && buffer[len - 1] != '\n')
     {
-        char error_msg[128 + PATH_MAX]; // adjust size as needed
-        snprintf(error_msg, sizeof(error_msg), "uart_scanf input too long. Trying to scan from UART port %s", port->device_path);
+        char error_msg[128 + MAX_LENGTH_UART_DEVICE_PATH]; // adjust size as needed
+        snprintf(error_msg, sizeof(error_msg), "uart_scanf input too long. Trying to scan from UART port %s", uart_get_device_path(port));
         error(FILE_LINE, error_msg);
     }
     va_list args;
