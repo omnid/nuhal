@@ -44,6 +44,17 @@ struct uart_port
 
 static struct uart_port * port_list_head = NULL;
 
+// accesses port's device path but prevents it from being modified
+const char * uart_get_device_path(const struct uart_port * port)
+{
+    if (!port)
+    {
+        error(FILE_LINE, "NULL uart port");
+    }
+
+    return port->device_path;
+}
+
 // run at exit to close all the uart ports
 static void uart_cleanup(void)
 {

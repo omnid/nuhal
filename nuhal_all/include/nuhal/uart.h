@@ -7,6 +7,9 @@
 /// @brief generic interface to a uart,
 /// implemented with different uart_<platform>.c files
 
+/// @brief max length of uart port device path
+#define MAX_LENGTH_UART_DEVICE_PATH 4096
+
 /// @brief a description of the port
 struct uart_port;
 
@@ -188,6 +191,11 @@ bool uart_wait_for_data(const struct uart_port * port, uint32_t timeout);
 /// @param port - the uart port to check
 /// @return true if data is available to be read
 bool uart_data_available(const struct uart_port * port);
+
+/// @brief accesses port's device path but prevents it from being modified
+/// @param port - the uart port to get device path from
+/// @return the name/device of the port
+const char * uart_get_device_path(const struct uart_port * port);
 
 #ifdef __cplusplus
 }
