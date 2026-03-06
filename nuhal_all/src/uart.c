@@ -77,7 +77,7 @@ int uart_read_block_error(const struct uart_port * port, void * data,
 int uart_read_block(const struct uart_port * port, void * data,
                     size_t len, uint32_t timeout, enum uart_term term)
 {
-    return uart_read_block_error(port, data, len, timeout, term, false);
+    return uart_read_block_error(port, data, len, timeout, term, true);
 }
 
 int uart_write_block(const struct uart_port * port, const void * data,
