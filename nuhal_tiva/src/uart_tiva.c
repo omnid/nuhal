@@ -78,7 +78,9 @@ void uart_passthrough(const struct uart_port * port1,
         UARTRxErrorClear(port1->base);
         if(time_elapsed_ms(&stamp) > timeout && timeout != 0)
         {
-            error(FILE_LINE, "Timeout pending end of break signal.");
+            char error_msg[128 + 2*MAX_LENGTH_UART_DEVICE_PATH]; // adjust size as needed
+            snprintf(error_msg, sizeof(error_msg), "Timeout pending end of break signal. Passthrough occurring through UART ports %s and %s.\n Set timeout period: %ld ms\n", uart_get_device_path(port1), uart_get_device_path(port2), timeout);
+            error(FILE_LINE, error_msg);
         }
     }
 }

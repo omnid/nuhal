@@ -127,9 +127,8 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     }
     port->is_usb = strncmp("/dev/ttyUSB", realname, 11) == 0
                    || strncmp("/dev/ttyACM", realname, 11) == 0;
-    strncpy(port->device_path, realname, PATH_MAX - 1);
+    strncpy(port->device_path, name, PATH_MAX - 1);
     port->device_path[PATH_MAX - 1] = '\0';
-
 
     // open serial port for non-blocking reads
     port->fd = open(realname, O_RDWR | O_NOCTTY | O_NONBLOCK);
