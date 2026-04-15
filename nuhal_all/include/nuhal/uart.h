@@ -8,7 +8,7 @@
 /// implemented with different uart_<platform>.c files
 
 /// @brief max length of uart port device path
-#define MAX_LENGTH_UART_DEVICE_PATH 4096
+#define MAX_LENGTH_UART_DEVICE_PATH 8
 
 /// @brief a description of the port
 struct uart_port;

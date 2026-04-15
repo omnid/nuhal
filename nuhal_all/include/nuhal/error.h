@@ -9,6 +9,7 @@
 
 #include "nuhal/utilities.h"
 #include <stdbool.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,9 +20,10 @@ extern "C" {
 /// recursive calls to error.  If a function used in the error handler
 /// itself calls error, than the error function terminates the program
 /// @param fileline: the FILE_LINE macro, current file and line number
-/// @param msg: additional error information
+/// @param format: formatted C-style string
+/// @param ...: variable number of arguments to be placed into format
 /// @post whether the program loops forever or exits is platform dependent
-void error(const char * fileline, const char * msg) __attribute__((noreturn));
+void error(const char * fileline, const char * fomrat, ...) __attribute__((noreturn));
 
 /// @brief a platform-dependent function that handles the error message
 /// @param fileline - filename and line-number where the error was triggered
