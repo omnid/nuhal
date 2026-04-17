@@ -195,6 +195,7 @@ bool uart_data_available(const struct uart_port * port);
 /// @brief accesses port's device path but prevents it from being modified
 /// @param port - the uart port to get device path from
 /// @return the name/device of the port
+/// @post returned char pointer remains valid as long as param uart_port* remains valid
 const char * uart_get_device_path(const struct uart_port * port);
 
 #ifdef __cplusplus

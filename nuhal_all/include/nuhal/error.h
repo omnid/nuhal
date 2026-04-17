@@ -23,7 +23,7 @@ extern "C" {
 /// @param format: formatted C-style string
 /// @param ...: variable number of arguments to be placed into format
 /// @post whether the program loops forever or exits is platform dependent
-void error(const char * fileline, const char * fomrat, ...) __attribute__((noreturn));
+void error(const char * fileline, const char * format, ...) __attribute__((noreturn, format(printf, 2, 3)));
 
 /// @brief a platform-dependent function that handles the error message
 /// @param fileline - filename and line-number where the error was triggered
