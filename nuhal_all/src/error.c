@@ -8,7 +8,7 @@
 
 void error_with_errno(const char * fileline)
 {
-    error(fileline, strerror(errno));
+    error(fileline, "%s", strerror(errno));
 }
 
 // sometimes an error somewhere else can trigger another
