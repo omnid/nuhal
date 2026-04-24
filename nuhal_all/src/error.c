@@ -25,7 +25,7 @@ void error(const char * fileline, const char * format, ...)
     va_start(args, format);
     vsnprintf(msg, sizeof(msg), format, args);
     va_end(args);
-    
+
     if(!error_called)
     {
         error_called = true;
@@ -50,3 +50,11 @@ bool error_pending(void)
 {
     return error_called;
 }
+
+#ifdef UNIT_TEST_MODE
+// for unit testing purposes we can reset the error so we can test multiple calls to error in a row
+void set_error_state(bool state)
+{
+    error_called = state;
+}
+#endif

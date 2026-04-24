@@ -10,12 +10,12 @@ void error_handler(const char * fileline, const char * msg)
 {
     const std::string fline(fileline);
     const std::string smsg(msg);
-    throw std::logic_error(fline+": " + smsg);
+    throw std::logic_error(fline + ": " + smsg);
 }
 
 void error_handler_fatal(const char * fileline, const char * msg)
 {
     const std::string fline(fileline);
     const std::string smsg(msg);
-    throw std::logic_error(fline+": (fatal) " + smsg);
+    throw std::logic_error(fline + ": (fatal) " + smsg);
 }
