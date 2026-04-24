@@ -20,8 +20,10 @@ extern "C" {
 /// recursive calls to error.  If a function used in the error handler
 /// itself calls error, than the error function terminates the program
 /// @param fileline: the FILE_LINE macro, current file and line number
-/// @param format: formatted C-style string
+/// @param format: C-style format string
 /// @param ...: variable number of arguments to be placed into format
+/// @post There is a maximum message length. After that message length is exceeded, the
+///  rest of the format string will be truncated and end with "[...]"
 /// @post whether the program loops forever or exits is platform dependent
 void error(const char * fileline, const char * format, ...) __attribute__((noreturn, format(printf, 2, 3)));
 
@@ -33,7 +35,7 @@ void error(const char * fileline, const char * format, ...) __attribute__((noret
 /// which can be overridden by specific applications
 void error_handler(const char * fileline, const char * msg);
 
-/// @brief a platform-dependent function that handles when an error occurs 
+/// @brief a platform-dependent function that handles when an error occurs
 /// within the error handler.  This function SHOULD NOT call any function
 /// that might call error
 void error_handler_fatal(const char * fileline, const char * msg);
