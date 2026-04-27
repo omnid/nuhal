@@ -57,9 +57,11 @@ bool error_pending(void)
     return error_called;
 }
 
+#ifdef UNIT_TEST_MODE
 // Internal, for unit testing purposes only.
 // DO NOT CALL THIS UNLESS IN A UNIT TEST
 void TEST_set_error_state(bool state)
 {
     error_called = state;
 }
+#endif
