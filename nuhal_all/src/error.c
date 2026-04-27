@@ -23,10 +23,9 @@ struct error_msg
     char buffer[1024]; // this is the actual message
     char suffix[sizeof(SUFFIX)]; // this is a suffix
 };
-#error confirm this conforms with the iso standard
+
 // buffer and suffix are guaranteed to be continguous by the C standard
 // so we can cast error_msg to char* and get a full message
-
 void error(const char * fileline, const char * format, ...)
 {
     static bool fatal_error_called = false;
@@ -67,10 +66,9 @@ bool error_pending(void)
     return error_called;
 }
 
-#ifdef UNIT_TEST_MODE
-// for unit testing purposes we can reset the error so we can test multiple calls to error in a row
-void set_error_state(bool state)
+// Internal, for unit testing purposes only.
+// DO NOT CALL THIS UNLESS IN A UNIT TEST
+void TEST_set_error_state(bool state)
 {
     error_called = state;
 }
-#endif

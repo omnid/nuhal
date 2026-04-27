@@ -5,10 +5,10 @@
 /// message that is generated
 TEST_CASE("Basic Error", "[error]")
 {
-    set_error_state(false);
+    TEST_set_error_state(false);
     CHECK_THROWS_WITH(error("","%s",""), ": ");
 
-    set_error_state(false);
+    TEST_set_error_state(false);
     CHECK_THROWS_WITH(error("FILE:LINE", "This Is A Test Error Message"),
                       "FILE:LINE: This Is A Test Error Message");
     CHECK_THROWS_WITH(error("FILE:LINE", "Hello %d %c %s", 5, 'A', "Stuff"),
@@ -17,9 +17,8 @@ TEST_CASE("Basic Error", "[error]")
 
 TEST_CASE("Long Error", "[error]")
 {
-    set_error_state(false);
+    TEST_set_error_state(false);
     const std::string msg(10, 'B');
     CHECK_THROWS_WITH(error("FILE:LINE", "%s", msg.c_str()), "FILE:LINE: " + msg);
-#error TODO: write tests that test this up to the buffer limits
 
 }
