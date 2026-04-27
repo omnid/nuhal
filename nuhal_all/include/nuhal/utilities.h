@@ -19,7 +19,7 @@
 
 #ifdef __cplusplus
 /// If any C code using this header is compiled with C++ remap STATIC_ASSERT to static_assert
-#define STATIC_ASSERT static_assert
+#define STATIC_ASSERT(test, msg) static_assert(test, #msg)
 #else
 /// @brief cause a compile error if test fails
 /// see https://stackoverflow.com/questions/3385515/static-assert-in-c
