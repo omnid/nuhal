@@ -16,42 +16,33 @@ void error_with_errno(const char * fileline)
 // error message. we want to stop recursive error calls
 static bool error_called = false;
 
-#define SUFFIX "[...]"
 
-struct error_msg
-{
-    char buffer[1024]; // this is the actual message
-    char suffix[sizeof(SUFFIX)]; // this is a suffix
-};
-
-// buffer and suffix are guaranteed to be continguous by the C standard
-// so we can cast error_msg to char* and get a full message
 void error(const char * fileline, const char * format, ...)
 {
     static bool fatal_error_called = false;
 
-    static struct error_msg msg = { .buffer = "", .suffix = SUFFIX};
+    static char msg[] = { [ERROR_MAX_ERROR_LEN] = '[', '.', '.', '.', ']'};
 
     va_list args;
     va_start(args, format);
-    int len = vsnprintf(msg.buffer, sizeof(msg.buffer), format, args);
-    if(len >= (int)sizeof(msg.buffer) )
+    int len = vsnprintf(msg, ERROR_MAX_ERROR_LEN, format, args);
+    if(len >= ERROR_MAX_ERROR_LEN )
     {
-        msg.buffer[ARRAY_LEN(msg.buffer) - 1] = ' ';
+        msg[ARRAY_LEN(msg) - 1] = ' ';
     }
     va_end(args);
 
     if(!error_called)
     {
         error_called = true;
-        error_handler(fileline, (char *)&msg);
+        error_handler(fileline, msg);
         exit(EXIT_FAILURE);
     }
 
     if(!fatal_error_called)
     {
         fatal_error_called = true;
-        error_handler_fatal(fileline, (char *)&msg);
+        error_handler_fatal(fileline, msg);
         exit(EXIT_FAILURE);
     }
 

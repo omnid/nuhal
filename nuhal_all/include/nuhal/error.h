@@ -15,6 +15,9 @@
 extern "C" {
 #endif
 
+/// \brief the maximum length of an error message
+#define ERROR_MAX_ERROR_LEN 1024
+
 /// @brief Trigger an error condition.  This will call the
 /// platform/application-specific error_handler.  It also prevents
 /// recursive calls to error.  If a function used in the error handler
@@ -22,7 +25,7 @@ extern "C" {
 /// @param fileline: the FILE_LINE macro, current file and line number
 /// @param format: C-style format string
 /// @param ...: variable number of arguments to be placed into format
-/// @post There is a maximum message length. After that message length is exceeded, the
+/// @post if ERROR_MAX_ERROR_LEN-1 is exceeded, the
 ///  rest of the format string will be truncated and end with "[...]"
 /// @post whether the program loops forever or exits is platform dependent
 void error(const char * fileline, const char * format, ...) __attribute__((noreturn, format(printf, 2, 3)));
