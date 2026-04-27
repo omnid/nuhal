@@ -28,7 +28,7 @@ void error(const char * fileline, const char * format, ...)
     int len = vsnprintf(msg, ERROR_MAX_ERROR_LEN, format, args);
     if(len >= ERROR_MAX_ERROR_LEN )
     {
-        msg[ARRAY_LEN(msg) - 1] = ' ';
+        msg[ERROR_MAX_ERROR_LEN - 1] = ' ';
     }
     va_end(args);
 

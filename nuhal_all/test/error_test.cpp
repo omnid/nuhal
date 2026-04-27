@@ -18,7 +18,12 @@ TEST_CASE("Basic Error", "[error]")
 TEST_CASE("Long Error", "[error]")
 {
     TEST_set_error_state(false);
-    const std::string msg(10, 'B');
+    const std::string msg(ERROR_MAX_ERROR_LEN-4, 'Q');
     CHECK_THROWS_WITH(error("FILE:LINE", "%s", msg.c_str()), "FILE:LINE: " + msg);
-
+    TEST_set_error_state(false);
+    CHECK_THROWS_WITH(error("FILE:LINE", "%s%s", msg.c_str(), "ABC"), "FILE:LINE: " + msg + "ABC");
+    TEST_set_error_state(false);
+    CHECK_THROWS_WITH(error("FILE:LINE", "%s%s", msg.c_str(), "ABCD"), "FILE:LINE: " + msg + "ABC [...]");
+    TEST_set_error_state(false);
+    CHECK_THROWS_WITH(error("FILE:LINE", "%s%d", msg.c_str(), 12345), "FILE:LINE: " + msg + "123 [...]");
 }

@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-/// \brief the maximum length of an error message
+/// \brief the maximum length of an error message, including the ending '\0'
 #define ERROR_MAX_ERROR_LEN 1024
 
 /// @brief Trigger an error condition.  This will call the
