@@ -1,0 +1,5 @@
+{
+    "cmake-args": [
+        "--toolchain cmake/GNU-toolchain.cmake"
+        ]
+}
