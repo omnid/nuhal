@@ -76,8 +76,21 @@ Usage
         -   `nuhal_install(name ...)` install a target with the given
             name. List dependencies after the target name. See
             *nuhal_all/nuhal.cmake* for details and requirements.
-- Additional Documentation can be found in each platform's `README.md`. Doxygen documentation is generated with each build
-  and placed in `&lt build &gt/doc/index.html`.
+
+Structure
+=========
+- `nuhal_all` contains the code common to all platforms. This does not make a library 
+- `nuhal_linux` contains code that works on Linux only.
+- `nuhal_tiva` contains code that works on the Tiva microcontroller.
+- While most of the code in `nuhal_linux` and `nuhal_tiva` are platform-specific implementations
+  there is also a small subset of the API that is specific to `linux` and specific to `tiva`
+- The code from `nuhal_all`, `nuhal_linux`, and `nuhal_tiva` is compiled into one `nuhal` library
+  for each platform. Usage is the same across platforms, the appropriate library is selected based
+  on the toolchain.
+
+Documentation
+=============
+- Doxygen documentation is generated with each build and placed in `&lt build &gt/doc/index.html`.
 
 Adding a Platform
 -----------------

@@ -1,0 +1,20 @@
+<package format="2">
+  <name>nuhal</name>
+  <version>0.1.0</version>
+  <description>
+    Northwestern Utilities and Hardware Abstraction Layer.
+  </description>
+
+  <author email="elwin@u.northwestern.edu">Matthew Elwin</author>
+  <maintainer email="elwin@northwestern.edu">Matthew Elwin</maintainer>
+
+  <license>MIT</license>
+  <url>https://www.github.com/omnid/nuhal</url>
+  <build_depend>cmakeme</build_depend>
+  <depend>tiva_cmake</depend>
+  <doc_depend>doxygen</doc_depend>
+  <doc_depend>texlive-full</doc_depend>
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
