@@ -5,9 +5,6 @@ find_package(nuhal_all)
 find_package(cmakeme)
 cmakeme_defaults(RelWithDebInfo)
 
-# ROS buidls libraries as shared by default, so we use a shared library to make this compatible
-option(BUILD_SHARED_LIBS "Build ${PROJECT} as a shared library" ON)
-
 # Add platform-specific files to the nuhal library
 add_library(nuhal
   src/error_host.c
@@ -16,15 +13,17 @@ add_library(nuhal
   src/uart_host.c
   )
 
-target_link_libraries(nuhal PRIVATE nuhal::nuhal_private cmakeme_flags PUBLIC m nuhal::nuhal_public)
+target_link_libraries(nuhal PRIVATE cmakeme_flags PUBLIC m nuhal::nuhal_all)
 target_include_directories(nuhal PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
-cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS nuhal_all)
+cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
 
 include(CTest)
-find_package(Threads)
-add_executable(nuhal_linux_test test/queue_concurrent_test.cpp)
-target_link_libraries(nuhal_linux_test nuhal Threads::Threads cmakeme_flags)
-add_test(NAME nuhal_linux COMMAND nuhal_linux_test)
+if(BUILD_TESTING)
+  find_package(Threads)
+  add_executable(nuhal_linux_test test/queue_concurrent_test.cpp)
+  target_link_libraries(nuhal_linux_test nuhal Threads::Threads cmakeme_flags)
+  add_test(NAME nuhal_linux COMMAND nuhal_linux_test)
+endif()
 
 # Doxygen documentation
 set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal) - Linux Specific Version")

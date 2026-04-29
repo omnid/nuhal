@@ -54,10 +54,11 @@ void error_with_errno(const char * fileline) __attribute__((noreturn));
 bool error_pending(void);
 
 #ifdef UNIT_TEST_MODE
+#define TEST_set_error_state private_TEST_set_error_state
     // This function is for UNIT TESTING ONLY and should not be present in production code!
     // reset the error so we can test multiple calls to error in a row
     // state - if false, no error is pending, if true it is as if error() has been called once
-    void TEST_set_error_state(bool state);
+    void private_TEST_set_error_state(bool state);
 #else
 #define TEST_set_error_state STATIC_ASSERT(false, "TEST_set_error_state is only callable from tests")
 #endif

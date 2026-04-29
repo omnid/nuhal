@@ -21,10 +21,10 @@ target_include_directories(nuhal PUBLIC
   )
 
 target_link_libraries(nuhal
-  PRIVATE nuhal::nuhal_private cmakeme_flags 
+  PRIVATE nuhal::nuhal_private cmakeme_flags
   PUBLIC nuhal::nuhal_public TivaCMake::driverlib m)
 
-cmakeme_install(TARGETS nuhal driverlib NAMESPACE nuhal DEPENDS nuhal_all TivaCMake) 
+cmakeme_install(TARGETS nuhal driverlib NAMESPACE nuhal DEPENDS nuhal_all TivaCMake)
 
 # Enable testing so that test is a well-defined target
 include(CTest)
