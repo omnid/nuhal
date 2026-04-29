@@ -45,18 +45,18 @@ ExternalProject_Add(nuhal_linux
   TEST_EXCLUDE_FROM_MAIN True
   DEPENDS nuhal_all_linux)
 
-#ExternalProject_Add(
-#    nuhal_tiva
-#    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../nuhal_tiva
-#    BUILD_ALWAYS True
-#    LIST_SEPARATOR |
-#    CMAKE_ARGS
-#    -G${CMAKE_GENERATOR}
-#    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-#    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install
-#    -DCMAKE_PREFIX_PATH=${prefix}
-#    DEPENDS nuhal_all
-#    )
+# Build the tiva version of the library
+ExternalProject_Add(nuhal_tiva
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nuhal_tiva
+  INSTALL_DIR install/nuhal_tiva
+  BUILD_ALWAYS True
+  CMAKE_ARGS
+    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+    -Dnuhal_all_DIR=${CMAKE_BINARY_DIR}/install_private/nuhal_all_tiva/lib/arm-none-eabi/nuhal_all
+    -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake
+    DEPENDS nuhal_all_tiva)
 
 #enable_testing()
 #add_test(NAME nuhal_all_test COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target nuhal_all-test)
