@@ -29,18 +29,20 @@ ExternalProject_Add(nuhal_all_tiva
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
   -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
   -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+  -DBUILD_TESTING=OFF
   -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake)
 
 # Build the Linux version of the library
 ExternalProject_Add(nuhal_linux
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nuhal_linux
-  INSTALL_DIR install/nuhal_linux
+  INSTALL_DIR install/
   BUILD_ALWAYS True
   CMAKE_ARGS
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
   -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
   -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
   -Dnuhal_all_DIR=${CMAKE_BINARY_DIR}/install_private/nuhal_all_linux/lib/nuhal_all
+  -DBUILD_TESTING=${BUILD_TESTING}
   STEP_TARGETS test
   TEST_EXCLUDE_FROM_MAIN True
   DEPENDS nuhal_all_linux)
@@ -48,12 +50,13 @@ ExternalProject_Add(nuhal_linux
 # Build the tiva version of the library
 ExternalProject_Add(nuhal_tiva
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nuhal_tiva
-  INSTALL_DIR install/nuhal_tiva
+  INSTALL_DIR install/
   BUILD_ALWAYS True
   CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+    -DBUILD_TESTING=${BUILD_TESTING}
     -Dnuhal_all_DIR=${CMAKE_BINARY_DIR}/install_private/nuhal_all_tiva/lib/arm-none-eabi/nuhal_all
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake
     DEPENDS nuhal_all_tiva)

@@ -30,8 +30,8 @@ cmakeme_install(TARGETS nuhal_all
                 NAMESPACE nuhal
                 PACKAGE_NAME nuhal_all)
 
-if(NOT CMAKE_CROSSCOMPILING)
-    include(CTest)
+include(CTest)
+if(BUILD_TESTING)
   add_executable(nuhal_test
     test/bytestream_test.cpp
     test/encoder_test.cpp
@@ -48,9 +48,9 @@ if(NOT CMAKE_CROSSCOMPILING)
   target_link_libraries(nuhal_test nuhal_all)
   target_compile_definitions(nuhal_test PRIVATE UNIT_TEST_MODE)
   add_test(NAME nuhal_all COMMAND nuhal_test)
-
-  # Doxygen documentation
-  set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
-  set(DOXYGEN_EXCLUDE "${CMAKE_SOURCE_DIR}/include/nuhal/catch.hpp")
-  cmakeme_doxygen(${CMAKE_SOURCE_DIR})
 endif()
+
+# Doxygen documentation
+set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
+set(DOXYGEN_EXCLUDE "${CMAKE_SOURCE_DIR}/include/nuhal/catch.hpp")
+cmakeme_doxygen(${CMAKE_SOURCE_DIR})
