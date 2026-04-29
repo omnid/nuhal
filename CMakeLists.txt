@@ -66,6 +66,6 @@ ExternalProject_Add(nuhal_tiva
 #add_test(NAME nuhal_linux_test COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target nuhal_linux-test)
 
 
-#install(DIRECTORY ${CMAKE_BINARY_DIR}/install/ DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY ${CMAKE_BINARY_DIR}/install/ DESTINATION .)
 
 
