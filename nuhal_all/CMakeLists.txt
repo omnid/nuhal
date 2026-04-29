@@ -32,7 +32,7 @@ cmakeme_install(TARGETS nuhal_all
 
 include(CTest)
 if(BUILD_TESTING)
-  add_executable(nuhal_test
+  add_executable(nuhal_all_test
     test/bytestream_test.cpp
     test/encoder_test.cpp
     test/error_stub.cpp
@@ -45,9 +45,9 @@ if(BUILD_TESTING)
     test/utilities_test.cpp
     test/error_test.cpp
   )
-  target_link_libraries(nuhal_test nuhal_all)
-  target_compile_definitions(nuhal_test PRIVATE UNIT_TEST_MODE)
-  add_test(NAME nuhal_all COMMAND nuhal_test)
+  target_link_libraries(nuhal_all_test nuhal_all)
+  target_compile_definitions(nuhal_all_test PRIVATE UNIT_TEST_MODE)
+  add_test(NAME nuhal_all COMMAND nuhal_all_test)
 endif()
 
 # Doxygen documentation
