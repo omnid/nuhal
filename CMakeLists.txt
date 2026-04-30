@@ -8,7 +8,7 @@ set_property(CACHE FIRMWARE_COMPILER PROPERTY STRINGS GNU TI)
 
 include(CTest)
 
-# Compile the common code for the linux system.
+# Compile the library for Linux
 ExternalProject_Add(nuhal_linux
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
   INSTALL_DIR install/
@@ -20,18 +20,17 @@ ExternalProject_Add(nuhal_linux
   -DBUILD_TESTING=${BUILD_TESTING}
   )
 
-# Compile the common code for the tiva system
-#ExternalProject_Add(nuhal_all_tiva
-#  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nuhal_all
-#  INSTALL_DIR install_private/nuhal_all_tiva
-#  BINARY_DIR nuhal_all_tiva-build
-#  BUILD_ALWAYS TRUE
-#  CMAKE_ARGS
-#  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-#  -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-#  -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-#  -DBUILD_TESTING=OFF
-#  -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake)
+# Compile the library for tiva
+ExternalProject_Add(nuhal_tiva
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
+  INSTALL_DIR install/
+  BUILD_ALWAYS TRUE
+  CMAKE_ARGS
+  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+  -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+  -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+  -DBUILD_TESTING=${BUILD_TESTING}
+  -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake)
 
 # Build the Linux version of the library
 #ExternalProject_Add(nuhal_linux

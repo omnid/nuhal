@@ -1,7 +1,12 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
-project(nuhal_all VERSION 0.1.0)
+project(nuhal VERSION 0.1.0)
 find_package(cmakeme)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "arm-none-eabi")
+  find_package(TivaCMake)
+endif()
+
 cmakeme_defaults(RelWithDebInfo)
 
 add_library(nuhal
@@ -44,7 +49,10 @@ target_include_directories(nuhal
   # If building for Tiva include Tiva-specific includes
   $<$<PLATFORM_ID:arm-none-eabi>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/tiva>>)
 
-target_link_libraries(nuhal PRIVATE cmakeme_flags)
+target_link_libraries(nuhal PRIVATE cmakeme_flags
+  PUBLIC
+  $<$<PLATFORM_ID:arm-none-eabi>:TivaCMake::driverlib>
+  m)
 
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
 
