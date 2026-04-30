@@ -1,6 +1,6 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
-project(nuhal VERSION 0.1.0)
+project(nuhal_inner VERSION 0.1.0)
 find_package(cmakeme)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "arm-none-eabi")
@@ -56,7 +56,11 @@ target_link_libraries(nuhal PRIVATE cmakeme_flags
 
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
 
-add_subdirectory(test/${CMAKE_SYSTEM_NAME})
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+  add_subdirectory(test/linux)
+elseif(CMAKE_SYSTEM_NAME STREQUAL arm-none-eabi)
+  add_subdirectory(test/tiva)
+endif()
 
 # Doxygen documentation
 set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
