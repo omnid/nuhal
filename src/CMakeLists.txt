@@ -56,40 +56,9 @@ target_link_libraries(nuhal PRIVATE cmakeme_flags
 
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
 
-include(CTest)
-if(BUILD_TESTING)
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    find_package(Threads)
-
-    # These are hardware independent tests
-    # That test functionality common to all platforms
-    # They use stub functions to handle any hardware-specific calls
-    add_executable(nuhal_common_test
-      test/common/bytestream_test.cpp
-      test/common/encoder_test.cpp
-      test/common/error_stub.cpp
-      test/common/led_stub.cpp
-      test/common/matrix_test.cpp
-      test/common/pid_test.cpp
-      test/common/queue_test.cpp
-      test/common/time_stub.cpp
-      test/common/uart_stub.cpp
-      test/common/utilities_test.cpp
-      test/common/error_test.cpp
-    )
-   target_link_libraries(nuhal_common_test PRIVATE nuhal cmakeme_flags)
-   target_compile_definitions(nuhal_common_test PRIVATE UNIT_TEST_MODE)
-   add_test(NAME nuhal_common_test COMMAND nuhal_common_test)
-
-   # This test needs the real functionality of the host systej
-   add_executable(nuhal_linux_test
-     test/linux/queue_concurrent_test.cpp)
-   target_link_libraries(nuhal_linux_test PRIVATE nuhal cmakeme_flags Threads::Threads)
-   add_test(NAME nuhal_linux_test COMMAND  nuhal_linux_test)
- endif()
-endif()
+add_subdirectory(test/${CMAKE_SYSTEM_NAME})
 
 # Doxygen documentation
-#set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
-#set(DOXYGEN_EXCLUDE "${CMAKE_SOURCE_DIR}/include/nuhal/catch.hpp")
-#cmakeme_doxygen(${CMAKE_SOURCE_DIR})
+set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
+set(DOXYGEN_EXCLUDE "${CMAKE_SOURCE_DIR}/include/nuhal/catch.hpp")
+cmakeme_doxygen(${CMAKE_SOURCE_DIR})
