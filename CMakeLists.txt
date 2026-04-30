@@ -12,6 +12,7 @@ include(CTest)
 ExternalProject_Add(nuhal_linux
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
   INSTALL_DIR install/
+  BINARY_DIR nuhal_linux-build/
   BUILD_ALWAYS TRUE
   CMAKE_ARGS
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -63,10 +64,9 @@ ExternalProject_Add(nuhal_tiva
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/install/ DESTINATION .)
 
-#if(BUILD_TESTING)
-# add_test(NAME nuhal_all_test COMMAND ${CMAKE_COMMAND} --build nuhal_all_linux-build# --target test)
-# add_test(NAME nuhal_linux_test COMMAND ${CMAKE_COMMAND} --build nuhal_linux-build -#-target test)
-#endif()
+if(BUILD_TESTING)
+ add_test(NAME nuhal_test COMMAND ${CMAKE_COMMAND} --build nuhal_linux-build --target test)
+endif()
 
 
 
