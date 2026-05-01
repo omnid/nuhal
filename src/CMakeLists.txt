@@ -1,7 +1,7 @@
 # Northwetern Utilities and Hardware Abstraction Layer (NUHAL)
 cmake_minimum_required(VERSION 3.14)
-project(nuhal_inner VERSION 0.1.0)
-find_package(cmakeme)
+project(nuhal VERSION 1.0.0)
+find_package(cmakeme 1.0.0 REQUIRED)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "arm-none-eabi")
   find_package(TivaCMake)
@@ -42,12 +42,9 @@ add_library(nuhal
 target_include_directories(nuhal
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/common>
+  $<BUILD_INTERFACE:$<$<PLATFORM_ID:Linux>:${CMAKE_CURRENT_SOURCE_DIR}/../include/linux>>
+  $<BUILD_INTERFACE:$<$<PLATFORM_ID:arm-none-eabi>:${CMAKE_CURRENT_SOURCE_DIR}/../include/tiva>>)
 
-  # If building for Linux include Linux-specific includes
-  $<$<PLATFORM_ID:Linux>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/linux>>
-
-  # If building for Tiva include Tiva-specific includes
-  $<$<PLATFORM_ID:arm-none-eabi>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/tiva>>)
 
 target_link_libraries(nuhal PRIVATE cmakeme_flags
   PUBLIC
@@ -55,12 +52,6 @@ target_link_libraries(nuhal PRIVATE cmakeme_flags
   m)
 
 cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
-
-if(CMAKE_SYSTEM_NAME STREQUAL Linux)
-  add_subdirectory(test/linux)
-elseif(CMAKE_SYSTEM_NAME STREQUAL arm-none-eabi)
-  add_subdirectory(test/tiva)
-endif()
 
 # Doxygen documentation
 set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
