@@ -8,10 +8,12 @@ set_property(CACHE FIRMWARE_COMPILER PROPERTY STRINGS GNU TI)
 
 include(CTest)
 
-# Compile the library for Linux
+# Compile the library for Linux.
+# Install into it's own prefix to avoid a race condition where files common between
+# nuhal_linux and nuhal_tiva are installed simultaneously
 ExternalProject_Add(nuhal_linux
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
-  INSTALL_DIR install/
+  INSTALL_DIR install/nuhal_linux
   BUILD_ALWAYS TRUE
   CMAKE_ARGS
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -22,7 +24,7 @@ ExternalProject_Add(nuhal_linux
 # Compile the library for tiva
 ExternalProject_Add(nuhal_tiva
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
-  INSTALL_DIR install/
+  INSTALL_DIR install/nuhal_tiva
   BUILD_ALWAYS TRUE
   CMAKE_ARGS
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -30,7 +32,10 @@ ExternalProject_Add(nuhal_tiva
   -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
   -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake)
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/install/ DESTINATION .)
+install(DIRECTORY
+  ${CMAKE_BINARY_DIR}/install/nuhal_linux/
+  ${CMAKE_BINARY_DIR}/install/nuhal_tiva/
+  DESTINATION .)
 
 if(BUILD_TESTING)
   ExternalProject_Add(nuhal_test_linux
@@ -42,7 +47,7 @@ if(BUILD_TESTING)
     -DBUILD_TESTING=ON
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-    -Dnuhal_DIR=${CMAKE_BINARY_DIR}/install/lib/nuhal
+    -Dnuhal_DIR=${CMAKE_BINARY_DIR}/install/nuhal_linux/lib/nuhal
     DEPENDS nuhal_linux)
 
   # Compile the tiva tests
@@ -55,7 +60,7 @@ if(BUILD_TESTING)
     -DBUILD_TESTING=ON
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-    -Dnuhal_DIR=${CMAKE_BINARY_DIR}/install/lib/arm-none-eabi/nuhal
+    -Dnuhal_DIR=${CMAKE_BINARY_DIR}/install/nuhal_tiva/lib/arm-none-eabi/nuhal
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/${FIRMWARE_COMPILER}-toolchain.cmake
     DEPENDS nuhal_tiva)
 
