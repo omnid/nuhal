@@ -41,8 +41,11 @@ add_library(nuhal
 
 target_include_directories(nuhal
   PUBLIC
+  # Headers used on all platforms
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/common>
+  # Linux specific headers
   $<BUILD_INTERFACE:$<$<PLATFORM_ID:Linux>:${CMAKE_CURRENT_SOURCE_DIR}/../include/linux>>
+  # Tiva specific headers
   $<BUILD_INTERFACE:$<$<PLATFORM_ID:arm-none-eabi>:${CMAKE_CURRENT_SOURCE_DIR}/../include/tiva>>)
 
 
