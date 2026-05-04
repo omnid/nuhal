@@ -3,9 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(nuhal VERSION 1.0.0)
 find_package(cmakeme 1.0.0 REQUIRED)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "arm-none-eabi")
-  find_package(TivaCMake)
-endif()
+find_package(TivaCMake)
 
 cmakeme_defaults(RelWithDebInfo)
 
@@ -54,7 +52,7 @@ target_link_libraries(nuhal PRIVATE cmakeme_flags
   $<$<PLATFORM_ID:arm-none-eabi>:TivaCMake::driverlib>
   m)
 
-cmakeme_install(TARGETS nuhal NAMESPACE nuhal)
+cmakeme_install(TARGETS nuhal NAMESPACE nuhal DEPENDS TivaCMake)
 
 # Doxygen documentation
 set(DOXYGEN_PROJECT_NAME "Northwestern Utilities and Hardware Abstraction Library (nuhal)")
