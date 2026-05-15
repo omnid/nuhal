@@ -226,10 +226,10 @@ bool protocol_read_block_error(const struct uart_port * port,
     protocol_packet_stream_init(out);
 
     // read the header
-    uart_read_block(port, &out->_data[0], HEADER_BYTES,
+    uart_read_block_error(port, &out->_data[0], HEADER_BYTES,
                     0 == timeout ? 0
                     : timeout + TIMEOUT_MS_PER_BYTE * HEADER_BYTES ,
-                    UART_TERM_NONE);
+                    UART_TERM_NONE, timeout_error);
 
     // ACK packets from the bootloader have a length of 0, so that length
     // does not include the header bytes. In all other packets, the length

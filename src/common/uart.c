@@ -80,7 +80,8 @@ int uart_read_block_error(const struct uart_port * port, void * data,
             offset += snprintf(read_hex_msg + offset, sizeof(read_hex_msg) - offset, "%02X ", bytes[i]);
         }
         read_hex_msg[offset] = '\0';
-        error(FILE_LINE, "Timeout on blocking read. Trying to read on UART port %s\nHave read up to: %s (in hex)\nNumber of bytes left to read: %zu", 
+        error(FILE_LINE, "Timeout (waited %lu ms) on blocking read. Trying to read on UART port %s\nHave read up to: %s (in hex)\nNumber of bytes left to read: %zu", 
+            (unsigned long) timeout,
             uart_get_device_path(port), 
             read_hex_msg, 
             len - read);
