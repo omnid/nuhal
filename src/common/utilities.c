@@ -1,5 +1,4 @@
 #include "nuhal/utilities.h"
-#include "nuhal/error.h"
 #include <string.h>
 #include <math.h>
 

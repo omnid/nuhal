@@ -44,40 +44,31 @@ Main Features
 
 Installation
 ============
-
-Use [vcstool](https://github.com/dirk-thomas/vcstool) with one of the
-provided repo files (*ssh*, *http*) to clone this repository and the
-others into a ROS workspace. Then use an isolated build tool like
-`catkin_tools` or `catkin_make_isolated` to compile the workspace.
-
-See
-[Installation](https://github.com/omnid/omnid_docs/blob/master/Installation.md)
-for more options and details, including how to install this project
-without ROS.
+See [Installation](https://github.com/omnid/omnid_docs/blob/master/Installation.md)
+for options and details, including how to install this project without ROS.
 
 Usage
 =====
 
 -   Use `find_package(nuhal)` then add `nuhal::nuhal` to the
     `target_link_libraries`
-    -   This will auto-detect your platform based on the toolchain,
-        host, and cross-compiling status
-    -   Includes some useful CMake Functions (see comments in
-        *nuhal_all/nuhal.cmake* for details.
-        -   `nuhal_defaults(type)` Sets a default build type and calls
-            -   `nuhal_set_default_build_type(type)` Sets the default
-                build type to `type` for single-configuration generators
-            -   `nuhal_disable_in_source_builds()` Requires that the
-                cmake build is in a separate directory from the source
-                tree (to avoid polluting the source with a bunch of
-                cmake-generated files)
-            -   `nuhal_no_lang_extensions()` Disables C and C++ language
-                extensions, forcing strict conformance to the standard.
-        -   `nuhal_install(name ...)` install a target with the given
-            name. List dependencies after the target name. See
-            *nuhal_all/nuhal.cmake* for details and requirements.
-- Additional Documentation can be found in each platform's `README.md`. Doxygen documentation is generated with each build
-  and placed in `&lt build &gt/doc/index.html`.
+-   The platform is auto-detected based on the toolchain and the appropriate libraries are used.
+-   `tiva_cmake` is a dependency.
+
+Structure
+=========
+- `src/common` contains the code common to all platforms. This does not make a library
+- `src/linux` contains code that works on Linux only.
+- `src/tiva` contains code that works on the Tiva microcontroller.
+- `include/common` headers common to all platforms
+- `include/linux` linux-specific headers
+- `include/tiva` tiva-specific headers
+- `CMakeLists.txt` orchestrates the overall build, ensures that hte library is built for all platforms with
+   the appropriate toolchain
+
+Documentation
+=============
+- Doxygen documentation is generated with each build and placed in `&lt build &gt/doc/index.html`.
 
 Adding a Platform
 -----------------

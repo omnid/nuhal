@@ -20,19 +20,20 @@ struct uart_port
     uint32_t base;      // the base uart register
     uint32_t sysctl;    // the peripheral as per the sysctl module
     uint32_t int_base; // the interrupt value for the interrupt controller
+    char device_path[MAX_LENGTH_UART_DEVICE_PATH];
 };
 /// \endcond
 
 // list of the ports that can be opened
 static const struct uart_port ports[] = {
-    {UART0_BASE, SYSCTL_PERIPH_UART0, INT_UART0},
-    {UART1_BASE, SYSCTL_PERIPH_UART1, INT_UART1},
-    {UART2_BASE, SYSCTL_PERIPH_UART2, INT_UART2},
-    {UART3_BASE, SYSCTL_PERIPH_UART3, INT_UART3},
-    {UART4_BASE, SYSCTL_PERIPH_UART4, INT_UART4},
-    {UART5_BASE, SYSCTL_PERIPH_UART5, INT_UART5},
-    {UART6_BASE, SYSCTL_PERIPH_UART6, INT_UART6},
-    {UART7_BASE, SYSCTL_PERIPH_UART7, INT_UART7}
+    {UART0_BASE, SYSCTL_PERIPH_UART0, INT_UART0, "UART0"},
+    {UART1_BASE, SYSCTL_PERIPH_UART1, INT_UART1, "UART1"},
+    {UART2_BASE, SYSCTL_PERIPH_UART2, INT_UART2, "UART2"},
+    {UART3_BASE, SYSCTL_PERIPH_UART3, INT_UART3, "UART3"},
+    {UART4_BASE, SYSCTL_PERIPH_UART4, INT_UART4, "UART4"},
+    {UART5_BASE, SYSCTL_PERIPH_UART5, INT_UART5, "UART5"},
+    {UART6_BASE, SYSCTL_PERIPH_UART6, INT_UART6, "UART6"},
+    {UART7_BASE, SYSCTL_PERIPH_UART7, INT_UART7, "UART7"}
 };
 
 void uart_passthrough(const struct uart_port * port1,
@@ -77,7 +78,7 @@ void uart_passthrough(const struct uart_port * port1,
         UARTRxErrorClear(port1->base);
         if(time_elapsed_ms(&stamp) > timeout && timeout != 0)
         {
-            error(FILE_LINE, "Timeout pending end of break signal");
+            error(FILE_LINE, "Timeout pending end of break signal. Passthrough occurring through UART ports %s and %s.\n Set timeout period: %ld ms\n", uart_get_device_path(port1), uart_get_device_path(port2), timeout); // was not tested and may never be needed since NUC may permanently not need to passthrough main
         }
     }
 }
@@ -312,4 +313,14 @@ void uart_send_break(const struct uart_port * port, uint32_t timeout)
         time_delay_ms(timeout/2);
     }
     UARTBreakCtl(port->base, false);
+}
+
+const char * uart_get_device_path(const struct uart_port * port)
+{
+    if (!port)
+    {
+        error(FILE_LINE, "NULL uart port");
+    }
+
+    return port->device_path;
 }

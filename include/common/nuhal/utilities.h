@@ -17,13 +17,17 @@
 /// @brief determine the length of a statically allocated array
 #define ARRAY_LEN(x) (sizeof((x))/sizeof((x)[0]))
 
+#ifdef __cplusplus
+/// If any C code using this header is compiled with C++ remap STATIC_ASSERT to static_assert
+#define STATIC_ASSERT(test, msg) static_assert(test, #msg)
+#else
 /// @brief cause a compile error if test fails
 /// see https://stackoverflow.com/questions/3385515/static-assert-in-c
 /// test - a boolean test that can be evaluated at compile time
 /// msg - a unique message that is also a valid c identifier
-#define STATIC_ASSERT(test, msg) \
+#define STATIC_ASSERT(test, msg)                                        \
     __attribute__((unused)) typedef char static_assert_##msg[!!(test) - !(test)]
-
+#endif
 /// @brief pi
 #define PI 3.14159265358979323846f
 

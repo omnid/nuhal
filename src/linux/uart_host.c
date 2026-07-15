@@ -30,6 +30,7 @@ struct uart_port
     int fd;   // file descriptor
     bool is_open;
     bool is_usb;
+    char device_path[PATH_MAX];
     struct termios old_tio;
     struct serial_struct old_serial;
 
@@ -42,6 +43,17 @@ struct uart_port
 /// \endcond
 
 static struct uart_port * port_list_head = NULL;
+
+// accesses port's device path but prevents it from being modified
+const char * uart_get_device_path(const struct uart_port * port)
+{
+    if (!port)
+    {
+        error(FILE_LINE, "NULL uart port");
+    }
+
+    return port->device_path;
+}
 
 // run at exit to close all the uart ports
 static void uart_cleanup(void)
@@ -115,7 +127,8 @@ const struct uart_port * uart_open(const char name[], uint32_t baud,
     }
     port->is_usb = strncmp("/dev/ttyUSB", realname, 11) == 0
                    || strncmp("/dev/ttyACM", realname, 11) == 0;
-
+    strncpy(port->device_path, name, PATH_MAX - 1);
+    port->device_path[PATH_MAX - 1] = '\0';
 
     // open serial port for non-blocking reads
     port->fd = open(realname, O_RDWR | O_NOCTTY | O_NONBLOCK);

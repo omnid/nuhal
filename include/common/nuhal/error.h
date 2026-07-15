@@ -9,19 +9,26 @@
 
 #include "nuhal/utilities.h"
 #include <stdbool.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/// \brief the maximum length of an error message, including the ending '\0'
+#define ERROR_MAX_ERROR_LEN 1024
 
 /// @brief Trigger an error condition.  This will call the
 /// platform/application-specific error_handler.  It also prevents
 /// recursive calls to error.  If a function used in the error handler
 /// itself calls error, than the error function terminates the program
 /// @param fileline: the FILE_LINE macro, current file and line number
-/// @param msg: additional error information
+/// @param format: C-style format string
+/// @param ...: variable number of arguments to be placed into format
+/// @post if ERROR_MAX_ERROR_LEN-1 is exceeded, the
+///  rest of the format string will be truncated and end with "[...]"
 /// @post whether the program loops forever or exits is platform dependent
-void error(const char * fileline, const char * msg) __attribute__((noreturn));
+void error(const char * fileline, const char * format, ...) __attribute__((noreturn, format(printf, 2, 3)));
 
 /// @brief a platform-dependent function that handles the error message
 /// @param fileline - filename and line-number where the error was triggered
@@ -31,7 +38,7 @@ void error(const char * fileline, const char * msg) __attribute__((noreturn));
 /// which can be overridden by specific applications
 void error_handler(const char * fileline, const char * msg);
 
-/// @brief a platform-dependent function that handles when an error occurs 
+/// @brief a platform-dependent function that handles when an error occurs
 /// within the error handler.  This function SHOULD NOT call any function
 /// that might call error
 void error_handler_fatal(const char * fileline, const char * msg);
@@ -46,6 +53,15 @@ void error_with_errno(const char * fileline) __attribute__((noreturn));
 /// as it allows such code to avoid triggering a recursive error
 bool error_pending(void);
 
+#ifdef UNIT_TEST_MODE
+#define TEST_set_error_state private_TEST_set_error_state
+    // This function is for UNIT TESTING ONLY and should not be present in production code!
+    // reset the error so we can test multiple calls to error in a row
+    // state - if false, no error is pending, if true it is as if error() has been called once
+    void private_TEST_set_error_state(bool state);
+#else
+#define TEST_set_error_state STATIC_ASSERT(false, "TEST_set_error_state is only callable from tests")
+#endif
 
 #ifdef __cplusplus
 }

@@ -31,3 +31,8 @@ int uart_write_nonblock(const struct uart_port * , const void * , size_t )
 {
     throw std::logic_error("uart_write_nonblock is a stub function");
 }
+
+const char * uart_get_device_path(const struct uart_port * ) 
+{
+    throw std::logic_error("uart_get_device_path is a stub function");
+}

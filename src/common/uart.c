@@ -20,7 +20,7 @@ int uart_read_block_error(const struct uart_port * port, void * data,
     struct time_elapsed_ms stamp = time_elapsed_ms_init();
     // on some platforms we can avoid taking cpu cycles to wait for data
     // in which case uart_wait_for_data is the most efficient way to go.
-    // no need to check if it time d out as the next loop will be skipped
+    // no need to check if it timed out as the next loop will be skipped
     // if it did
     (void)uart_wait_for_data(port, timeout);
     while(timeout == 0 || time_elapsed_ms(&stamp) < timeout)
@@ -33,43 +33,57 @@ int uart_read_block_error(const struct uart_port * port, void * data,
 
         switch(term)
         {
-        case UART_TERM_NONE:
-            ; // no early termination based on a character
-            break;
-        case UART_TERM_CR:
-            if('\r' == ((uint8_t*)data)[read - 1])
+            case UART_TERM_NONE:
+                ; // no early termination based on a character
+                break;
+            case UART_TERM_CR:
+                if('\r' == ((uint8_t*)data)[read - 1])
+                {
+                    return read;
+                }
+                break;
+            case UART_TERM_LF:
+                if('\n' == ((uint8_t*)data)[read-1])
+                {
+                    return read;
+                }
+                break;
+            case UART_TERM_NULL:
+                if('\0' == ((uint8_t*)data)[read-1])
+                {
+                    return read;
+                }
+                break;
+            case UART_TERM_CR_OR_LF:
+                if('\r' == ((uint8_t*)data)[read-1]
+                || '\n' == ((uint8_t*)data)[read-1])
+                {
+                    return read;
+                }
+                break;
+            default:
             {
-                return read;
+                error(FILE_LINE, "Invalid termination condition on UART port %s", uart_get_device_path(port));
+                break;
             }
-            break;
-        case UART_TERM_LF:
-            if('\n' == ((uint8_t*)data)[read-1])
-            {
-                return read;
-            }
-            break;
-        case UART_TERM_NULL:
-            if('\0' == ((uint8_t*)data)[read-1])
-            {
-                return read;
-            }
-            break;
-        case UART_TERM_CR_OR_LF:
-            if('\r' == ((uint8_t*)data)[read-1]
-               || '\n' == ((uint8_t*)data)[read-1])
-            {
-                return read;
-            }
-            break;
-        default:
-            error(FILE_LINE, "Invalid termination condition");
-            break;
         }
     }
+    
     // if we get here we have timed out
     if(timeout_error)
     {
-        error(FILE_LINE, "Timeout on blocking read.");
+        uint8_t* bytes = (uint8_t *)data;
+        char read_hex_msg[3*read + 1];
+        size_t offset = 0;
+        for (size_t i = 0; i < read; i++)
+        {
+            offset += snprintf(read_hex_msg + offset, sizeof(read_hex_msg) - offset, "%02X ", bytes[i]);
+        }
+        read_hex_msg[offset] = '\0';
+        error(FILE_LINE, "Timeout on blocking read. Trying to read on UART port %s\nHave read up to: %s (in hex)\nNumber of bytes left to read: %zu", 
+            uart_get_device_path(port), 
+            read_hex_msg, 
+            len - read);
     }
     return read;
 }
@@ -96,7 +110,28 @@ int uart_write_block(const struct uart_port * port, const void * data,
         }
     }
     // if we get here we have timed out
-    error(FILE_LINE, "Timeout on blocking write.");
+    uint8_t* bytes = (uint8_t *)data;
+
+    char written_hex_msg[3*written + 1];
+    size_t offset = 0;
+    for (size_t i = 0; i < written; i++)
+    {
+        offset += snprintf(written_hex_msg + offset, sizeof(written_hex_msg) - offset, "%02X ", bytes[i]);
+    }
+    written_hex_msg[offset] = '\0';
+
+    char to_write_hex_msg[3*(len - written) + 1];
+    offset = 0;
+    for (size_t i = written; i < len; i++)
+    {
+        offset += snprintf(to_write_hex_msg + offset, sizeof(to_write_hex_msg) - offset, "%02X ", bytes[i]);
+    }
+    to_write_hex_msg[offset] = '\0';
+
+    error(FILE_LINE, "Timeout on blocking write. Trying to write from UART port %s\nHave written up to: %s (in hex)\nStill left to write: %s(in hex)", 
+        uart_get_device_path(port), 
+        written_hex_msg, 
+        to_write_hex_msg);
     return -1;
 }
 
@@ -108,7 +143,7 @@ int uart_printf(const struct uart_port * port, const char * fmt, ...)
     const int len = vsnprintf(NULL, 0, fmt, args);
     if(len < 0)
     {
-        error(FILE_LINE, "printf encoding error");
+        error(FILE_LINE, "printf encoding error. Trying to print from UART port %s", uart_get_device_path(port));
     }
 
     // true if the message to be printed fits in the buffer
@@ -147,7 +182,7 @@ int uart_scanf(const struct uart_port * port, const char * fmt, ...)
                                     UART_TERM_CR_OR_LF);
     if(buffer[len - 1] != '\r' && buffer[len - 1] != '\n')
     {
-        error(FILE_LINE, "uart_scanf input too long");
+        error(FILE_LINE, "uart_scanf input too long. Trying to scan from UART port %s", uart_get_device_path(port));
     }
     va_list args;
     va_start(args, fmt);
